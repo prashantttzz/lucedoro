@@ -1,0 +1,126 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "heading": "Frames for bright days and sharp looks",
+        "button_label": "customize"
+      }
+    },
+    "custom_featured_collection": {
+      "type": "custom-featured-collection",
+      "settings": {
+        "heading": "signature sunglasses",
+        "subheading": "Statement frames made for daily wear, easy styling, and all-day comfort.",
+        "feature_text": "From bold acetate shapes to everyday essentials, discover sunglasses designed to stand out without trying too hard.",
+        "feature_button_label": "shop all",
+        "collection": "all"
+      }
+    },
+    "custom_parallax_image": {
+      "type": "custom-parallax-image",
+      "settings": {}
+    },
+    "custom_bento_grid": {
+      "type": "custom-bento-grid",
+      "blocks": {
+        "block_1": {
+          "type": "image_card",
+          "settings": {
+            "heading": "everyday icons",
+            "use_script_font": true,
+            "subtext": "Clean silhouettes, versatile tints, and easy-to-style frames for daily rotation.",
+            "button_label": "shop"
+          }
+        },
+        "block_2": {
+          "type": "image_card",
+          "settings": {
+            "heading": "bold statement frames",
+            "use_script_font": true,
+            "subtext": "Oversized shapes, richer tones, and standout designs that instantly elevate a look.",
+            "button_label": "explore"
+          }
+        },
+        "block_3": {
+          "type": "text_card",
+          "settings": {
+            "bg_color": "#fcf9f2",
+            "kicker": "brand story",
+            "heading": "Luce D'Oro Club",
+            "use_script_font": true,
+            "text": "<p>Luce D'Oro Club creates sunglasses with a refined point of view: strong shapes, rich materials, and a fit that feels effortless from morning to night.</p><p>Each frame is designed to balance comfort, clarity, and character, so it feels as good on the face as it looks in the mirror.</p><p>Our collections pair timeless lines with expressive details, giving you eyewear that works for everyday dressing while still feeling distinctive.</p><p>From understated classics to statement silhouettes, every pair is made to bring polish, confidence, and a little attitude to the way you see the world.</p><p>Welcome to Luce D'Oro Club.</p>"
+          }
+        },
+        "block_4": {
+          "type": "image_card",
+          "settings": {
+            "heading": "",
+            "subtext": "",
+            "button_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "block_1",
+        "block_2",
+        "block_3",
+        "block_4"
+      ],
+      "settings": {}
+    },
+    "custom_our_speciality": {
+      "type": "custom-our-speciality",
+      "blocks": {
+        "specialty_1": {
+          "type": "specialty",
+          "settings": {
+            "title": "premium frame design",
+            "text": "Every silhouette is shaped to feel modern, flattering, and easy to wear across seasons."
+          }
+        },
+        "specialty_2": {
+          "type": "specialty",
+          "settings": {
+            "title": "comfortable daily fit",
+            "text": "Lightweight construction and balanced proportions make each pair comfortable from morning to night."
+          }
+        },
+        "specialty_3": {
+          "type": "specialty",
+          "settings": {
+            "title": "quality tinted lenses",
+            "text": "Thoughtfully selected lenses add clarity, sun protection, and a polished finish to every frame."
+          }
+        }
+      },
+      "block_order": [
+        "specialty_1",
+        "specialty_2",
+        "specialty_3"
+      ],
+      "settings": {
+        "heading": "our speciality",
+        "right_heading": "why our frames stand out",
+        "description": "<p>Great sunglasses should do more than complete an outfit. They should feel comfortable, look distinctive, and become the pair you reach for every day. Our approach combines refined design, dependable materials, and wearable shapes that make a strong impression without losing practicality.</p>",
+        "button_label": "shop the collection"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "custom_featured_collection",
+    "custom_parallax_image",
+    "custom_our_speciality",
+    "custom_bento_grid"
+  ]
+}

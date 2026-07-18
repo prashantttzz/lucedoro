@@ -1,0 +1,266 @@
+<div class="custom-parallax-hero">
+  <div class="parallax-hero-bg">
+    {% if section.settings.image != blank %}
+      {{ section.settings.image | image_url: width: 3840 | image_tag: loading: 'eager', class: 'parallax-hero-img' }}
+    {% else %}
+      <img
+        src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.09_PM.jpg?v=1784350056"
+        alt="Hero background"
+        loading="eager"
+        class="parallax-hero-img"
+        width="3840"
+        height="2160"
+      >
+    {% endif %}
+
+    <div class="parallax-hero-overlay"></div>
+  </div>
+
+  <div class="parallax-hero-content">
+    <div class="parallax-hero-text-wrap">
+      {% if section.settings.heading != blank %}
+        <h1 class="parallax-hero-heading">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.button_label != blank %}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="parallax-hero-btn">
+          {{- section.settings.button_label -}}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .section-custom-hero {
+    position: relative;
+    z-index: 1;
+  }
+
+  .custom-parallax-hero {
+    position: relative;
+    height: 150vh;
+    overflow: hidden;
+  }
+
+  .parallax-hero-bg {
+    position: absolute;
+    top: -25%;
+    left: 0;
+    width: 100%;
+    height: 125%;
+    z-index: 1;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .parallax-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .parallax-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+    pointer-events: none;
+  }
+
+  .parallax-hero-content {
+    position: absolute;
+    top: 100vh;
+    left: 0;
+    width: 100%;
+    height: 50vh;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 25px;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    .parallax-hero-content {
+      align-items: flex-start;
+      padding-bottom: 5rem;
+    }
+  }
+
+  .parallax-hero-text-wrap {
+    pointer-events: auto;
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .parallax-hero-heading,
+  .parallax-hero-btn {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: hero-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .parallax-hero-heading {
+    animation-delay: 0.12s;
+  }
+
+  .parallax-hero-btn {
+    animation-delay: 0.28s;
+  }
+
+  @media (min-width: 768px) {
+    .parallax-hero-text-wrap {
+      text-align: left;
+    }
+  }
+
+  .parallax-hero-heading {
+    color: #ffffff;
+    font-size: clamp(32px, 5vw, 64px);
+    font-style: normal;
+    font-weight: normal;
+    letter-spacing: 0.1em;
+    margin-bottom: 30px;
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .parallax-hero-btn {
+    display: inline-block;
+    background-color: #fdfbf7;
+    color: #1a1a1a;
+    padding: 16px 36px;
+    text-decoration: none;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .parallax-hero-btn:hover {
+    background-color: #e5e0d8;
+    transform: translateY(-2px);
+  }
+
+  @keyframes hero-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .custom-parallax-hero {
+      height: 100svh;
+      min-height: 640px;
+    }
+
+    .parallax-hero-bg {
+      top: -8%;
+      height: 108%;
+      will-change: transform;
+    }
+
+    .parallax-hero-content {
+      top: auto;
+      bottom: 0;
+      height: 100%;
+      min-height: 100%;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 18px;
+    }
+
+    .parallax-hero-text-wrap {
+      max-width: 100%;
+      width: 100%;
+      text-align: center;
+    }
+
+    .parallax-hero-heading {
+      font-size: clamp(28px, 9vw, 42px);
+      line-height: 1.08;
+      letter-spacing: 0.02em;
+      margin-bottom: 18px;
+      text-wrap: balance;
+    }
+
+    .parallax-hero-btn {
+      padding: 13px 24px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const heroBg = document.querySelector('.parallax-hero-bg');
+    if (!heroBg) return;
+
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const speed = isMobile ? 0.18 : 0.55;
+          heroBg.style.transform = `translate3d(0, ${scrollY * speed}px, 0)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Custom Parallax Hero",
+  "tag": "section",
+  "class": "section-custom-hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frames for bright days and sharp looks"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "customize"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Parallax Hero"
+    }
+  ]
+}
+{% endschema %}

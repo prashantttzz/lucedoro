@@ -1,0 +1,682 @@
+@font-face {
+  font-family: 'ldc-font';
+  src: url('{{ "ldc-font.woff2" | asset_url }}') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Canela';
+  src: url('{{ "Canela-Regular-Trial.otf" | asset_url }}') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Canela';
+  src: url('{{ "Canela-Thin-Trial.otf" | asset_url }}') format('opentype');
+  font-weight: 100;
+  /* Thin */
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-body-family: 'Canela' !important;
+  --font-body--family: 'Canela' !important;
+  --font-paragraph--family: 'Canela' !important;
+  --font-family: 'Canela' !important;
+  --font-subheading--family: 'Canela' !important;
+  --font-accent--family: 'Canela' !important;
+
+  --font-heading-family: 'ldc-font' !important;
+  --font-heading--family: 'ldc-font' !important;
+  --font-h1--family: 'ldc-font' !important;
+  --font-h2--family: 'ldc-font' !important;
+  --font-h3--family: 'ldc-font' !important;
+  --font-h4--family: 'ldc-font' !important;
+  --font-h5--family: 'ldc-font' !important;
+  --font-h6--family: 'ldc-font' !important;
+  --font-paragraph--case: none !important;
+  --font-h1--case: none !important;
+  --font-h2--case: none !important;
+  --font-h3--case: none !important;
+  --font-h4--case: none !important;
+  --font-h5--case: none !important;
+  --font-h6--case: none !important;
+  --button-text-case-primary: none !important;
+  --button-text-case-secondary: none !important;
+
+  /* Global Color Palette */
+  --ldc-green: #2E3B33;
+  --ldc-burgundy: #5A1F26;
+  --ldc-beige: #E9E2D6;
+  --ldc-gold: #C6A15B;
+  --ldc-white: #FAFAF7;
+  --ldc-black: #111111;
+
+  /* Shopify Core Overrides */
+  --color-base-background-1: #FAFAF7 !important;
+  /* Off-White background */
+  --color-base-background-2: #E9E2D6 !important;
+  --color-base-text: #5A1F26 !important;
+  /* Burgundy text */
+  --color-base-solid-button-labels: #FAFAF7 !important;
+  --color-base-outline-button-labels: #5A1F26 !important;
+  --color-button: #5A1F26 !important;
+  --color-button-text: #FAFAF7 !important;
+  --color-foreground: #5A1F26 !important;
+  /* Burgundy text */
+  --color-background: #FAFAF7 !important;
+  /* Off-White background */
+}
+
+body,
+.gradient,
+html {
+  background-color: var(--ldc-white) !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+/* Global scheme overrides */
+.color-scheme-1,
+.color-scheme-2,
+.color-scheme-3,
+.color-scheme-4,
+.color-scheme-5,
+.color-scheme-6 {
+  background-color: var(--ldc-white) !important;
+  background: var(--ldc-white) !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+/* Product Section Exception: Uses secondary Off-White */
+.section-main-product,
+.section-main-product .color-scheme-1,
+.section-main-product .color-scheme-2,
+.product-section,
+.product {
+  background-color: var(--ldc-white) !important;
+  background: var(--ldc-white) !important;
+}
+
+body,
+p,
+li,
+a,
+button,
+input,
+textarea,
+select,
+label {
+  font-family: 'Canela' !important;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+span,
+li,
+button,
+input,
+textarea,
+select,
+label,
+summary,
+small,
+strong,
+em,
+legend,
+blockquote,
+figcaption,
+td,
+th,
+.button,
+[class*="title"],
+[class*="heading"],
+[class*="label"],
+[class*="caption"],
+[class*="link"],
+[class*="menu"] {
+  text-transform: none !important;
+}
+
+/* Headings + Hero + Header + Footer + Product Title */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.hero__heading,
+.hero__heading *,
+.hero__subheading,
+.parallax-hero-heading,
+.parallax-hero-subheading,
+.product__title,
+.product__title h1,
+.product-title,
+.footer-block__heading,
+.header__heading-link,
+.menu-list__link-title,
+.header__heading,
+.header__heading a,
+.header__heading span,
+.header__heading-logo,
+.header__heading-logo-wrapper {
+  font-family: 'ldc-font' !important;
+  font-weight: normal !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  line-height: 1.15 !important;
+}
+
+/* Explicit size scale up for navigation links */
+.menu-list__link-title {
+  font-family: 'Canela' !important;
+  font-size: 1.05rem !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+}
+
+/* Header Padding Override */
+.header,
+.header__columns,
+.header-wrapper {
+  --header-padding: 2px !important;
+  --padding-block-start: 2px !important;
+  --padding-block-end: 2px !important;
+  padding: 2px !important;
+}
+
+/* Global Scroll Reveal Animations */
+.ldc-animate {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.ldc-animate.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Lenis smooth scrolling compatibility */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Brand Color Definitions & Root Overrides */
+:root {
+  --color-forest: #2E3B33;
+  --color-burgundy: #5A1F26;
+  --color-beige: #E9E2D6;
+  --color-gold: #C6A15B;
+  --color-offwhite: #FAFAF7;
+  --color-black: #111111;
+}
+
+/* Force body styling to match personality */
+body {
+  background-color: #FAFAF7 !important;
+  color: #5A1F26 !important;
+}
+
+/* Custom Footer and Newsletter Styling to Match Reference */
+.footer-section,
+.footer,
+[class*="footer-wrapper"],
+.color-scheme-4 {
+  background-color: #2E3B33 !important;
+  /* Deep Forest Green background */
+  color: #E9E2D6 !important;
+  /* Warm Beige text */
+}
+
+/* Style footer headings to be Canela script/italic style */
+.footer-content h4,
+.footer-content .h4,
+.footer-content [class*="heading"] {
+  font-family: 'ldc-font' !important;
+  font-style: normal !important;
+  text-transform: none !important;
+  color: #E9E2D6 !important;
+  /* Warm Beige */
+  font-weight: normal !important;
+  font-size: 22px !important;
+  letter-spacing: normal !important;
+  line-height: 1.15 !important;
+  margin-bottom: 20px !important;
+}
+
+/* Style footer links */
+.footer-content a,
+.footer-content p,
+.footer-content span {
+  font-family: 'Canela', serif !important;
+  color: #FAFAF7 !important;
+  /* Off White */
+}
+
+.footer-content a {
+  text-transform: uppercase !important;
+  font-size: 11px !important;
+  letter-spacing: 0.15em !important;
+  transition: color 0.3s ease;
+}
+
+.footer-content a:hover {
+  color: #C6A15B !important;
+  /* Gold hover */
+}
+
+/* Vintage circular seal layout for footer logo */
+.footer .header__heading-logo,
+.footer img[class*="logo"] {
+  padding: 10px;
+  border: 1px solid #C6A15B;
+  /* Gold border frame */
+  border-radius: 50%;
+  background-color: transparent !important;
+  max-width: 90px !important;
+  height: auto !important;
+}
+
+/* Footer newsletter inputs styling (Underline inputs) */
+.footer-content input[type="email"],
+.footer-content input[type="text"] {
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid #E9E2D6 !important;
+  border-radius: 0 !important;
+  color: #FAFAF7 !important;
+  padding: 12px 0 !important;
+  font-family: 'Canela', serif !important;
+  font-size: 12px !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  width: 100% !important;
+  box-shadow: none !important;
+}
+
+.footer-content input[type="email"]::placeholder,
+.footer-content input[type="text"]::placeholder {
+  color: rgba(233, 226, 214, 0.5) !important;
+}
+
+.footer-content input[type="email"]:focus,
+.footer-content input[type="text"]:focus {
+  border-bottom: 1px solid #C6A15B !important;
+  /* Gold bottom border on focus */
+}
+
+/* Styling the newsletter submit button in footer */
+.footer-content button[type="submit"],
+.footer-content .newsletter-form__button,
+.footer-content input[type="submit"] {
+  background-color: #FAFAF7 !important;
+  color: #2E3B33 !important;
+  border: 1px solid #FAFAF7 !important;
+  font-family: 'Canela', serif !important;
+  text-transform: uppercase !important;
+  font-size: 11px !important;
+  letter-spacing: 0.15em !important;
+  font-weight: 600 !important;
+  padding: 10px 24px !important;
+  cursor: pointer;
+  transition: all 0.3s ease !important;
+  margin-top: 15px !important;
+  border-radius: 0 !important;
+}
+
+.footer-content button[type="submit"]:hover,
+.footer-content .newsletter-form__button:hover {
+  background-color: transparent !important;
+  color: #FAFAF7 !important;
+  border-color: #FAFAF7 !important;
+}
+
+/* Mega Menu and Header Retro Overrides */
+#header-component {
+  background-color: transparent !important;
+  transition: background-color 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: background-color;
+}
+
+#header-component .header__row,
+#header-component .header__columns,
+#header-component .header-menu,
+#header-component .header-menu__inner,
+#header-component .menu-list,
+#header-component .menu-list__list-item,
+#header-component .header__inline-menu,
+#header-component [class*="color-scheme-"]:not(.menu-list__submenu-inner):not(.mega-menu) {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Header is transparent by default, transitions to forest green on hover or open */
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])),
+#header-component:has(.menu-list__submenu:hover),
+#header-component:has([aria-expanded='true']) {
+  background-color: #111111 !important;
+  color: var(--ldc-white) !important;
+}
+
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header__row,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header__columns,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header-menu,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header-menu__inner,
+#header-component:has([aria-expanded='true']) .header__row,
+#header-component:has([aria-expanded='true']) .header__columns,
+#header-component:has([aria-expanded='true']) .header-menu,
+#header-component:has([aria-expanded='true']) .header-menu__inner {
+  background-color: #111111 !important;
+}
+
+/* Default colors for transparent header */
+.header a,
+.header button,
+.header span,
+.header__heading-link {
+  color: var(--ldc-white) !important;
+  transition: color 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.header__icon,
+.header__icon svg,
+.header__icon svg path {
+  color: var(--ldc-white) !important;
+  stroke: var(--ldc-white) !important;
+  fill: none !important;
+  /* Force transparent fill for outline icons */
+  transition: stroke 0.28s cubic-bezier(0.22, 1, 0.36, 1), color 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Force image logo to be white (handles black PNGs) */
+.header-logo__image {
+  filter: brightness(0) invert(1) !important;
+}
+
+/* On hover (when header is green), turn text and icons off-white */
+#header-component:has([aria-expanded='true']) .header a,
+#header-component:has([aria-expanded='true']) .header button,
+#header-component:has([aria-expanded='true']) .header span,
+#header-component:has([aria-expanded='true']) .header__heading-link,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header a,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header button,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header span,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header__heading-link {
+  color: var(--ldc-white) !important;
+}
+
+#header-component:has([aria-expanded='true']) .header__icon,
+#header-component:has([aria-expanded='true']) .header__icon svg,
+#header-component:has([aria-expanded='true']) .header__icon svg path,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header__icon,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header__icon svg,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header__icon svg path {
+  color: var(--ldc-white) !important;
+  stroke: var(--ldc-white) !important;
+}
+
+/* Mega Menu Dropdown Panel styling */
+.menu-list__submenu-inner,
+.mega-menu {
+  background-color: #111111 !important;
+  color: #FAFAF7 !important;
+  border: none !important;
+}
+
+.menu-list__submenu {
+  background-color: #111111 !important;
+  clip-path: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translate3d(0, -4px, 0) !important;
+  transition: opacity 0.16s ease-out, transform 0.16s ease-out, visibility 0.16s linear !important;
+  margin-top: -1px;
+  padding-top: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-shadow: none !important;
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+
+/* Force dropdown visibility on native CSS hover */
+.menu-list__list-item:hover>.menu-list__submenu,
+.menu-list__list-item:has([aria-expanded='true'])>.menu-list__submenu,
+#header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .menu-list__submenu,
+#header-component:has(.menu-list__submenu:hover) .menu-list__submenu {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+/* Force the inner content to actually become opaque (overriding theme JS opacity variables) */
+.menu-list__list-item:hover,
+.menu-list__list-item:has([aria-expanded='true']) {
+  --submenu-content-opacity: 1 !important;
+  --submenu-content-animation: opacity 0.14s linear !important;
+}
+
+
+.mega-menu__grid {
+  position: relative;
+  z-index: 2;
+  /* Content sits above noise overlay */
+  min-height: 420px;
+  transform: translateZ(0);
+}
+
+.menu-list__submenu-inner {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.mega-menu.section,
+.mega-menu.section--full-width-margin {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* Mega Menu Column Headings (Cursive Script style) */
+.mega-menu__link--parent,
+.mega-menu__link--parent span,
+.mega-menu__link--parent * {
+  font-family: 'ldc-font' !important;
+  font-style: normal !important;
+  text-transform: none !important;
+  font-size: 22px !important;
+  color: #E9E2D6 !important;
+  /* Brand Warm Beige */
+  font-weight: normal !important;
+  letter-spacing: normal !important;
+  line-height: 1.15 !important;
+  margin-bottom: 12px !important;
+}
+
+/* Mega Menu Child Links (All-Caps sans-serif/serif) */
+.mega-menu__column ul li a.mega-menu__link,
+.mega-menu__column ul li a.mega-menu__link span,
+.mega-menu__column ul li a.mega-menu__link * {
+  font-family: 'Canela', serif !important;
+  text-transform: uppercase !important;
+  font-size: 11px !important;
+  letter-spacing: 0.15em !important;
+  color: #FAFAF7 !important;
+  /* Brand Off-White link text */
+  font-weight: 500 !important;
+  transition: color 0.3s ease;
+}
+
+.mega-menu__column ul li a.mega-menu__link:hover,
+.mega-menu__column ul li a.mega-menu__link:hover * {
+  color: #C6A15B !important;
+  /* Gold on link hover */
+}
+
+/* Featured Image Box on the Right side (Styled as Polaroid frame) */
+.mega-menu__content {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+}
+
+.mega-menu__content--feature {
+  align-self: stretch;
+  min-width: 200px;
+  max-width: 270px;
+  flex: 0 1 22%;
+}
+
+.mega-menu__feature-panel {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.mega-menu__feature-image {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  object-fit: cover;
+  display: block;
+  transform: translateZ(0);
+}
+
+.mega-menu__feature-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.08) 100%);
+}
+
+.mega-menu__feature-copy {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 28px 24px;
+  color: #FAFAF7;
+}
+
+.mega-menu__feature-kicker {
+  margin: 0 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(250, 250, 247, 0.78);
+}
+
+.mega-menu__feature-title {
+  margin: 0 0 8px;
+  font-family: 'ldc-font' !important;
+  font-size: clamp(28px, 2vw, 36px);
+  font-weight: normal !important;
+  line-height: 1.05 !important;
+  color: #FAFAF7;
+}
+
+.mega-menu__feature-text {
+  margin: 0;
+  font-family: 'Canela' !important;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(250, 250, 247, 0.92);
+}
+
+.mega-menu__content-list {
+  display: block !important;
+  width: 100% !important;
+  max-width: 250px !important;
+}
+
+.mega-menu__content-list-item {
+  background-color: #FAF5EB !important;
+  /* Polaroid vintage cream backing */
+  border: 1px solid #d3c4ad !important;
+  padding: 10px 10px 38px 10px !important;
+  /* Wider bottom margin for text label */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  position: relative !important;
+  border-radius: 2px !important;
+}
+
+.mega-menu__content-list-item:hover {
+  transform: scale(1.03) rotate(1deg) !important;
+}
+
+/* Polaroid Image Wrapper and Inner Border */
+.mega-menu__content-list-item .resource-card__image-wrapper,
+.mega-menu__content-list-item img {
+  border: 1px solid #d3c4ad !important;
+  aspect-ratio: 1/1 !important;
+  /* Force square format */
+  object-fit: cover !important;
+  filter: sepia(0.15) contrast(0.95) !important;
+  border-radius: 0 !important;
+}
+
+/* Polaroid Text Labels */
+.mega-menu__content-list-item .resource-card__info,
+.mega-menu__content-list-item .resource-card__title,
+.mega-menu__content-list-item [class*="title"],
+.mega-menu__content-list-item [class*="heading"] {
+  font-family: 'Canela', serif !important;
+  text-transform: uppercase !important;
+  font-size: 10px !important;
+  letter-spacing: 0.12em !important;
+  color: #8c765c !important;
+  /* Muted brown */
+  margin: 12px 0 0 0 !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+}
+
+/* Polaroid "Shop Now" Link text */
+.mega-menu__content-list-item::after {
+  content: "Shop Now";
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-family: 'Canela', serif;
+  font-size: 9px;
+  text-decoration: underline;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8c765c;
+}

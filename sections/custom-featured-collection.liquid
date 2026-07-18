@@ -1,0 +1,654 @@
+<div class="cfc-section">
+  <div class="cfc-header-area ldc-animate">
+    <div class="cfc-header-left">
+      {% if section.settings.heading != blank %}
+        <h2 class="cfc-heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="cfc-subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+    <div class="cfc-header-right">
+      {% if section.settings.menu != blank %}
+        <ul class="cfc-menu">
+          {% for link in section.settings.menu.links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <!-- Fallback static menu for mockup -->
+        <ul class="cfc-menu">
+          <li><a href="#">new arrivals</a></li>
+          <li><a href="#">best sellers</a></li>
+          <li><a href="#">limited edition</a></li>
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="cfc-grid">
+    <!-- Feature Card -->
+    <div class="cfc-product-card cfc-feature-card ldc-animate">
+      <div class="cfc-product-image-wrapper">
+        <div class="cfc-feature-bg-wrapper">
+          {% if section.settings.feature_image != blank %}
+            {{
+              section.settings.feature_image
+              | image_url: width: 1000
+              | image_tag: class: 'cfc-feature-bg', loading: 'lazy'
+            }}
+          {% else %}
+            <img
+              src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM.jpg?v=1784350056"
+              alt="Feature background"
+              class="cfc-feature-bg"
+              loading="lazy"
+              width="1000"
+              height="1000"
+            >
+          {% endif %}
+        </div>
+
+        <div class="cfc-feature-info">
+          {% if section.settings.feature_text != blank %}
+            <p class="cfc-feature-text">{{ section.settings.feature_text }}</p>
+          {% endif %}
+          {% if section.settings.feature_button_label != blank %}
+            <a href="{{ section.settings.feature_button_link | default: '#' }}" class="cfc-feature-btn">
+              {{- section.settings.feature_button_label -}}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Cards -->
+    {% assign collection = section.settings.collection %}
+    {% if collection != blank and collection.products_count > 0 %}
+      {% for product in collection.products limit: 11 %}
+        <div class="cfc-product-card ldc-animate">
+          <a href="{{ product.url }}" class="cfc-product-image-wrapper">
+            <div class="cfc-product-images">
+              <img
+                src="{{ product.featured_image | image_url: width: 600 }}"
+                alt="{{ product.title | escape }}"
+                class="cfc-img-primary"
+                loading="lazy"
+                width="{{ product.featured_image.width }}"
+                height="{{ product.featured_image.height }}"
+              >
+              {% if product.images[1] %}
+                <img
+                  src="{{ product.images[1] | image_url: width: 600 }}"
+                  alt="{{ product.title | escape }}"
+                  class="cfc-img-secondary"
+                  loading="lazy"
+                  width="{{ product.images[1].width }}"
+                  height="{{ product.images[1].height }}"
+                >
+              {% endif %}
+            </div>
+
+            <product-form class="cfc-add-to-cart-wrapper">
+              {%- form 'product',
+                product,
+                id: product.id,
+                class: 'cfc-form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                <button
+                  type="submit"
+                  class="cfc-add-to-cart-btn"
+                  {% unless product.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {% if product.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+                </button>
+              {%- endform -%}
+            </product-form>
+          </a>
+
+          <div class="cfc-product-info">
+            <h3 class="cfc-product-title">
+              <a href="{{ product.url }}">{{ product.title }}</a>
+            </h3>
+            <div class="cfc-product-price">
+              {% if product.compare_at_price > product.price %}
+                <span class="cfc-price-compare">{{ product.compare_at_price | money }}</span>
+              {% endif %}
+              <span class="cfc-price-current">{{ product.price | money }}</span>
+            </div>
+            {% if product.variants.size > 1 %}
+              <p class="cfc-product-variants">{{ product.variants.size }} variants</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <!-- Placeholder Products -->
+      {% for i in (1..11) %}
+        <div class="cfc-product-card">
+          <div class="cfc-product-image-wrapper">
+            <div class="cfc-product-images">
+              {{ 'product-' | append: i | placeholder_svg_tag: 'cfc-img-primary placeholder-svg' }}
+            </div>
+          </div>
+          <div class="cfc-product-info">
+            <h3 class="cfc-product-title">
+              <a href="#">Example Product {{ i }}</a>
+            </h3>
+            <div class="cfc-product-price">
+              <span class="cfc-price-current">$99.00</span>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .cfc-section {
+    padding: 60px 25px;
+    background-color: #fafaf7;
+  }
+
+  .cfc-header-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    gap: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .cfc-header-area {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+  }
+
+  .cfc-header-left {
+    max-width: 600px;
+  }
+
+  .cfc-heading {
+    margin: 0 0 10px 0;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.1;
+    color: #5a1f26;
+  }
+
+  .cfc-subheading {
+    margin: 0;
+    font-size: 14px;
+    color: #5a1f26;
+    letter-spacing: 0.05em;
+  }
+
+  .cfc-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .cfc-menu a {
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #5a1f26;
+    font-weight: 600;
+  }
+  .cfc-menu a:hover {
+    text-decoration: underline;
+  }
+
+  /* Grid */
+  .cfc-grid {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-inline: 2px;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .cfc-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cfc-product-card {
+    flex: 0 0 min(82vw, 320px);
+    scroll-snap-align: start;
+  }
+
+  .cfc-feature-card {
+    flex-basis: min(88vw, 360px);
+  }
+
+  @media (min-width: 768px) {
+    .cfc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      overflow: visible;
+      scroll-snap-type: none;
+      padding-inline: 0;
+      padding-bottom: 0;
+    }
+
+    .cfc-product-card,
+    .cfc-feature-card {
+      flex: initial;
+    }
+  }
+  @media (min-width: 1024px) {
+    .cfc-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Feature Card Info */
+  .cfc-feature-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 12px;
+    padding: 30px 20px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+  }
+
+  .cfc-feature-bg-wrapper {
+    position: absolute;
+    top: -20%;
+    left: 0;
+    width: 100%;
+    height: 140%; /* Increased for parallax travel distance */
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .cfc-feature-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    will-change: transform;
+  }
+
+  .cfc-feature-text {
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    font-weight: 500;
+  }
+
+  .cfc-feature-btn {
+    display: inline-block;
+    background-color: #fafaf7;
+    color: #5a1f26;
+    padding: 10px 24px;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+  }
+  .cfc-feature-btn:hover {
+    background-color: #e5e0d8;
+  }
+
+  /* Product Cards */
+  .cfc-product-card {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    height: 100%;
+  }
+
+  .cfc-feature-card .cfc-product-image-wrapper {
+    flex-grow: 1;
+    height: 100%;
+    margin-bottom: 0;
+    aspect-ratio: auto; /* Override to allow stretching to row height */
+  }
+
+  .cfc-product-image-wrapper {
+    position: relative;
+    display: block;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background-color: #fafaf7;
+    aspect-ratio: 3/4;
+  }
+
+  .cfc-product-images {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cfc-product-images img,
+  .cfc-product-images svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.4s ease;
+  }
+
+  .cfc-img-secondary {
+    opacity: 0;
+  }
+
+  .cfc-product-card:hover .cfc-img-secondary {
+    opacity: 1;
+  }
+  .cfc-product-card:hover .cfc-img-primary {
+    opacity: 0;
+  }
+
+  /* CTA Overlay */
+  .cfc-add-to-cart-wrapper {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+  }
+
+  .cfc-product-image-wrapper:hover .cfc-add-to-cart-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .cfc-add-to-cart-btn {
+    background-color: #5a1f26;
+    color: #fafaf7;
+    border: none;
+    padding: 12px 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  .cfc-add-to-cart-btn:hover {
+    background-color: #7a2b35;
+  }
+
+  /* Product Info */
+  .cfc-product-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cfc-product-title {
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+
+  .cfc-product-title a {
+    text-decoration: none;
+    color: #5a1f26;
+  }
+
+  .cfc-product-price {
+    font-size: 12px;
+    color: #5a1f26;
+    font-weight: 600;
+  }
+
+  .cfc-price-compare {
+    text-decoration: line-through;
+    color: #777;
+    margin-right: 6px;
+    font-weight: normal;
+  }
+
+  .cfc-product-variants {
+    margin: 4px 0 0;
+    font-size: 11px;
+    color: #5a1f26;
+  }
+
+  @media (max-width: 767px) {
+    .cfc-section {
+      padding: 48px 16px;
+    }
+
+    .cfc-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 12px !important;
+      overflow-x: hidden !important;
+      padding-inline: 0 !important;
+      padding-bottom: 0 !important;
+      width: 100% !important;
+    }
+
+    .cfc-product-card {
+      flex: none !important;
+      width: 100% !important;
+      min-width: 0 !important;
+    }
+
+    .cfc-feature-card {
+      /* If you prefer the feature card full width at top, use 1 / -1. 
+         If you prefer it on the left spanning 2 rows, use 1 / 2 and span 2. */
+      grid-column: 1 / -1 !important;
+      flex: none !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      min-height: auto;
+    }
+
+    .cfc-feature-card .cfc-product-image-wrapper {
+      aspect-ratio: 3 / 4;
+      min-height: 420px;
+      height: auto;
+    }
+
+    .cfc-feature-bg-wrapper {
+      top: 0;
+      height: 100%;
+    }
+
+    .cfc-header-area {
+      margin-bottom: 26px;
+      gap: 14px;
+    }
+
+    .cfc-header-left {
+      max-width: none;
+    }
+
+    .cfc-heading {
+      font-size: clamp(28px, 8vw, 38px);
+      margin-bottom: 8px;
+    }
+
+    .cfc-subheading {
+      font-size: 13px;
+      line-height: 1.55;
+      letter-spacing: 0.02em;
+    }
+
+    .cfc-menu {
+      gap: 14px;
+    }
+
+    .cfc-menu a {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+    }
+
+    .cfc-product-image-wrapper {
+      margin-bottom: 16px;
+    }
+
+    .cfc-product-info {
+      align-items: flex-start;
+      text-align: left;
+      gap: 4px;
+    }
+
+    .cfc-product-title {
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .cfc-product-price,
+    .cfc-product-variants {
+      font-size: 11px;
+    }
+
+    .cfc-add-to-cart-wrapper {
+      opacity: 1;
+      transform: none;
+      right: 12px;
+      bottom: 12px;
+    }
+
+    .cfc-add-to-cart-btn {
+      padding: 10px 14px;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Parallax effect for the feature tile
+    const featureBgs = document.querySelectorAll('.cfc-feature-bg');
+    if (featureBgs.length === 0) return;
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          featureBgs.forEach((bg) => {
+            const container = bg.closest('.cfc-feature-card');
+            if (container) {
+              const rect = container.getBoundingClientRect();
+              const windowHeight = window.innerHeight;
+
+              // Only animate if the element is visible in the viewport
+              if (rect.top <= windowHeight && rect.bottom >= 0) {
+                // scrollDistance starts at 0 when the top of the card enters the bottom of the screen
+                const scrollDistance = windowHeight - rect.top;
+                // Reverse parallax: translate downwards relative to scroll
+                bg.style.transform = `translateY(${scrollDistance * 0.15}px)`;
+              }
+            }
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Custom Featured Collectio",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "signature sunglasses"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Statement frames made for daily wear, easy styling, and all-day comfort."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Top Right Menu (Optional)"
+    },
+    {
+      "type": "header",
+      "content": "Feature Tile"
+    },
+    {
+      "type": "image_picker",
+      "id": "feature_image",
+      "label": "Feature Background Image"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_text",
+      "label": "Feature Text",
+      "default": "From bold acetate shapes to everyday essentials, discover sunglasses designed to stand out without trying too hard."
+    },
+    {
+      "type": "text",
+      "id": "feature_button_label",
+      "label": "Feature Button Label",
+      "default": "shop all"
+    },
+    {
+      "type": "url",
+      "id": "feature_button_link",
+      "label": "Feature Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Featured Collection"
+    }
+  ]
+}
+{% endschema %}

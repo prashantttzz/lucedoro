@@ -1,0 +1,109 @@
+<div class="cpi-section" style="{% if section.settings.full_width %}padding: 0;{% else %}padding: 0 5px;{% endif %}">
+  <div class="cpi-container ldc-animate" style="height: {{ section.settings.height }}vh;">
+    <div class="cpi-bg-wrapper">
+      {% if section.settings.image != blank %}
+        {{ section.settings.image | image_url: width: 3840 | image_tag: class: 'cpi-bg', loading: 'lazy' }}
+      {% else %}
+        <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.07_PM.jpg?v=1784350056" alt="Parallax banner" class="cpi-bg" loading="lazy" width="3840" height="2160">
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .cpi-section {
+    width: 100%;
+    margin: 40px 0;
+  }
+
+  .cpi-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .cpi-bg-wrapper {
+    position: absolute;
+    top: -20%;
+    left: 0;
+    width: 100%;
+    height: 140%; /* Increased for parallax travel distance */
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .cpi-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    will-change: transform;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cpiBgs = document.querySelectorAll('.cpi-bg');
+    if (cpiBgs.length === 0) return;
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          cpiBgs.forEach((bg) => {
+            const container = bg.closest('.cpi-container');
+            if (container) {
+              const rect = container.getBoundingClientRect();
+              const windowHeight = window.innerHeight;
+              
+              // Only animate if the element is visible in the viewport
+              if (rect.top <= windowHeight && rect.bottom >= 0) {
+                // scrollDistance starts at 0 when the top of the card enters the bottom of the screen
+                const scrollDistance = windowHeight - rect.top;
+                // Reverse parallax: translate downwards relative to scroll
+                bg.style.transform = `translateY(${scrollDistance * 0.15}px)`;
+              }
+            }
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Custom Parallax Image",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Section Height",
+      "default": 80
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width (Edge-to-Edge)",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Parallax Image"
+    }
+  ]
+}
+{% endschema %}

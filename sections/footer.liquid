@@ -1,0 +1,516 @@
+<div class="custom-footer">
+  <div class="footer-main-grid">
+    
+    <!-- Column 1: Logo -->
+    <div class="footer-col-logo">
+      <a href="{{ routes.root_url }}" class="footer-logo-link">
+        {% if section.settings.logo != blank %}
+          {{ section.settings.logo | image_url: width: 300 | image_tag: class: 'footer-brand-logo', loading: 'lazy' }}
+        {% else %}
+          <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/logogreen-Photoroom.png?v=1784364695" class="footer-brand-logo" alt="Luce D'Oro" loading="lazy">
+        {% endif %}
+      </a>
+    </div>
+
+    <!-- Column 2: Shop Menu -->
+    <div class="footer-col-menu">
+      <h3 class="footer-heading">SHOP</h3>
+      <ul class="footer-links-list">
+        {% assign shop_menu = section.settings.menu_shop | default: 'main-menu' %}
+        {% for link in linklists[shop_menu].links %}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% else %}
+          <li><a href="/collections/all">Shop All</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Column 3: Explore Menu -->
+    <div class="footer-col-menu">
+      <h3 class="footer-heading">EXPLORE</h3>
+      <ul class="footer-links-list">
+        {% assign explore_menu = section.settings.menu_explore | default: 'footer' %}
+        {% for link in linklists[explore_menu].links %}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% else %}
+          <li><a href="/">Home</a></li>
+          <li><a href="/#custom-our-speciality">Our Speciality</a></li>
+          <li><a href="/#custom-bento-grid">Luce D'Oro Club</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Column 4: Connect -->
+    <div class="footer-col-connect">
+      <h3 class="footer-heading">CONNECT</h3>
+      {% if section.settings.phone_number != blank %}
+        <a href="tel:{{ section.settings.phone_number }}" class="footer-phone">{{ section.settings.phone_number }}</a>
+      {% endif %}
+      
+      <div class="footer-social-icons">
+        {%- if settings.social_instagram_link != blank -%}
+          <a href="{{ settings.social_instagram_link }}" target="_blank">Instagram</a>
+        {%- else -%}
+          <a href="https://instagram.com" target="_blank">Instagram</a>
+        {%- endif -%}
+        {%- if settings.social_facebook_link != blank -%}
+          <a href="{{ settings.social_facebook_link }}" target="_blank">Facebook</a>
+        {%- else -%}
+          <a href="https://facebook.com" target="_blank">Facebook</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- Column 5: Newsletter & Giant Text Logo -->
+    <div class="footer-col-newsletter">
+      <h3 class="footer-heading">{{ section.settings.newsletter_heading | default: "JOIN OUR 'OHANA" }}</h3>
+      
+      {%- form 'customer', id: 'FooterNewsletterForm', class: 'footer-newsletter-form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="footer-input-pill">
+          <input
+            id="NewsletterForm--{{ section.id }}"
+            type="email"
+            name="contact[email]"
+            class="footer-pill-field"
+            value="{{ form.email }}"
+            aria-required="true"
+            autocorrect="off"
+            autocapitalize="off"
+            autocomplete="email"
+            {% if form.errors %}
+              autofocus
+              aria-invalid="true"
+              aria-describedby="ContactFooter-success"
+            {% elsif form.posted_successfully? %}
+              aria-describedby="ContactFooter-success"
+            {% endif %}
+            placeholder="Enter your email"
+            required
+          >
+          <button
+            type="submit"
+            class="footer-pill-submit"
+            name="commit"
+            id="Subscribe"
+            aria-label="Subscribe"
+          >
+            <svg class="footer-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+        {%- if form.errors -%}
+          <small class="newsletter-message error" id="ContactFooter-success">
+            {{- form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email -}}
+          </small>
+        {%- endif -%}
+        {%- if form.posted_successfully? -%}
+          <h3 class="newsletter-message success" id="ContactFooter-success" tabindex="-1" autofocus>
+            Thanks for subscribing!
+          </h3>
+        {%- endif -%}
+      {%- endform -%}
+
+    </div>
+
+  </div>
+
+  <!-- Bottom Row: Policies & Copyright -->
+  <div class="footer-bottom-row">
+    <div class="footer-bottom-links">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
+      <a href="/policies/terms-of-service">Terms</a>
+      <a href="/policies/privacy-policy">Privacy</a>
+      <a href="/policies/refund-policy">Refund Policy</a>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .custom-footer {
+    background-color: var(--ldc-burgundy); /* Brand Burgundy */
+    background-image: url("https://cdn.shopify.com/s/files/1/0665/5036/6274/files/ChatGPT_Image_Jul_18_2026_02_48_48_PM.png?v=1784366339");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--ldc-white); /* Brand Off-White */
+    padding: 68px 4% 26px 4%;
+    font-family: 'Canela', serif !important;
+    position: relative;
+    border-top: 1px solid rgba(250, 250, 247, 0.08);
+    overflow: hidden;
+  }
+
+  /* SVG Noise Grain Overlay for Vintage Texture */
+  .custom-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.045; /* Subtle vintage texture */
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  /* Ensure footer content stays above noise overlay */
+  .footer-main-grid,
+  .footer-bottom-row {
+    position: relative;
+    z-index: 2;
+  }
+
+  .footer-main-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 42px;
+  }
+
+  @media (min-width: 768px) {
+    .footer-main-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 990px) {
+    .footer-main-grid {
+      grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.6fr; /* Exact layout distribution */
+      gap: 30px;
+    }
+  }
+
+  .footer-col-logo {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .footer-brand-logo {
+    max-width: 96px;
+    height: auto;
+  }
+
+  .footer-heading {
+    font-family: 'ldc-font', sans-serif !important;
+    font-size: 17px;
+    color: rgba(250, 250, 247, 0.92);
+    text-transform: lowercase !important;
+    font-weight: normal !important;
+    letter-spacing: normal;
+    line-height: 1.15;
+    margin: 0 0 14px 0;
+  }
+
+  .footer-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .footer-links-list a {
+    color: rgba(250, 250, 247, 0.82);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.45;
+    transition: opacity 0.3s ease, color 0.3s ease;
+  }
+
+  .footer-links-list a:hover {
+    color: #C6A15B; /* Brand Gold on hover */
+    opacity: 1;
+  }
+
+  .footer-col-connect {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-phone {
+    color: rgba(250, 250, 247, 0.82);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 300;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+  }
+
+  .footer-phone:hover {
+    color: #C6A15B;
+  }
+
+  .footer-social-icons {
+    display: flex;
+    gap: 15px;
+  }
+
+  .footer-social-icons a {
+    color: rgba(250, 250, 247, 0.8);
+    text-decoration: none;
+    font-size: 11px;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-weight: 300;
+    transition: color 0.3s ease;
+  }
+
+  .footer-social-icons a:hover {
+    color: #C6A15B; /* Brand Gold on hover */
+  }
+
+  .footer-col-newsletter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-newsletter-form {
+    width: 100%;
+    margin-bottom: 18px;
+  }
+
+  .footer-input-pill {
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(250, 250, 247, 0.55);
+    border-radius: 100px; /* Pill shaped */
+    padding: 4px 6px 4px 16px;
+    background-color: transparent;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .footer-pill-field {
+    border: none !important;
+    background: transparent !important;
+    color: rgba(250, 250, 247, 0.92) !important;
+    font-family: 'Canela', serif !important;
+    font-size: 12px !important;
+    font-weight: 300 !important;
+    outline: none !important;
+    flex-grow: 1;
+    padding: 8px 0 !important;
+    box-shadow: none !important;
+  }
+
+  .footer-pill-field::placeholder {
+    color: rgba(250, 250, 247, 0.6) !important;
+  }
+
+  .footer-pill-submit {
+    background: transparent;
+    border: none;
+    color: #FAFAF7;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  .footer-pill-submit:hover {
+    transform: translateX(4px);
+    color: #C6A15B; /* Brand Gold on hover */
+  }
+
+  .footer-arrow-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .newsletter-message {
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 300;
+  }
+
+  .newsletter-message.success {
+    color: #FAFAF7;
+  }
+
+  .newsletter-message.error {
+    color: #C6A15B;
+  }
+
+  .footer-bottom-row {
+    border-top: 1px solid rgba(250, 250, 247, 0.08);
+    padding: 18px 0 0;
+    font-size: 10px;
+    text-transform: none;
+    letter-spacing: 0.04em;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .footer-bottom-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    color: rgba(250, 250, 247, 0.62);
+  }
+
+  .footer-bottom-links a {
+    color: rgba(250, 250, 247, 0.62);
+    text-decoration: none;
+    font-weight: 300;
+    transition: color 0.3s ease;
+  }
+
+  .footer-bottom-links a:hover {
+    color: #C6A15B; /* Brand Gold */
+  }
+
+  @media (max-width: 767px) {
+    .custom-footer {
+      padding: 36px 18px 22px;
+    }
+
+    .footer-main-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 14px;
+      margin-bottom: 28px;
+      align-items: start;
+    }
+
+    .footer-col-logo,
+    .footer-col-menu,
+    .footer-col-connect,
+    .footer-col-newsletter {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .footer-col-logo {
+      justify-content: flex-start;
+    }
+
+    .footer-brand-logo {
+      max-width: 72px;
+    }
+
+    .footer-heading {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .footer-links-list {
+      gap: 8px;
+    }
+
+    .footer-links-list a,
+    .footer-phone,
+    .footer-social-icons a {
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .footer-social-icons {
+      justify-content: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .footer-col-newsletter {
+      grid-column: 1 / -1;
+      padding: 14px 0 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      backdrop-filter: none;
+    }
+
+    .footer-newsletter-form {
+      margin-bottom: 0;
+    }
+
+    .footer-input-pill {
+      max-width: none;
+      padding-left: 12px;
+    }
+
+    .footer-pill-field {
+      font-size: 12px !important;
+      text-align: left;
+    }
+
+    .footer-col-connect {
+      gap: 8px;
+    }
+
+    .footer-phone {
+      margin-bottom: 0;
+    }
+
+    .footer-bottom-row {
+      padding-top: 16px;
+    }
+
+    .footer-bottom-links {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+      gap: 10px 14px;
+      font-size: 10px;
+    }
+  }
+
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "footer",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Image"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_shop",
+      "label": "Shop Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_explore",
+      "label": "Explore Menu"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone Number",
+      "default": "888-882-6664"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter Heading",
+      "default": "JOIN OUR 'OHANA"
+    },
+    {
+      "type": "text",
+      "id": "giant_title",
+      "label": "Giant Footer Title",
+      "default": "LUCE D'ORO"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer"
+    }
+  ]
+}
+{% endschema %}
