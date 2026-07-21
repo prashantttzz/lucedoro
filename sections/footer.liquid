@@ -61,60 +61,7 @@
       </div>
     </div>
 
-    <!-- Column 5: Newsletter & Giant Text Logo -->
-    <div class="footer-col-newsletter">
-      <h3 class="footer-heading">{{ section.settings.newsletter_heading | default: "JOIN OUR CLUB" }}</h3>
-      
-      {%- form 'customer', id: 'FooterNewsletterForm', class: 'footer-newsletter-form' -%}
-        <input type="hidden" name="contact[tags]" value="newsletter">
-        <div class="footer-input-pill">
-          <input
-            id="NewsletterForm--{{ section.id }}"
-            type="email"
-            name="contact[email]"
-            class="footer-pill-field"
-            value="{{ form.email }}"
-            aria-required="true"
-            autocorrect="off"
-            autocapitalize="off"
-            autocomplete="email"
-            {% if form.errors %}
-              autofocus
-              aria-invalid="true"
-              aria-describedby="ContactFooter-success"
-            {% elsif form.posted_successfully? %}
-              aria-describedby="ContactFooter-success"
-            {% endif %}
-            placeholder="Enter your email"
-            required
-          >
-          <button
-            type="submit"
-            class="footer-pill-submit"
-            name="commit"
-            id="Subscribe"
-            aria-label="Subscribe"
-          >
-            <svg class="footer-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-        </div>
-        {%- if form.errors -%}
-          <small class="newsletter-message error" id="ContactFooter-success">
-            {{- form.errors.translated_fields.email | capitalize }}
-            {{ form.errors.messages.email -}}
-          </small>
-        {%- endif -%}
-        {%- if form.posted_successfully? -%}
-          <h3 class="newsletter-message success" id="ContactFooter-success" tabindex="-1" autofocus>
-            Thanks for subscribing!
-          </h3>
-        {%- endif -%}
-      {%- endform -%}
 
-    </div>
 
   </div>
 
@@ -177,7 +124,7 @@
 
   @media (min-width: 990px) {
     .footer-main-grid {
-      grid-template-columns: 0.8fr 0.8fr 0.8fr 1fr 1.6fr; /* Exact layout distribution */
+      grid-template-columns: 1fr 1fr 1fr 1fr; /* Exact layout distribution */
       gap: 30px;
     }
   }
@@ -490,12 +437,7 @@
       "label": "Phone Number",
       "default": "888-882-6664"
     },
-    {
-      "type": "text",
-      "id": "newsletter_heading",
-      "label": "Newsletter Heading",
-      "default": "JOIN OUR CLUB"
-    },
+
     {
       "type": "text",
       "id": "giant_title",
