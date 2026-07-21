@@ -1,66 +1,23 @@
 <div class="cbg-section" id="custom-bento-grid">
   <div class="cbg-grid">
     {% for block in section.blocks %}
-      {% case block.type %}
-        {% when 'image_card' %}
-          <div class="cbg-card cbg-image-card ldc-animate" {{ block.shopify_attributes }}>
-            <div class="cbg-img-wrapper">
-              {% if block.settings.image != blank %}
-                {{ block.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'cbg-img' }}
-              {% else %}
-                {% if forloop.index == 1 %}
-                  <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.07_PM_1.jpg?v=1784350057" class="cbg-img" loading="lazy" width="1200" height="1200">
-                {% elsif forloop.index == 2 %}
-                  <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.09_PM_1.jpg?v=1784350057" class="cbg-img" loading="lazy" width="1200" height="1200">
-                {% elsif forloop.index == 4 %}
-                  <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.09_PM.jpg?v=1784350056" class="cbg-img" loading="lazy" width="1200" height="1200">
-                {% else %}
-                  {{ 'lifestyle-1' | placeholder_svg_tag: 'cbg-img placeholder-svg' }}
-                {% endif %}
-              {% endif %}
-              <div class="cbg-overlay"></div>
-            </div>
-            
-            <div class="cbg-content">
-              {% if block.settings.heading != blank %}
-                <h3 class="cbg-heading {% if block.settings.use_script_font %}cbg-script-font{% endif %}">{{ block.settings.heading }}</h3>
-              {% endif %}
-              {% if block.settings.subtext != blank %}
-                <p class="cbg-subtext">{{ block.settings.subtext }}</p>
-              {% endif %}
-              {% if block.settings.button_label != blank %}
-                <a href="{{ block.settings.button_link | default: '#' }}" class="cbg-btn">{{ block.settings.button_label }}</a>
-              {% endif %}
-            </div>
-          </div>
-
-        {% when 'text_card' %}
-          <div class="cbg-card cbg-text-card {% if block.settings.vintage_layout %}cbg-vintage-card{% endif %} ldc-animate" style="background-color: {{ block.settings.bg_color }};" {{ block.shopify_attributes }}>
-            <div class="cbg-text-content">
-              {% if block.settings.vintage_layout %}
-                <div class="cbg-vintage-crest">
-                  <span>LDC</span>
-                </div>
-              {% endif %}
-              {% if block.settings.kicker != blank %}
-                <p class="cbg-kicker {% if block.settings.vintage_layout %}cbg-vintage-kicker{% endif %}">{{ block.settings.kicker }}</p>
-              {% endif %}
-              {% if block.settings.heading != blank %}
-                <h3 class="cbg-heading-large {% if block.settings.vintage_layout %}cbg-vintage-heading{% endif %} {% if block.settings.use_script_font %}cbg-script-font{% endif %}">{{ block.settings.heading }}</h3>
-              {% endif %}
-              {% if block.settings.vintage_layout %}
-                <div class="cbg-vintage-divider">
-                  <span class="cbg-line"></span>
-                  <span class="cbg-ornament">✦</span>
-                  <span class="cbg-line"></span>
-                </div>
-              {% endif %}
-              {% if block.settings.text != blank %}
-                <div class="cbg-richtext {% if block.settings.vintage_layout %}cbg-vintage-richtext{% endif %}">{{ block.settings.text }}</div>
-              {% endif %}
-            </div>
-          </div>
-      {% endcase %}
+      <div class="cbg-card cbg-image-card ldc-animate" {{ block.shopify_attributes }}>
+        <div class="cbg-img-wrapper">
+          {% if block.settings.image != blank %}
+            {{ block.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'cbg-img' }}
+          {% else %}
+            {% if forloop.index == 1 %}
+              <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.07_PM_1.jpg?v=1784350057" class="cbg-img" loading="lazy" width="1200" height="1200">
+            {% elsif forloop.index == 2 %}
+              <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.09_PM_1.jpg?v=1784350057" class="cbg-img" loading="lazy" width="1200" height="1200">
+            {% elsif forloop.index == 3 %}
+              <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_4.18.48_PM.jpg?v=1784632722" class="cbg-img" loading="lazy" width="1200" height="1200">
+            {% else %}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'cbg-img placeholder-svg' }}
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
     {% endfor %}
   </div>
 </div>
@@ -68,11 +25,7 @@
 <style>
   .cbg-section {
     padding: 60px 5% 0;
-    background-color: #111111;
-    background-image: url("https://cdn.shopify.com/s/files/1/0665/5036/6274/files/ChatGPT_Image_Jul_18_2026_02_48_48_PM.png?v=1784366339");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-color: #5A1F26; /* Burgundy */
     position: relative;
   }
 
@@ -90,11 +43,11 @@
 
   @media (min-width: 1024px) {
     .cbg-grid {
-      grid-template-columns: 1.2fr 1fr 1fr;
+      grid-template-columns: 1.2fr 1fr;
       grid-template-rows: minmax(320px, auto) minmax(320px, auto);
       grid-template-areas:
-        "card3 card1 card1"
-        "card3 card2 card4";
+        "card1 card2"
+        "card1 card3";
       gap: 24px;
     }
 
@@ -106,7 +59,6 @@
     .cbg-card:nth-child(1) { grid-area: card1; }
     .cbg-card:nth-child(2) { grid-area: card2; }
     .cbg-card:nth-child(3) { grid-area: card3; }
-    .cbg-card:nth-child(4) { grid-area: card4; }
   }
 
   .cbg-card {
@@ -127,7 +79,6 @@
   .cbg-image-card {
     flex-direction: column;
     justify-content: flex-end;
-    padding: 40px;
   }
 
   .cbg-img-wrapper {
@@ -146,209 +97,6 @@
     object-position: center;
     will-change: transform;
   }
-
-  .cbg-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
-  }
-
-  .cbg-content {
-    position: relative;
-    z-index: 2;
-    color: #ffffff;
-    max-width: 400px;
-  }
-
-  .cbg-heading {
-    margin: 0 0 10px 0;
-    font-size: 28px;
-    font-weight: 500;
-  }
-
-  .cbg-script-font {
-    font-family: 'ldc-font', sans-serif;
-    font-weight: normal;
-    text-transform: none;
-    letter-spacing: normal;
-    font-size: 1.5em; /* Scale up slightly compared to base */
-  }
-
-  .cbg-subtext {
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-  }
-
-  .cbg-btn {
-    display: inline-block;
-    background-color: #fdfbf7;
-    color: #06402b;
-    padding: 12px 24px;
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: background-color 0.2s ease;
-  }
-  
-  .cbg-btn:hover {
-    background-color: #e5e0d8;
-  }
-
-  /* Text Card */
-  .cbg-text-card {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 60px 40px;
-    color: #5A1F26;
-    position: relative;
-    background-color: #FAFAF7 !important;
-    backdrop-filter: none;
-  }
-
-  /* Vintage styling additions */
-  .cbg-vintage-card {
-    border: 1px solid #d3c4ad;
-    padding: 60px 50px;
-  }
-  
-  .cbg-vintage-card::before {
-    content: '';
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border: 1px solid #d3c4ad;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .cbg-vintage-crest {
-    width: 48px;
-    height: 48px;
-    border: 1px solid #d3c4ad;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 24px auto;
-    position: relative;
-    z-index: 2;
-  }
-
-  .cbg-vintage-crest::after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    right: 3px;
-    bottom: 3px;
-    border: 1px dashed #d3c4ad;
-    border-radius: 50%;
-  }
-
-  .cbg-vintage-crest span {
-    font-family: 'LDC', serif !important;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: #8c765c;
-    font-weight: 600;
-  }
-
-  .cbg-text-content {
-    max-width: 500px;
-    position: relative;
-    z-index: 2;
-  }
-
-  .cbg-kicker {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    font-weight: 600;
-    margin: 0 0 16px 0;
-    color: #5A1F26;
-  }
-
-  .cbg-vintage-kicker {
-    color: #8c765c;
-    letter-spacing: 0.25em;
-    font-family: 'Canela', serif !important;
-  }
-
-  .cbg-heading-large {
-    font-size: clamp(36px, 4vw, 56px);
-    margin: 0 0 24px 0;
-    line-height: 1.1;
-  }
-
-  .cbg-vintage-heading {
-    color: #5A1F26;
-    font-style: normal;
-    font-size: clamp(32px, 3.5vw, 44px);
-    letter-spacing: -0.01em;
-  }
-
-  .cbg-vintage-divider {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    margin: 20px auto 28px auto;
-    width: 60%;
-  }
-
-  .cbg-vintage-divider .cbg-line {
-    flex: 1;
-    height: 1px;
-    background-color: #d3c4ad;
-  }
-
-  .cbg-vintage-divider .cbg-ornament {
-    font-size: 10px;
-    color: #8c765c;
-  }
-
-  .cbg-richtext p {
-    font-size: 13px;
-    line-height: 1.6;
-    margin-bottom: 16px;
-  }
-  .cbg-richtext p:last-child {
-    margin-bottom: 0;
-  }
-
-  .cbg-vintage-richtext {
-    text-align: justify;
-    text-justify: inter-word;
-    color: #2b2b2b;
-  }
-
-  .cbg-vintage-richtext p {
-    font-size: 13.5px;
-    line-height: 1.75;
-    color: #3d3d3d;
-  }
-
-  .cbg-vintage-richtext p:first-of-type::first-letter {
-    font-family: 'LDC', serif !important;
-    font-size: 48px;
-    float: left;
-    line-height: 0.85;
-    margin-right: 10px;
-    margin-top: 4px;
-    color: #5A1F26;
-    font-weight: bold;
-  }
-
 </style>
 
 <script>
@@ -393,78 +141,7 @@
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Background Image"
-        },
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "everyday icons"
-        },
-        {
-          "type": "checkbox",
-          "id": "use_script_font",
-          "label": "Use script/secondary font for heading",
-          "default": true
-        },
-        {
-          "type": "textarea",
-          "id": "subtext",
-          "label": "Subtext",
-          "default": "Clean silhouettes, versatile tints, and easy-to-style frames for daily rotation."
-        },
-        {
-          "type": "text",
-          "id": "button_label",
-          "label": "Button Label",
-          "default": "shop"
-        },
-        {
-          "type": "url",
-          "id": "button_link",
-          "label": "Button Link"
-        }
-      ]
-    },
-    {
-      "type": "text_card",
-      "name": "Text Card",
-      "settings": [
-        {
-          "type": "color",
-          "id": "bg_color",
-          "label": "Background Color",
-          "default": "#fcf9f2"
-        },
-        {
-          "type": "checkbox",
-          "id": "vintage_layout",
-          "label": "Use vintage editorial layout",
-          "default": true
-        },
-        {
-          "type": "text",
-          "id": "kicker",
-          "label": "Small Kicker",
-          "default": "brand story"
-        },
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Large Heading",
-          "default": "Members Club"
-        },
-        {
-          "type": "checkbox",
-          "id": "use_script_font",
-          "label": "Use script/secondary font for heading",
-          "default": true
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text",
-          "default": "<p>Luce D'Oro Club makes sunglasses that pair strong design with comfortable everyday wear.</p>"
+          "label": "Image"
         }
       ]
     }
@@ -475,7 +152,7 @@
       "blocks": [
         { "type": "image_card" },
         { "type": "image_card" },
-        { "type": "text_card" },
+        { "type": "image_card" },
         { "type": "image_card" }
       ]
     }

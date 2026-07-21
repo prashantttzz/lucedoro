@@ -12,16 +12,16 @@
     "hero": {
       "type": "hero",
       "settings": {
-        "heading": "Frames for bright days and sharp looks",
+        "heading": "Your Frame. Your Shade. Your Signature .",
         "button_label": "customize"
       }
     },
     "custom_featured_collection": {
       "type": "custom-featured-collection",
       "settings": {
-        "heading": "signature sunglasses",
-        "subheading": "Statement frames made for daily wear, easy styling, and all-day comfort.",
-        "feature_text": "From bold acetate shapes to everyday essentials, discover sunglasses designed to stand out without trying too hard.",
+        "heading": "signature eyewear",
+        "subheading": "Distinctive frames, crafted for everyday wear and made to become your own.",
+        "feature_text": "Considered shapes, expressive colours, and timeless character. Eyewear made to become distinctly yours.",
         "feature_button_label": "shop all",
         "collection": "all"
       }
@@ -52,16 +52,6 @@
           }
         },
         "block_3": {
-          "type": "text_card",
-          "settings": {
-            "bg_color": "#fcf9f2",
-            "kicker": "brand story",
-            "heading": "Luce D'Oro Club",
-            "use_script_font": true,
-            "text": "<p>Luce D'Oro Club creates sunglasses with a refined point of view: strong shapes, rich materials, and a fit that feels effortless from morning to night.</p><p>Each frame is designed to balance comfort, clarity, and character, so it feels as good on the face as it looks in the mirror.</p><p>Our collections pair timeless lines with expressive details, giving you eyewear that works for everyday dressing while still feeling distinctive.</p><p>From understated classics to statement silhouettes, every pair is made to bring polish, confidence, and a little attitude to the way you see the world.</p><p>Welcome to Luce D'Oro Club.</p>"
-          }
-        },
-        "block_4": {
           "type": "image_card",
           "settings": {
             "heading": "",
@@ -73,54 +63,20 @@
       "block_order": [
         "block_1",
         "block_2",
-        "block_3",
-        "block_4"
+        "block_3"
       ],
       "settings": {}
     },
-    "custom_our_speciality": {
-      "type": "custom-our-speciality",
-      "blocks": {
-        "specialty_1": {
-          "type": "specialty",
-          "settings": {
-            "title": "premium frame design",
-            "text": "Every silhouette is shaped to feel modern, flattering, and easy to wear across seasons."
-          }
-        },
-        "specialty_2": {
-          "type": "specialty",
-          "settings": {
-            "title": "comfortable daily fit",
-            "text": "Lightweight construction and balanced proportions make each pair comfortable from morning to night."
-          }
-        },
-        "specialty_3": {
-          "type": "specialty",
-          "settings": {
-            "title": "quality tinted lenses",
-            "text": "Thoughtfully selected lenses add clarity, sun protection, and a polished finish to every frame."
-          }
-        }
-      },
-      "block_order": [
-        "specialty_1",
-        "specialty_2",
-        "specialty_3"
-      ],
-      "settings": {
-        "heading": "our speciality",
-        "right_heading": "why our frames stand out",
-        "description": "<p>Great sunglasses should do more than complete an outfit. They should feel comfortable, look distinctive, and become the pair you reach for every day. Our approach combines refined design, dependable materials, and wearable shapes that make a strong impression without losing practicality.</p>",
-        "button_label": "shop the collection"
-      }
+    "custom_our_story": {
+      "type": "custom-our-story",
+      "settings": {}
     }
   },
   "order": [
     "hero",
     "custom_featured_collection",
     "custom_parallax_image",
-    "custom_our_speciality",
+    "custom_our_story",
     "custom_bento_grid"
   ]
 }

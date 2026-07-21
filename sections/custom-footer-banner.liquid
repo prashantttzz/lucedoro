@@ -1,24 +1,13 @@
 <div class="cfb-section">
-  <div class="cfb-bg">
-    {% if section.settings.image != blank %}
-      {{ section.settings.image | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'cfb-bg-img' }}
-    {% else %}
-      <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/Screenshot_2026-07-18_122309.png?v=1784357607" class="cfb-bg-img" alt="Cozy Vintage Room" loading="lazy">
-    {% endif %}
-    <div class="cfb-overlay"></div>
-  </div>
-
-  <div class="cfb-content">
-    {% if section.settings.heading != blank %}
-      <h2 class="cfb-heading">{{ section.settings.heading }}</h2>
+  <div class="cfb-content ldc-animate">
+    <h2 class="cfb-heading">{{ section.settings.heading }}</h2>
+    {% if section.settings.subtext != blank %}
+      <p class="cfb-subtext">{{ section.settings.subtext }}</p>
     {% endif %}
     
     <div class="cfb-buttons">
       {% if section.settings.button_1_label != blank %}
         <a href="{{ section.settings.button_1_link | default: '#' }}" class="cfb-btn">{{ section.settings.button_1_label }}</a>
-      {% endif %}
-      {% if section.settings.button_2_label != blank %}
-        <a href="{{ section.settings.button_2_link | default: '#' }}" class="cfb-btn">{{ section.settings.button_2_label }}</a>
       {% endif %}
     </div>
   </div>
@@ -27,69 +16,46 @@
 <style>
   .cfb-section {
     position: relative;
-    height: 400px;
+    padding: 80px 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    overflow: hidden;
-    background-color: #111111;
-    background-image: url("https://cdn.shopify.com/s/files/1/0665/5036/6274/files/ChatGPT_Image_Jul_18_2026_02_48_48_PM.png?v=1784366339");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-color: #FAFAF7; /* Off-White to contrast with burgundy above/footer below */
     margin-top: 0;
   }
 
   @media (min-width: 768px) {
     .cfb-section {
-      height: 500px;
+      padding: 100px 20px;
     }
-  }
-
-  .cfb-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    overflow: hidden;
-  }
-
-  .cfb-bg-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    will-change: transform;
-  }
-
-  .cfb-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(17, 17, 17, 0.28);
   }
 
   .cfb-content {
     position: relative;
     z-index: 2;
-    padding: 0 20px;
+    max-width: 600px;
   }
 
   .cfb-heading {
     font-family: 'ldc-font', sans-serif !important;
-    font-size: clamp(32px, 5vw, 56px);
-    color: #FAFAF7;
-    margin: 0 0 30px 0;
+    font-size: clamp(36px, 6vw, 64px);
+    color: #5A1F26;
+    margin: 0 0 35px 0;
     font-weight: normal;
     font-style: normal;
     text-transform: none;
     letter-spacing: normal;
     line-height: 1.15;
+  }
+
+  .cfb-subtext {
+    font-family: 'Canela', serif !important;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #5A1F26;
+    margin: 0 auto 35px auto;
+    max-width: 500px;
   }
 
   .cfb-buttons {
@@ -101,98 +67,57 @@
 
   .cfb-btn {
     display: inline-block;
-    background-color: #FAFAF7;
-    color: #2E3B33; /* Deep Forest Green */
-    border: 1px solid #FAFAF7;
-    padding: 12px 28px;
+    background-color: #5A1F26;
+    color: #FAFAF7;
+    border: 1px solid #5A1F26;
+    padding: 14px 32px;
     font-family: 'Canela', serif;
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.15em;
-    text-transform: none;
+    text-transform: uppercase;
     text-decoration: none;
     transition: all 0.3s ease;
   }
 
   .cfb-btn:hover {
-    background-color: transparent;
-    color: #FAFAF7;
+    background-color: #FAFAF7;
+    color: #5A1F26;
   }
 </style>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const cfbBgs = document.querySelectorAll('.cfb-bg-img');
-    if (cfbBgs.length === 0) return;
-
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          cfbBgs.forEach((bg) => {
-            const container = bg.closest('.cfb-section');
-            if (container) {
-              const rect = container.getBoundingClientRect();
-              const windowHeight = window.innerHeight;
-              
-              // Only animate if visible in the viewport
-              if (rect.top <= windowHeight && rect.bottom >= 0) {
-                // translate relative to scroll
-                const scrollDistance = windowHeight - rect.top;
-                bg.style.transform = `translateY(${scrollDistance * 0.08}px)`;
-              }
-            }
-          });
-          ticking = false;
-        });
-        ticking = true;
-      }
-    });
-  });
-</script>
-
 {% schema %}
 {
-  "name": "Footer Banner",
+  "name": "Join the Club",
   "tag": "section",
   "settings": [
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Background Image"
-    },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "find your next signature pair"
+      "default": "Join the Club"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Sign up for exclusive access to our newest collections, private sales, and behind-the-scenes content."
     },
     {
       "type": "text",
       "id": "button_1_label",
-      "label": "Button 1 Label",
-      "default": "shop new arrivals"
+      "label": "Button Label",
+      "default": "sign up"
     },
     {
       "type": "url",
       "id": "button_1_link",
-      "label": "Button 1 Link"
-    },
-    {
-      "type": "text",
-      "id": "button_2_label",
-      "label": "Button 2 Label",
-      "default": "shop best sellers"
-    },
-    {
-      "type": "url",
-      "id": "button_2_link",
-      "label": "Button 2 Link"
+      "label": "Button Link"
     }
   ],
   "presets": [
     {
-      "name": "Footer Banner"
+      "name": "Join the Club"
     }
   ]
 }

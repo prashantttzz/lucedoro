@@ -63,7 +63,7 @@
 
     <!-- Column 5: Newsletter & Giant Text Logo -->
     <div class="footer-col-newsletter">
-      <h3 class="footer-heading">{{ section.settings.newsletter_heading | default: "JOIN OUR 'OHANA" }}</h3>
+      <h3 class="footer-heading">{{ section.settings.newsletter_heading | default: "JOIN OUR CLUB" }}</h3>
       
       {%- form 'customer', id: 'FooterNewsletterForm', class: 'footer-newsletter-form' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
@@ -133,10 +133,6 @@
 <style>
   .custom-footer {
     background-color: var(--ldc-burgundy); /* Brand Burgundy */
-    background-image: url("https://cdn.shopify.com/s/files/1/0665/5036/6274/files/ChatGPT_Image_Jul_18_2026_02_48_48_PM.png?v=1784366339");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     color: var(--ldc-white); /* Brand Off-White */
     padding: 68px 4% 26px 4%;
     font-family: 'Canela', serif !important;
@@ -498,7 +494,7 @@
       "type": "text",
       "id": "newsletter_heading",
       "label": "Newsletter Heading",
-      "default": "JOIN OUR 'OHANA"
+      "default": "JOIN OUR CLUB"
     },
     {
       "type": "text",
