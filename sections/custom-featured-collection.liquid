@@ -91,26 +91,17 @@
               {% endif %}
             </div>
 
-            <product-form class="cfc-add-to-cart-wrapper">
-              {%- form 'product',
-                product,
-                id: product.id,
-                class: 'cfc-form',
-                novalidate: 'novalidate',
-                data-type: 'add-to-cart-form'
-              -%}
-                <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+            {% unless product.available %}
+              <div class="cfc-add-to-cart-wrapper cfc-sold-out-wrapper">
                 <button
-                  type="submit"
-                  class="cfc-add-to-cart-btn"
-                  {% unless product.available %}
-                    disabled
-                  {% endunless %}
+                  type="button"
+                  class="cfc-add-to-cart-btn cfc-sold-out-btn"
+                  disabled
                 >
-                  {% if product.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+                  SOLD OUT
                 </button>
-              {%- endform -%}
-            </product-form>
+              </div>
+            {% endunless %}
           </a>
 
           <div class="cfc-product-info">
@@ -388,6 +379,11 @@
     z-index: 10;
   }
 
+  .cfc-sold-out-wrapper {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
   .cfc-product-image-wrapper:hover .cfc-add-to-cart-wrapper {
     opacity: 1;
     transform: translateY(0);
@@ -405,6 +401,15 @@
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
+
+  .cfc-sold-out-btn {
+    background-color: rgba(90, 3, 3, 0.8) !important;
+    color: #fafaf7 !important;
+    border: 1px solid rgba(250, 250, 247, 0.2) !important;
+    cursor: not-allowed !important;
+    padding: 10px 18px !important;
+  }
+
   .cfc-add-to-cart-btn:hover {
     background-color: #7a2b35;
   }
