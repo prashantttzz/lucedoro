@@ -1,0 +1,35 @@
+<div class="c-product-gallery">
+  <div class="c-product-gallery__main">
+    {%- for tag in product.tags -%}
+      {%- if tag contains 'NEW' or tag contains 'SALE' or tag contains 'LIMITED' -%}
+        <span class="c-product-gallery__badge">{{ tag }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+    
+    {%- if product.featured_image != blank -%}
+      <img 
+        src="{{ product.featured_image | image_url: width: 1024 }}" 
+        :src="currentImage || '{{ product.featured_image | image_url: width: 1024 }}'"
+        alt="{{ product.title | escape }}" 
+        loading="eager" 
+      />
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
+
+  {%- if product.media.size > 1 -%}
+    <div class="c-product-gallery__thumbnails">
+      {%- for media in product.media -%}
+        <button 
+          class="c-product-gallery__thumbnail"
+          :class="{ 'is-active': currentImage === '{{ media.src | image_url: width: 1024 }}' }"
+          @click="setCurrentImage('{{ media.src | image_url: width: 1024 }}')"
+          aria-label="Load image {{ forloop.index }}"
+        >
+          <img src="{{ media.src | image_url: width: 150, height: 150, crop: 'center' }}" alt="{{ media.alt | escape }}" loading="lazy" />
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>

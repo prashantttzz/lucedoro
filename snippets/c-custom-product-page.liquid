@@ -1,0 +1,1505 @@
+{%- comment -%}
+  Custom 2-Column 3-Step Product Customizer Page (Vintage Minimal Luxury Theme)
+{%- endcomment -%}
+
+<div class="c-pdp-customizer">
+  <div class="c-pdp-container">
+    <!-- Left Column: Horizontal Scrollable Photo Gallery Showcase -->
+    <div class="c-pdp-left">
+      <div class="c-pdp-gallery-wrap" id="c-pdp-gallery-wrap">
+        {% if product.media.size > 0 %}
+          {% for media in product.media %}
+            {% if media.media_type == 'image' %}
+              <div class="c-pdp-gallery-item">
+                <img
+                  src="{{ media | image_url: width: 1400 }}"
+                  alt="{{ media.alt | default: product.title }}"
+                  class="c-pdp-main-img"
+                  {% if forloop.first %}
+                    id="c-pdp-main-image"
+                  {% endif %}
+                >
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% elsif product.featured_image != blank %}
+          <div class="c-pdp-gallery-item">
+            <img
+              id="c-pdp-main-image"
+              src="{{ product.featured_image | image_url: width: 1400 }}"
+              alt="{{ product.title }}"
+              class="c-pdp-main-img"
+            >
+          </div>
+        {% else %}
+          <div class="c-pdp-gallery-item">
+            {{ 'product-1' | placeholder_svg_tag: 'c-pdp-main-img' }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if product.media.size > 1 %}
+        <div class="c-pdp-gallery-nav">
+          <button type="button" class="c-pdp-nav-btn" onclick="pdpScrollGallery(-1)" aria-label="Previous photo">
+            &larr;
+          </button>
+          <div class="c-pdp-nav-dots" id="c-pdp-nav-dots">
+            {% for media in product.media %}
+              <span class="c-pdp-nav-dot{% if forloop.first %} is-active{% endif %}"></span>
+            {% endfor %}
+          </div>
+          <button type="button" class="c-pdp-nav-btn" onclick="pdpScrollGallery(1)" aria-label="Next photo">
+            &rarr;
+          </button>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Minimalist 3-Step Wizard -->
+    <div class="c-pdp-right">
+      <!-- Progress Bar & Top Navigation (Revealed when customization starts) -->
+      <div class="c-pdp-header" id="c-pdp-header" style="display: none;">
+        <div class="c-pdp-progress-track">
+          <div id="c-pdp-progress-bar" class="c-pdp-progress-bar" style="width: 33.33%;"></div>
+        </div>
+        <div class="c-pdp-step-indicator">
+          <span id="c-pdp-step-label">step 1 of 3</span>
+          <a href="/collections/all" class="c-pdp-close-btn" aria-label="Close customizer">&times;</a>
+        </div>
+      </div>
+
+      <!-- Step Containers -->
+      <div class="c-pdp-wizard-body">
+        <!-- Product Overview & Default Description -->
+        <div class="c-pdp-overview" id="c-pdp-overview">
+          <div class="c-pdp-title-row">
+            <h1 class="c-pdp-product-name">{{ product.title | downcase }}</h1>
+            <div class="c-pdp-product-price">{{ product.price | money }}</div>
+          </div>
+
+          <div class="c-pdp-open-desc">
+            {% if product.description != blank %}
+              {{ product.description }}
+            {% else %}
+              <p>
+                Handcrafted with premium optical materials, engineered for lightweight comfort and timeless luxury
+                styling.
+              </p>
+            {% endif %}
+          </div>
+
+          <div class="c-pdp-spec-list">
+            <span>Lens Width: 51mm</span>
+            <span>Bridge: 20mm</span>
+            <span>Temple: 145mm</span>
+          </div>
+
+          <button
+            type="button"
+            class="c-pdp-start-btn"
+            onclick="pdpStartCustomizing()"
+          >
+            CUSTOMIZE LENSES &rarr;
+          </button>
+        </div>
+
+        <!-- STEP 1: Frame & Lens Selection (Revealed on click) -->
+        <div id="c-pdp-step-1" class="c-pdp-step-panel" style="display: none;">
+          <button type="button" class="c-pdp-back-btn" onclick="pdpShowOverview()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>back to product info</span>
+          </button>
+
+          <span class="c-pdp-kicker">customization wizard</span>
+          <h2 class="c-pdp-heading">select frame & lens type</h2>
+
+          <!-- Frame Options if multiple variants -->
+          {% if product.variants.size > 1 %}
+            <div class="c-pdp-section-label">frame color</div>
+            <div class="c-pdp-frame-swatches" id="c-pdp-frame-swatches">
+              {% for variant in product.variants %}
+                <div
+                  class="c-pdp-frame-swatch{% if forloop.first %} is-selected{% endif %}"
+                  data-variant-id="{{ variant.id }}"
+                  data-image-src="{{ variant.featured_image | image_url: width: 1400 }}"
+                  onclick="pdpSelectVariant(this, {{ variant.id }}, '{{ variant.featured_image | image_url: width: 1400 }}')"
+                >
+                  <img src="{{ variant.featured_image | image_url: width: 200 }}" alt="{{ variant.title }}">
+                  <span>{{ variant.title | downcase }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="c-pdp-section-label" style="margin-top: 28px;">lens type</div>
+          <div class="c-pdp-options-list" id="c-pdp-type-list">
+            <!-- Populated via JavaScript -->
+          </div>
+        </div>
+
+        <!-- STEP 2: Prescription Upload (Signature Tints + Prescription / Optical Clear only) -->
+        <div id="c-pdp-step-2" class="c-pdp-step-panel" style="display: none;">
+          <button type="button" class="c-pdp-back-btn" onclick="pdpPrevStep()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>previous step</span>
+          </button>
+
+          <span class="c-pdp-kicker">customization wizard</span>
+          <h2 class="c-pdp-heading">add your prescription</h2>
+
+          <div class="c-pdp-upload-container" id="c-pdp-upload-zone" onclick="document.getElementById('c-pdp-rx-file-input').click()">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="c-pdp-upload-icon">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+            </svg>
+            <div class="c-pdp-upload-text-main">click or drag to upload prescription</div>
+            <div class="c-pdp-upload-text-sub">support files: .jpg, .png, .pdf (max 10mb)</div>
+            <input type="file" id="c-pdp-rx-file-input" style="display: none;" accept=".jpg,.jpeg,.png,.pdf">
+          </div>
+
+          <div class="c-pdp-upload-success" id="c-pdp-upload-success" style="display: none;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="c-pdp-success-icon">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <div class="c-pdp-upload-success-info">
+              <div class="c-pdp-success-title">prescription uploaded successfully</div>
+              <div class="c-pdp-success-filename" id="c-pdp-uploaded-filename"></div>
+            </div>
+            <button type="button" class="c-pdp-upload-replace-btn" onclick="event.stopPropagation(); document.getElementById('c-pdp-rx-file-input').click()">replace file</button>
+          </div>
+
+          <div class="c-pdp-upload-error" id="c-pdp-upload-error" style="display: none;">
+            please upload a valid jpg, png, or pdf file.
+          </div>
+
+          <button
+            type="button"
+            id="c-pdp-rx-continue-btn"
+            class="c-pdp-start-btn"
+            style="margin-top: 24px; display: none;"
+            onclick="pdpNextStep()"
+          >
+            continue &rarr;
+          </button>
+        </div>
+
+        <!-- STEP 3: Lens Tint Color -->
+        <div id="c-pdp-step-3" class="c-pdp-step-panel" style="display: none;">
+          <button type="button" class="c-pdp-back-btn" onclick="pdpPrevStep()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>previous step</span>
+          </button>
+
+          <span class="c-pdp-kicker">customization wizard</span>
+          <h2 class="c-pdp-heading">select lens tint color</h2>
+
+          <div class="c-pdp-tint-tabs" id="c-pdp-tint-tabs">
+            <button type="button" class="c-pdp-tint-tab is-active" data-tint="solid" onclick="pdpSwitchTintTab('solid')">solid tints</button>
+            <button type="button" class="c-pdp-tint-tab" data-tint="gradient" onclick="pdpSwitchTintTab('gradient')">gradient tints</button>
+          </div>
+
+          <div class="c-pdp-color-grid" id="c-pdp-color-grid-solid">
+            <!-- Populated via JavaScript -->
+          </div>
+
+          <div class="c-pdp-color-grid" id="c-pdp-color-grid-gradient" style="display: none;">
+            <!-- Populated via JavaScript -->
+          </div>
+        </div>
+
+        <!-- STEP 4: Order Review & Cart -->
+        <div id="c-pdp-step-4" class="c-pdp-step-panel" style="display: none;">
+          <button type="button" class="c-pdp-back-btn" onclick="pdpPrevStep()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>previous step</span>
+          </button>
+
+          <span class="c-pdp-kicker">final specification</span>
+          <h2 class="c-pdp-heading">review your custom order</h2>
+
+          <div class="c-pdp-summary-card">
+            <div class="c-pdp-summary-row">
+              <span>frame model</span>
+              <strong>{{ product.title | downcase }}</strong>
+            </div>
+            <div class="c-pdp-summary-row">
+              <span>frame color</span>
+              <strong id="c-pdp-summary-frame-color">-</strong>
+            </div>
+            <div class="c-pdp-summary-row">
+              <span>lens type</span>
+              <strong id="c-pdp-summary-type">standard</strong>
+            </div>
+            <div class="c-pdp-summary-row">
+              <span>lens finish</span>
+              <strong id="c-pdp-summary-finish">n/a</strong>
+            </div>
+            <div class="c-pdp-summary-row">
+              <span>lens color</span>
+              <strong id="c-pdp-summary-color">n/a</strong>
+            </div>
+            <div class="c-pdp-summary-row">
+              <span>prescription uploaded</span>
+              <strong id="c-pdp-summary-rx">no</strong>
+            </div>
+            <div class="c-pdp-summary-divider"></div>
+            <div class="c-pdp-summary-row">
+              <span>frame price</span>
+              <strong id="c-pdp-summary-frame-price">{{ product.price | money }}</strong>
+            </div>
+            <div class="c-pdp-summary-row">
+              <span>lens upgrade</span>
+              <strong id="c-pdp-summary-lens-price">+AED 0</strong>
+            </div>
+            <div class="c-pdp-summary-divider"></div>
+            <div class="c-pdp-summary-row c-pdp-summary-total">
+              <span>total custom investment</span>
+              <strong id="c-pdp-summary-price">{{ product.price | money }}</strong>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            id="c-pdp-add-to-cart-btn"
+            class="c-pdp-submit-btn"
+            onclick="pdpAddToCart()"
+          >
+            ADD TO CART &bull; <span id="c-pdp-btn-price">{{ product.price | money }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Width Vintage Parallax Image Banner -->
+  <div
+    class="c-pdp-parallax-banner"
+    style="background-image: url('https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.09_PM.jpg?v=1784350056');"
+  >
+    <div class="c-pdp-parallax-overlay"></div>
+  </div>
+
+  <!-- Similar Products Section -->
+  <section class="c-pdp-similar-section">
+    <div class="c-pdp-similar-header">
+      <span class="c-pdp-similar-kicker">curated collection</span>
+      <h2 class="c-pdp-similar-title">similar frames</h2>
+    </div>
+
+    <div class="c-pdp-similar-grid">
+      {% assign rec_products = collections.all.products %}
+      {% assign count = 0 %}
+      {% for rec in rec_products %}
+        {% if rec.id != product.id and count < 4 %}
+          <a href="{{ rec.url }}" class="c-pdp-sim-card">
+            <div class="c-pdp-sim-image-box">
+              {% if rec.featured_image != blank %}
+                <img src="{{ rec.featured_image | image_url: width: 600 }}" alt="{{ rec.title }}" loading="lazy">
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag }}
+              {% endif %}
+              <div class="c-pdp-sim-hover-tag">view frame &rarr;</div>
+            </div>
+            <div class="c-pdp-sim-info">
+              <h3 class="c-pdp-sim-name">{{ rec.title | downcase }}</h3>
+              <span class="c-pdp-sim-price">{{ rec.price | money }}</span>
+            </div>
+          </a>
+          {% assign count = count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Vintage Minimal Luxury Theme */
+  .c-pdp-customizer {
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    background: #fafaf7;
+    color: #2c2c2c;
+    font-family: 'Canela', serif !important;
+    padding-top: 0px;
+  }
+
+  .c-pdp-container {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    min-height: calc(100vh - 80px);
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  @media (max-width: 989px) {
+    .c-pdp-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Left Column: Horizontal Scrollable Photo Gallery */
+  .c-pdp-left {
+    background: #f4f1ea;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0 0 0;
+    position: relative;
+    border-right: 1px solid rgba(90, 31, 38, 0.08);
+    overflow: hidden;
+  }
+
+  .c-pdp-gallery-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .c-pdp-gallery-wrap::-webkit-scrollbar {
+    display: none;
+  }
+
+  .c-pdp-gallery-item {
+    min-width: 100%;
+    width: 100%;
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    padding: 30px;
+  }
+
+  .c-pdp-main-img {
+    width: 85%;
+    max-width: 650px;
+    height: auto;
+    max-height: calc(100vh - 180px);
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .c-pdp-gallery-nav {
+    position: absolute;
+    bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 5;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    padding: 6px 16px;
+    border-radius: 30px;
+    border: 1px solid rgba(90, 31, 38, 0.1);
+  }
+
+  .c-pdp-nav-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #5a1f26;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: opacity 0.2s ease;
+  }
+  .c-pdp-nav-btn:hover {
+    opacity: 0.6;
+  }
+
+  .c-pdp-nav-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .c-pdp-nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(90, 31, 38, 0.25);
+    transition: all 0.3s ease;
+  }
+
+  .c-pdp-nav-dot.is-active {
+    background: #5a1f26;
+    width: 14px;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 989px) {
+    .c-pdp-gallery-item {
+      min-height: 380px;
+    }
+  }
+
+  /* Right Column: Minimal Wizard */
+  .c-pdp-right {
+    padding: 48px 56px;
+    display: flex;
+    flex-direction: column;
+    background: #fafaf7;
+  }
+
+  @media (max-width: 767px) {
+    .c-pdp-right {
+      padding: 28px 20px;
+    }
+
+    /* Mobile: Display Customize Button BEFORE description */
+    .c-pdp-overview {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .c-pdp-title-row {
+      order: 1;
+    }
+    .c-pdp-start-btn {
+      order: 2;
+      margin-bottom: 24px;
+    }
+    .c-pdp-open-desc {
+      order: 3;
+    }
+    .c-pdp-spec-list {
+      order: 4;
+    }
+  }
+
+  .c-pdp-header {
+    margin-bottom: 32px;
+  }
+
+  .c-pdp-progress-track {
+    width: 100%;
+    height: 2px;
+    background: rgba(90, 31, 38, 0.08);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .c-pdp-progress-bar {
+    height: 100%;
+    background: #5a1f26;
+    transition: width 0.4s ease;
+  }
+
+  .c-pdp-step-indicator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #8c8275;
+    text-transform: lowercase;
+  }
+
+  .c-pdp-close-btn {
+    font-size: 22px;
+    color: #5a1f26;
+    text-decoration: none;
+    line-height: 1;
+    transition: opacity 0.2s ease;
+  }
+  .c-pdp-close-btn:hover {
+    opacity: 0.6;
+  }
+
+  .c-pdp-kicker {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8c8275;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .c-pdp-heading {
+    font-family: 'ldc-font', sans-serif !important;
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-weight: normal;
+    margin-bottom: 20px;
+    color: #5a1f26;
+    text-transform: lowercase;
+    line-height: 1.15;
+  }
+
+  /* Product Overview & Open Description */
+  .c-pdp-overview {
+    margin-bottom: 28px;
+  }
+
+  .c-pdp-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+  }
+
+  .c-pdp-product-name {
+    font-family: 'ldc-font', sans-serif !important;
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: normal;
+    color: #5a1f26;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .c-pdp-product-price {
+    font-size: 20px;
+    font-weight: 600;
+    color: #5a1f26;
+    font-family: 'Canela', serif;
+  }
+
+  .c-pdp-open-desc {
+    font-family: 'Canela', serif !important;
+    font-size: 15px;
+    color: #4a443e;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(90, 31, 38, 0.08);
+  }
+
+  .c-pdp-open-desc p {
+    margin: 0 0 12px 0;
+  }
+
+  .c-pdp-open-desc p:last-child {
+    margin-bottom: 0;
+  }
+
+  .c-pdp-spec-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8c8275;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(90, 31, 38, 0.08);
+  }
+
+  .c-pdp-start-btn {
+    width: 100%;
+    padding: 18px 24px;
+    background: #5a1f26;
+    color: #fafaf7;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .c-pdp-start-btn:hover {
+    background: #3d0c11;
+    transform: translateY(-1px);
+  }
+
+  .c-pdp-section-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5a1f26;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .c-pdp-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    color: #5a1f26;
+    padding: 0;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 16px;
+    text-transform: lowercase;
+    transition: opacity 0.2s ease;
+  }
+  .c-pdp-back-btn:hover {
+    opacity: 0.6;
+  }
+
+  /* Frame Swatches UI */
+  .c-pdp-frame-swatches {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    margin-bottom: 24px;
+    padding-bottom: 4px;
+  }
+
+  .c-pdp-frame-swatch {
+    border: 1px solid rgba(90, 31, 38, 0.12);
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    width: 95px;
+    flex-shrink: 0;
+    text-align: center;
+    background: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  .c-pdp-frame-swatch:hover,
+  .c-pdp-frame-swatch.is-selected {
+    border-color: #5a1f26;
+    box-shadow: 0 2px 8px rgba(90, 31, 38, 0.08);
+  }
+
+  .c-pdp-frame-swatch img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
+  .c-pdp-frame-swatch span {
+    font-size: 10px;
+    display: block;
+    margin-top: 4px;
+    color: #2c2c2c;
+    text-transform: lowercase;
+  }
+
+  /* Step 1 Vintage Minimal Options List */
+  .c-pdp-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .c-pdp-type-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 4px;
+    margin-bottom: 0;
+    border: none;
+    border-bottom: 1px solid rgba(90, 31, 38, 0.08);
+    border-radius: 0;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.2s ease;
+  }
+
+  .c-pdp-type-card:hover,
+  .c-pdp-type-card.is-selected {
+    background: transparent;
+    border-bottom-color: #5a1f26;
+  }
+
+  .c-pdp-type-card.is-selected .c-pdp-type-title {
+    color: #5a1f26;
+    font-weight: 600;
+  }
+
+  .c-pdp-type-info {
+    flex: 1;
+    padding-right: 16px;
+  }
+
+  .c-pdp-type-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c2c2c;
+    margin-bottom: 2px;
+  }
+
+  .c-pdp-type-desc {
+    font-size: 11px;
+    color: #6e675f;
+    line-height: 1.35;
+  }
+
+  .c-pdp-type-price {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5a1f26;
+    white-space: nowrap;
+  }
+
+  /* Step 2 Prescription Upload UI */
+  .c-pdp-upload-container {
+    border: 1px dashed rgba(90, 31, 38, 0.25);
+    border-radius: 4px;
+    padding: 36px 20px;
+    text-align: center;
+    background: #f4f1ea;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .c-pdp-upload-container:hover {
+    border-color: #5a1f26;
+    background: #fff;
+  }
+  .c-pdp-upload-icon {
+    color: #5a1f26;
+    margin-bottom: 14px;
+    opacity: 0.7;
+  }
+  .c-pdp-upload-text-main {
+    font-size: 15px;
+    color: #2c2c2c;
+    margin-bottom: 6px;
+    text-transform: lowercase;
+  }
+  .c-pdp-upload-text-sub {
+    font-size: 11px;
+    color: #8c8275;
+  }
+  .c-pdp-upload-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 28px 20px;
+    border: 1px solid rgba(90, 31, 38, 0.12);
+    border-radius: 4px;
+    background: #f4f1ea;
+    text-align: center;
+  }
+  .c-pdp-success-icon {
+    color: #3d6b3d;
+  }
+  .c-pdp-success-title {
+    font-size: 14px;
+    color: #3d6b3d;
+    text-transform: lowercase;
+  }
+  .c-pdp-success-filename {
+    font-size: 12px;
+    color: #6e675f;
+    background: rgba(90, 31, 38, 0.06);
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-top: 4px;
+  }
+  .c-pdp-upload-replace-btn {
+    background: none;
+    border: 1px solid #5a1f26;
+    color: #5a1f26;
+    padding: 7px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    text-transform: lowercase;
+    transition: all 0.2s ease;
+  }
+  .c-pdp-upload-replace-btn:hover {
+    background: #5a1f26;
+    color: #fff;
+  }
+  .c-pdp-upload-error {
+    color: #a13a3a;
+    margin-top: 14px;
+    font-size: 12px;
+  }
+
+  /* Step 3 Solid / Gradient Toggle */
+  .c-pdp-tint-tabs {
+    display: flex;
+    gap: 24px;
+    border-bottom: 1px solid rgba(90, 31, 38, 0.1);
+    margin-bottom: 20px;
+  }
+
+  .c-pdp-tint-tab {
+    background: none;
+    border: none;
+    padding: 0 0 10px 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: lowercase;
+    color: #8c8275;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .c-pdp-tint-tab:hover {
+    color: #5a1f26;
+  }
+
+  .c-pdp-tint-tab.is-active {
+    color: #5a1f26;
+    border-bottom-color: #5a1f26;
+  }
+
+  /* Step 3 Editorial Color List UI */
+  .c-pdp-color-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  /* 2-Column Compact Lens Color Grid */
+  .c-pdp-color-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 12px;
+    max-height: 440px;
+    overflow-y: auto;
+    padding-right: 6px;
+    margin-bottom: 24px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(90, 31, 38, 0.3) transparent;
+  }
+
+  .c-pdp-color-grid::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .c-pdp-color-grid::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .c-pdp-color-grid::-webkit-scrollbar-thumb {
+    background: rgba(90, 31, 38, 0.3);
+    border-radius: 4px;
+  }
+
+  .c-pdp-color-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 4px;
+    margin-bottom: 0;
+    border: none;
+    border-bottom: 1px solid rgba(90, 31, 38, 0.08);
+    border-radius: 0;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.2s ease;
+  }
+
+  .c-pdp-color-item:hover,
+  .c-pdp-color-item.is-selected {
+    background: transparent;
+    border-bottom-color: #5a1f26;
+  }
+
+  .c-pdp-color-item.is-selected .c-pdp-color-title {
+    color: #5a1f26;
+    font-weight: 600;
+  }
+
+  .c-pdp-color-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .c-pdp-color-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+  }
+
+  .c-pdp-color-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .c-pdp-color-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #2c2c2c;
+    line-height: 1.2;
+  }
+
+  .c-pdp-color-desc {
+    font-size: 10px;
+    color: #8c8275;
+    margin-top: 1px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .c-pdp-color-radio {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(90, 31, 38, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .c-pdp-color-item.is-selected .c-pdp-color-radio {
+    border-color: #5a1f26;
+  }
+
+  .c-pdp-color-item.is-selected .c-pdp-color-radio::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #5a1f26;
+  }
+
+  /* Step 3 Vintage Order Summary */
+  .c-pdp-summary-card {
+    background: #f4f1ea;
+    border: 1px solid rgba(90, 31, 38, 0.12);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+
+  .c-pdp-summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 12px;
+    color: #6e675f;
+    text-transform: lowercase;
+  }
+
+  .c-pdp-summary-row strong {
+    color: #2c2c2c;
+    font-weight: 600;
+  }
+
+  .c-pdp-summary-divider {
+    height: 1px;
+    background: rgba(90, 31, 38, 0.1);
+    margin: 16px 0;
+  }
+
+  .c-pdp-summary-total {
+    font-size: 15px;
+    margin-bottom: 0;
+  }
+  .c-pdp-summary-total strong {
+    color: #5a1f26;
+    font-size: 17px;
+  }
+
+  /* Vintage Call-To-Action Button */
+  .c-pdp-submit-btn {
+    width: 100%;
+    padding: 16px 24px;
+    background: #5a1f26;
+    color: #fafaf7;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .c-pdp-submit-btn:hover {
+    background: #3d0c11;
+    transform: translateY(-1px);
+  }
+
+  /* Vintage Parallax Banner */
+  .c-pdp-parallax-banner {
+    width: 100%;
+    height: 480px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    margin-top: 80px;
+    margin-bottom: 0;
+  }
+
+  .c-pdp-parallax-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(90, 31, 38, 0.12);
+  }
+
+  /* Similar Products Section */
+  .c-pdp-similar-section {
+    background-image: url('https://cdn.shopify.com/s/files/1/0665/5036/6274/files/ChatGPT_Image_Jul_18_2026_02_48_48_PM.png?v=1784366339');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    padding: 90px 40px;
+    border-bottom: 1px solid rgba(90, 31, 38, 0.08);
+  }
+
+  .c-pdp-similar-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .c-pdp-similar-kicker {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #ffffff;
+    opacity: 0.9;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .c-pdp-similar-title {
+    font-family: 'ldc-font', sans-serif !important;
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: normal;
+    color: #ffffff !important;
+    text-transform: lowercase;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  .c-pdp-similar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 989px) {
+    .c-pdp-similar-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .c-pdp-similar-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Unique Similar Product Cards */
+  .c-pdp-sim-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease;
+  }
+
+  .c-pdp-sim-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .c-pdp-sim-image-box {
+    width: 100%;
+    aspect-ratio: 1.1;
+    background: rgba(244, 241, 234, 0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(90, 31, 38, 0.12);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .c-pdp-sim-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: multiply;
+    transition: transform 0.4s ease;
+  }
+
+  .c-pdp-sim-card:hover .c-pdp-sim-image-box img {
+    transform: scale(1.06);
+  }
+
+  .c-pdp-sim-hover-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    opacity: 0;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #5a1f26;
+    background: rgba(250, 250, 247, 0.92);
+    backdrop-filter: blur(4px);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(90, 31, 38, 0.15);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .c-pdp-sim-card:hover .c-pdp-sim-hover-tag {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .c-pdp-sim-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    background: transparent;
+    border: none;
+  }
+
+  .c-pdp-sim-name {
+    font-family: 'Canela', serif !important;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff !important;
+    margin: 0;
+    text-transform: lowercase;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  .c-pdp-sim-price {
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff !important;
+    font-family: 'Canela', serif;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+  }
+</style>
+
+<script>
+  (function() {
+    const basePrice = {{ product.price }} / 100;
+    let selectedVariantId = {{ product.selected_or_first_available_variant.id }};
+    let selectedFrameColorName = "{{ product.selected_or_first_available_variant.title | escape }}";
+
+    // Dynamic lens type catalogue — edit here to add/remove/reprice lens types
+    const lensTypes = [
+      { id: 'sig-tints', title: 'Signature Tints', desc: 'Custom coloured non-prescription lenses.', price: 150 },
+      { id: 'sig-tints-rx', title: 'Signature Tints + Prescription', desc: 'Custom coloured prescription lenses.', price: 180 },
+      { id: 'digital-blue', title: 'Digital Blue', desc: 'Blue-light filtering lenses for everyday screen use.', price: 200 },
+      { id: 'optical-clear', title: 'Optical Clear', desc: 'Clear prescription lenses.', price: 180 }
+    ];
+
+    // Dynamic lens color catalogue — edit here to add/remove/rename colors
+    const solidColors = [
+      { name: 'Azure Blue', color: '#1e88e5' },
+      { name: 'Champagne', color: '#f7e7ce' },
+      { name: 'Emerald', color: '#2e7d32' },
+      { name: 'Honey Gold', color: '#fbc02d' },
+      { name: 'Lavender Mist', color: '#b39ddb' },
+      { name: 'Amber', color: '#ffb300' },
+      { name: 'Rose Blush', color: '#f48fb1' },
+      { name: 'Riviera Blue', color: '#00acc1' },
+      { name: 'Turquoise', color: '#00838f' },
+      { name: 'Burnt Amber', color: '#d84315' },
+      { name: 'Olive', color: '#558b2f' },
+      { name: 'Royal Violet', color: '#6a1b9a' }
+    ];
+
+    const gradientColors = [
+      { name: 'Golden Dusk Fade', color: 'linear-gradient(180deg, #fbc02d 0%, #d84315 100%)' },
+      { name: 'Coastal Fade', color: 'linear-gradient(180deg, #1e88e5 0%, #f7e7ce 100%)' },
+      { name: 'Chestnut Fade', color: 'linear-gradient(180deg, #8b5a2b 0%, #e9e2d6 100%)' },
+      { name: 'Ocean Fade', color: 'linear-gradient(180deg, #00838f 0%, #b39ddb 100%)' },
+      { name: 'Smoke Fade', color: 'linear-gradient(180deg, #37474f 0%, #cfd8dc 100%)' },
+      { name: 'Forest Fade', color: 'linear-gradient(180deg, #2e7d32 0%, #fbc02d 100%)' },
+      { name: 'Classic Green Fade', color: 'linear-gradient(180deg, #1b5e20 0%, #dcedc8 100%)' },
+      { name: 'Lagoon Fade', color: 'linear-gradient(180deg, #00acc1 0%, #558b2f 100%)' },
+      { name: 'Bordeaux Fade', color: 'linear-gradient(180deg, #5a1f26 0%, #f48fb1 100%)' },
+      { name: 'Ruby Fade', color: 'linear-gradient(180deg, #c62828 0%, #ffcdd2 100%)' },
+      { name: 'Espresso Fade', color: 'linear-gradient(180deg, #4e342e 0%, #d7ccc8 100%)' },
+      { name: 'Silver Fade', color: 'linear-gradient(180deg, #b0bec5 0%, #eceff1 100%)' },
+      { name: 'Sunset Fade', color: 'linear-gradient(180deg, #ff7043 0%, #ffca28 100%)' }
+    ];
+
+    let selectedType = null;
+    let selectedColor = null;
+    let selectedColorType = null; // 'solid' or 'gradient'
+    let rxFile = null;
+
+    // Panel flow per lens type — panel numbers map to c-pdp-step-N divs
+    function getStepsFlow(typeId) {
+      if (typeId === 'sig-tints') return [1, 3, 4];
+      if (typeId === 'sig-tints-rx') return [1, 2, 3, 4];
+      if (typeId === 'digital-blue') return [1, 4];
+      if (typeId === 'optical-clear') return [1, 2, 4];
+      return [1, 4];
+    }
+
+    let flow = [1];
+    let flowIndex = 0;
+
+    window.pdpSelectVariant = function(el, vId, imgSrc) {
+      selectedVariantId = vId;
+      selectedFrameColorName = el.querySelector('span') ? el.querySelector('span').textContent : selectedFrameColorName;
+      document.querySelectorAll('.c-pdp-frame-swatch').forEach(s => s.classList.remove('is-selected'));
+      el.classList.add('is-selected');
+
+      if (imgSrc) {
+        document.getElementById('c-pdp-main-image').src = imgSrc;
+      }
+    };
+
+    window.pdpScrollGallery = function(direction) {
+      const wrap = document.getElementById('c-pdp-gallery-wrap');
+      if (!wrap) return;
+      const scrollAmount = wrap.clientWidth;
+      wrap.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    };
+
+    const galleryWrap = document.getElementById('c-pdp-gallery-wrap');
+    if (galleryWrap) {
+      galleryWrap.addEventListener('scroll', () => {
+        const index = Math.round(galleryWrap.scrollLeft / galleryWrap.clientWidth);
+        const dots = document.querySelectorAll('.c-pdp-nav-dot');
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('is-active', i === index);
+        });
+      });
+    }
+
+    window.pdpStartCustomizing = function() {
+      document.getElementById('c-pdp-overview').style.display = 'none';
+      document.getElementById('c-pdp-header').style.display = 'block';
+      flow = [1];
+      flowIndex = 0;
+      pdpShowPanel(1);
+    };
+
+    window.pdpShowOverview = function() {
+      document.getElementById('c-pdp-overview').style.display = 'block';
+      document.getElementById('c-pdp-header').style.display = 'none';
+      [1, 2, 3, 4].forEach(n => document.getElementById(`c-pdp-step-${n}`).style.display = 'none');
+    };
+
+    function pdpShowPanel(panel) {
+      [1, 2, 3, 4].forEach(n => document.getElementById(`c-pdp-step-${n}`).style.display = n === panel ? 'block' : 'none');
+
+      document.getElementById('c-pdp-step-label').textContent = `step ${flowIndex + 1} of ${flow.length}`;
+      document.getElementById('c-pdp-progress-bar').style.width = ((flowIndex + 1) / flow.length * 100) + '%';
+
+      if (panel === 3 && selectedColorType) {
+        window.pdpSwitchTintTab(selectedColorType);
+      }
+
+      if (panel === 4) {
+        updateSummary();
+      }
+    }
+
+    // Advance to the next panel in the current flow
+    window.pdpNextStep = function() {
+      if (flowIndex >= flow.length - 1) return;
+      flowIndex += 1;
+      pdpShowPanel(flow[flowIndex]);
+    };
+
+    // Go back one panel in the current flow, or to product overview from the first panel
+    window.pdpPrevStep = function() {
+      if (flowIndex <= 0) {
+        pdpShowOverview();
+        return;
+      }
+      flowIndex -= 1;
+      pdpShowPanel(flow[flowIndex]);
+    };
+
+    window.pdpSwitchTintTab = function(tint) {
+      document.querySelectorAll('.c-pdp-tint-tab').forEach(tab => {
+        tab.classList.toggle('is-active', tab.dataset.tint === tint);
+      });
+      document.getElementById('c-pdp-color-grid-solid').style.display = tint === 'solid' ? 'grid' : 'none';
+      document.getElementById('c-pdp-color-grid-gradient').style.display = tint === 'gradient' ? 'grid' : 'none';
+    };
+
+    function renderTypes() {
+      const container = document.getElementById('c-pdp-type-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      lensTypes.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'c-pdp-type-card' + (selectedType && selectedType.id === t.id ? ' is-selected' : '');
+        card.innerHTML = `
+          <div class="c-pdp-type-info">
+            <div class="c-pdp-type-title">${t.title}</div>
+            <div class="c-pdp-type-desc">${t.desc}</div>
+          </div>
+          <div class="c-pdp-type-price">+ AED ${t.price}</div>
+        `;
+        card.onclick = () => {
+          selectedType = t;
+          if (t.id !== 'sig-tints' && t.id !== 'sig-tints-rx') {
+            selectedColor = null;
+            selectedColorType = null;
+          }
+          renderTypes();
+          flow = getStepsFlow(t.id);
+          flowIndex = 0;
+          window.pdpNextStep();
+        };
+        container.appendChild(card);
+      });
+    }
+
+    function renderColorGrid(containerId, colors, type) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      colors.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'c-pdp-color-item' + (selectedColor && selectedColor.name === c.name ? ' is-selected' : '');
+        item.innerHTML = `
+          <div class="c-pdp-color-left">
+            <span class="c-pdp-color-dot" style="background: ${c.color}"></span>
+            <div class="c-pdp-color-info">
+              <span class="c-pdp-color-title">${c.name}</span>
+            </div>
+          </div>
+          <div class="c-pdp-color-radio"></div>
+        `;
+        item.onclick = () => {
+          selectedColor = c;
+          selectedColorType = type;
+          renderColorGrid('c-pdp-color-grid-solid', solidColors, 'solid');
+          renderColorGrid('c-pdp-color-grid-gradient', gradientColors, 'gradient');
+          window.pdpNextStep();
+        };
+        container.appendChild(item);
+      });
+    }
+
+    // ------------------- PRESCRIPTION UPLOAD -------------------
+    const rxInput = document.getElementById('c-pdp-rx-file-input');
+    if (rxInput) {
+      rxInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        const errorEl = document.getElementById('c-pdp-upload-error');
+        const zoneEl = document.getElementById('c-pdp-upload-zone');
+        const successEl = document.getElementById('c-pdp-upload-success');
+        const continueBtn = document.getElementById('c-pdp-rx-continue-btn');
+
+        if (!validTypes.includes(file.type)) {
+          errorEl.style.display = 'block';
+          successEl.style.display = 'none';
+          zoneEl.style.display = 'block';
+          continueBtn.style.display = 'none';
+          rxFile = null;
+          return;
+        }
+
+        errorEl.style.display = 'none';
+        rxFile = file;
+        zoneEl.style.display = 'none';
+        successEl.style.display = 'flex';
+        continueBtn.style.display = 'block';
+        document.getElementById('c-pdp-uploaded-filename').textContent = file.name;
+      });
+    }
+
+    function updateSummary() {
+      document.getElementById('c-pdp-summary-frame-color').textContent = selectedFrameColorName.toLowerCase();
+      document.getElementById('c-pdp-summary-type').textContent = selectedType ? selectedType.title.toLowerCase() : 'n/a';
+      document.getElementById('c-pdp-summary-finish').textContent = selectedColorType ? (selectedColorType === 'solid' ? 'solid tint' : 'gradient tint') : 'n/a';
+      document.getElementById('c-pdp-summary-color').textContent = selectedColor ? selectedColor.name.toLowerCase() : 'n/a';
+      document.getElementById('c-pdp-summary-rx').textContent = rxFile ? 'yes' : 'no';
+
+      const lensPrice = selectedType ? selectedType.price : 0;
+      const total = basePrice + lensPrice;
+      document.getElementById('c-pdp-summary-frame-price').textContent = 'AED ' + basePrice.toFixed(2);
+      document.getElementById('c-pdp-summary-lens-price').textContent = '+ AED ' + lensPrice;
+      document.getElementById('c-pdp-summary-price').textContent = 'AED ' + total.toFixed(2);
+      document.getElementById('c-pdp-btn-price').textContent = 'AED ' + total.toFixed(2);
+    }
+
+    window.pdpAddToCart = function() {
+      const btn = document.getElementById('c-pdp-add-to-cart-btn');
+      btn.textContent = 'ADDING TO CART...';
+
+      const properties = {
+        'Frame Color': selectedFrameColorName,
+        'Lens Type': selectedType ? selectedType.title : 'N/A',
+        'Lens Finish': selectedColorType ? (selectedColorType === 'solid' ? 'Solid Tint' : 'Gradient Tint') : 'N/A',
+        'Lens Color': selectedColor ? selectedColor.name : 'N/A'
+      };
+
+      if (rxFile) {
+        properties['Prescription File'] = rxFile.name;
+      }
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{
+            id: selectedVariantId,
+            quantity: 1,
+            properties: properties
+          }]
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          btn.textContent = 'ADDED TO CART!';
+          setTimeout(() => {
+            window.location.href = '/cart';
+          }, 600);
+        } else {
+          btn.textContent = 'ERROR - TRY AGAIN';
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        btn.textContent = 'ERROR';
+      });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTypes();
+      renderColorGrid('c-pdp-color-grid-solid', solidColors, 'solid');
+      renderColorGrid('c-pdp-color-grid-gradient', gradientColors, 'gradient');
+    });
+  })();
+</script>

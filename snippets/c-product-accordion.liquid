@@ -1,0 +1,29 @@
+<div class="c-accordion">
+  <div 
+    class="c-accordion__header" 
+    @click="accordionOpen = !accordionOpen"
+  >
+    <span>Details</span>
+    <span class="c-accordion__icon" x-text="accordionOpen ? '−' : '+'"></span>
+  </div>
+  
+  <div 
+    class="c-accordion__content"
+    x-show="accordionOpen"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 max-h-0"
+    x-transition:enter-end="opacity-100 max-h-[1000px]"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100 max-h-[1000px]"
+    x-transition:leave-end="opacity-0 max-h-0"
+    style="display: none;"
+  >
+    <div style="padding-top: 16px;">
+      {%- if product.description != blank -%}
+        {{ product.description }}
+      {%- else -%}
+        <p>No details available for this product.</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

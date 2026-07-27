@@ -1,0 +1,39 @@
+<div class="c-product-info">
+  <!-- Breadcrumb -->
+  <div class="c-breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a>
+    <span>&gt;</span>
+    {%- if collection -%}
+      <a href="{{ collection.url }}">{{ collection.title }}</a>
+      <span>&gt;</span>
+    {%- endif -%}
+    <span>{{ product.title }}</span>
+  </div>
+
+  <!-- Header -->
+  <div class="c-product-info__header">
+    <h1 class="c-product-info__title">{{ product.title }}</h1>
+    
+    <div class="c-product-info__price-container">
+      <div class="c-product-info__price">
+        <template x-if="compareAtPrice">
+          <span class="c-product-info__compare-price" x-text="compareAtPrice"></span>
+        </template>
+        <span x-text="price">{{ product.price | money }}</span>
+      </div>
+      <div class="c-product-info__currency">{{ cart.currency.iso_code }}</div>
+    </div>
+  </div>
+
+  <!-- Reviews Summary (Placeholder) -->
+  <div class="c-product-info__reviews">
+    <span class="stars">★★★★★</span>
+    <span>19 reviews</span>
+  </div>
+
+  <!-- Options and Form -->
+  {% render 'c-product-options' %}
+  
+  <!-- Details Accordion -->
+  {% render 'c-product-accordion' %}
+</div>

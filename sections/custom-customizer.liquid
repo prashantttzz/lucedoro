@@ -1,0 +1,1951 @@
+{% comment %}
+  Premium Full-Page Eyewear & Lens Customizer for Luce D'Oro Club
+{% endcomment %}
+
+<div class="ldc-customizer-section color-{{ section.settings.color_scheme }}">
+  <!-- VIEW 1: FRAME GALLERY SELECTION -->
+  <div id="ldc-gallery-view" class="ldc-gallery-container">
+    <!-- 1. EDITORIAL LIFESTYLE HERO BANNER -->
+    {%- liquid
+      assign hero_img = section.settings.hero_image
+      if hero_img == blank
+        assign hero_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM.jpg?v=1784350056'
+      else
+        assign hero_url = hero_img | image_url: width: 2400
+      endif
+    -%}
+    <div class="ldc-gallery-hero" style="background-image: url('{{ hero_url }}');">
+      <div class="ldc-hero-overlay"></div>
+      <div class="ldc-hero-content">
+        {%- if section.settings.hero_kicker != blank -%}
+          <span class="ldc-hero-subtitle">{{ section.settings.hero_kicker | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.hero_title != blank -%}
+          <h2 class="ldc-hero-title">{{ section.settings.hero_title | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.hero_desc != blank -%}
+          <p class="ldc-hero-desc">{{ section.settings.hero_desc | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.hero_cta_label != blank -%}
+          <a href="{{ section.settings.hero_cta_link | default: '#ldc-gallery-grid' }}" class="ldc-hero-btn">
+            {{ section.settings.hero_cta_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- 2. PROMOTIONAL FEATURE BANNERS (scattered into the product grid as bento tiles via JS) -->
+    <template id="ldc-promo-tiles-template">
+      {%- liquid
+        assign p1_img = section.settings.promo1_image
+        if p1_img == blank
+          assign p1_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068'
+        else
+          assign p1_url = p1_img | image_url: width: 1200
+        endif
+        assign p2_img = section.settings.promo2_image
+        if p2_img == blank
+          assign p2_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056'
+        else
+          assign p2_url = p2_img | image_url: width: 1200
+        endif
+      -%}
+      <a href="{{ section.settings.promo1_link | default: '#ldc-gallery-grid' }}" class="ldc-promo-banner ldc-bento-tile" style="background-image: url('{{ p1_url }}');">
+        <div class="ldc-promo-overlay"></div>
+        <div class="ldc-promo-content">
+          <h3 class="ldc-promo-title">{{ section.settings.promo1_title | escape }}</h3>
+          <p class="ldc-promo-desc">{{ section.settings.promo1_desc | escape }}</p>
+        </div>
+      </a>
+      <a href="{{ section.settings.promo2_link | default: '#ldc-gallery-grid' }}" class="ldc-promo-banner ldc-bento-tile" style="background-image: url('{{ p2_url }}');">
+        <div class="ldc-promo-overlay"></div>
+        <div class="ldc-promo-content">
+          <h3 class="ldc-promo-title">{{ section.settings.promo2_title | escape }}</h3>
+          <p class="ldc-promo-desc">{{ section.settings.promo2_desc | escape }}</p>
+        </div>
+      </a>
+    </template>
+
+    <!-- 3. PRODUCT CATALOGUE HEADER -->
+    <div class="ldc-catalog-section-header">
+      <h2 class="ldc-catalog-section-title">{{ section.settings.catalog_heading | default: 'new products' | escape }}</h2>
+
+      <!-- Price & Sort Filters -->
+      <div class="ldc-filter-bar">
+        <div class="ldc-price-chips" id="ldc-price-tabs">
+          <button type="button" class="ldc-chip active" onclick="ldcFilterPrice('all')">all prices</button>
+          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('under-700')">under aed 700</button>
+          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('700-800')">aed 700&ndash;800</button>
+          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('over-800')">over aed 800</button>
+        </div>
+
+        <div class="ldc-sort-wrap">
+          <label for="ldc-sort-select" class="ldc-sort-label">sort by</label>
+          <div class="ldc-sort-select-wrap">
+            <select id="ldc-sort-select" class="ldc-sort-select" onchange="ldcSortGallery(this.value)">
+              <option value="featured">featured</option>
+              <option value="price-asc">price: low to high</option>
+              <option value="price-desc">price: high to low</option>
+              <option value="name-asc">name: a &ndash; z</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ldc-gallery-grid" id="ldc-gallery-grid">
+      <!-- Generated via JS -->
+    </div>
+  </div>
+
+  <!-- VIEW 2: IMMERSIVE 5-STEP CUSTOMIZER SCREEN -->
+  <div id="ldc-wizard-view" class="ldc-wizard-container" style="display: none;">
+    <!-- TOP PROGRESS BAR & NAVIGATION -->
+    <div class="ldc-wiz-header">
+      <button class="ldc-wiz-back-arrow-btn" onclick="ldcPrevStep()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>back</span>
+      </button>
+      <div class="ldc-wiz-progress-wrap">
+        <div class="ldc-wiz-progress-bar" id="ldc-progress-bar" style="width: 0%;"></div>
+        <div class="ldc-wiz-progress-labels">
+          <span class="ldc-wiz-progress-step" id="ldc-wiz-step-num">Step 1 of 5</span>
+          <span class="ldc-wiz-progress-name" id="ldc-wiz-step-name">Choose Lens Type</span>
+        </div>
+      </div>
+      <button class="ldc-wiz-close-btn" onclick="ldcExitCustomizer()">
+        <span>exit</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ldc-wiz-layout">
+      <!-- LEFT COLUMN: LIVE PREVIEW SHOWCASE -->
+      <div class="ldc-wiz-left">
+        <div class="ldc-preview-card">
+          <span class="ldc-preview-kicker" id="ldc-preview-model-name">Park</span>
+          <h2 class="ldc-preview-title" id="ldc-preview-frame-color">Emerald Acetate</h2>
+          
+          <div class="ldc-preview-image-container">
+            <img id="ldc-preview-frame-img" src="" alt="Custom Eyewear Frame" class="ldc-preview-main-img">
+            <!-- Dynamic Lens Color Overlay for tint simulation -->
+            <div id="ldc-preview-lens-overlay" class="ldc-preview-lens-overlay"></div>
+          </div>
+
+          <div class="ldc-preview-specs">
+            <span>Handcrafted Bio-Acetate</span>
+            <span>&bull;</span>
+            <span>German Steel Hinges</span>
+            <span>&bull;</span>
+            <span>100% UVA/UVB Protection</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: STEP CONTROLS -->
+      <div class="ldc-wiz-right">
+        <div class="ldc-step-panels">
+          
+          <!-- STEP 1: CHOOSE LENS TYPE -->
+          <div id="ldc-step-panel-1" class="ldc-step-panel active">
+            <span class="ldc-step-kicker">Step 1 &mdash; Specification</span>
+            <h3 class="ldc-step-title">Choose Your Lens Type</h3>
+            <p class="ldc-step-desc">Select the lens technology and prescription type for your daily routine.</p>
+            
+            <div class="ldc-options-vertical" id="ldc-lens-type-options">
+              <!-- Populated dynamically via JS -->
+            </div>
+          </div>
+
+          <!-- STEP 2: PRESCRIPTION UPLOAD -->
+          <div id="ldc-step-panel-2" class="ldc-step-panel">
+            <span class="ldc-step-kicker">Step 2 &mdash; Medical Details</span>
+            <h3 class="ldc-step-title">Add Your Prescription</h3>
+            <p class="ldc-step-desc">Please upload your optical prescription. We accept high-resolution JPG, PNG, or PDF formats.</p>
+            
+            <div class="ldc-upload-container">
+              <div class="ldc-upload-zone" id="ldc-upload-zone">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="ldc-upload-icon">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+                <div class="ldc-upload-text-main">Click or Drag to Upload Prescription</div>
+                <div class="ldc-upload-text-sub">Support files: .jpg, .png, .pdf (Max 10MB)</div>
+                <input type="file" id="ldc-rx-file-input" style="display: none;" accept=".jpg,.jpeg,.png,.pdf">
+              </div>
+
+              <!-- Upload Success State -->
+              <div class="ldc-upload-success" id="ldc-upload-success" style="display: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ldc-success-icon">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <div class="ldc-upload-success-info">
+                  <div class="ldc-success-title">Prescription Uploaded Successfully</div>
+                  <div class="ldc-success-filename" id="ldc-uploaded-filename">prescription_2026.pdf</div>
+                </div>
+                <button type="button" class="ldc-upload-replace-btn" onclick="ldcTriggerUpload()">Replace File</button>
+              </div>
+
+              <!-- Error State -->
+              <div class="ldc-upload-error" id="ldc-upload-error" style="display: none;">
+                Please upload a valid JPG, PNG, or PDF file.
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: LENS COLOUR SELECTION -->
+          <div id="ldc-step-panel-3" class="ldc-step-panel">
+            <span class="ldc-step-kicker">Step 3 &mdash; Aesthetic Tints</span>
+            <h3 class="ldc-step-title">Select Lens Color</h3>
+            <p class="ldc-step-desc">Choose from our signature hues, crafted for light performance and rich aesthetics.</p>
+
+            <div class="ldc-swatch-section">
+              <h4 class="ldc-swatch-section-title">Solid Tints</h4>
+              <div class="ldc-swatch-grid" id="ldc-solid-swatches">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+
+            <div class="ldc-swatch-section" style="margin-top: 30px;">
+              <h4 class="ldc-swatch-section-title">Gradient Tints</h4>
+              <div class="ldc-swatch-grid" id="ldc-gradient-swatches">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4: REVIEW & ADD TO CART -->
+          <div id="ldc-step-panel-4" class="ldc-step-panel">
+            <span class="ldc-step-kicker">Final Step &mdash; Summary</span>
+            <h3 class="ldc-step-title">Review Your Customization</h3>
+            <p class="ldc-step-desc">Verify your custom choices before adding them to the cart.</p>
+
+            <div class="ldc-summary-card">
+              <div class="ldc-summary-row">
+                <span class="ldc-summary-label">Frame Model</span>
+                <span class="ldc-summary-val" id="ldc-sum-model">Park</span>
+              </div>
+              <div class="ldc-summary-row">
+                <span class="ldc-summary-label">Frame Finish</span>
+                <span class="ldc-summary-val" id="ldc-sum-frame-color">Emerald</span>
+              </div>
+              <div class="ldc-summary-row">
+                <span class="ldc-summary-label">Lens Technology</span>
+                <span class="ldc-summary-val" id="ldc-sum-lens-type">Signature Tints</span>
+              </div>
+              <div class="ldc-summary-row id-lens-color-row">
+                <span class="ldc-summary-label">Lens Color / Tint</span>
+                <span class="ldc-summary-val" id="ldc-sum-lens-color">Azure Blue (Solid)</span>
+              </div>
+              <div class="ldc-summary-row id-rx-uploaded-row">
+                <span class="ldc-summary-label">Prescription Uploaded</span>
+                <span class="ldc-summary-val" id="ldc-sum-rx-uploaded">Yes</span>
+              </div>
+              
+              <div class="ldc-summary-divider"></div>
+
+              <div class="ldc-summary-row">
+                <span class="ldc-summary-label">Base Frame Price</span>
+                <span class="ldc-summary-val" id="ldc-sum-frame-price">AED 650</span>
+              </div>
+              <div class="ldc-summary-row">
+                <span class="ldc-summary-label">Lens Upgrade</span>
+                <span class="ldc-summary-val" id="ldc-sum-lens-price">+ AED 150</span>
+              </div>
+              <div class="ldc-summary-row ldc-summary-total">
+                <span class="ldc-summary-label">Total Investment</span>
+                <span class="ldc-summary-val" id="ldc-sum-total-price">AED 800</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FOOTER NAV BUTTONS -->
+        <div class="ldc-wiz-footer">
+          <div class="ldc-wiz-price-display">
+            <span class="ldc-wiz-price-label">total</span>
+            <span class="ldc-wiz-price-amount" id="ldc-wiz-price-amount">AED 800</span>
+          </div>
+          
+          <div class="ldc-wiz-actions">
+            <!-- Next Step / Add to Cart trigger -->
+            <button type="button" class="ldc-wiz-btn-primary" id="ldc-wiz-next-btn" onclick="ldcNextStep()">
+              <span>continue</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+            <button type="button" class="ldc-wiz-btn-primary" id="ldc-wiz-cart-btn" style="display: none;" onclick="ldcAddToCart()">
+              <span>add to cart</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ------------------- CORE DESIGN VARIABLES ------------------- */
+  .ldc-customizer-section {
+    font-family: 'Canela', serif;
+    background-color: var(--ldc-white, #FAFAF7);
+    color: var(--ldc-burgundy, #5A1F26);
+    padding: 0 20px 24px;
+    min-height: 90vh;
+    box-sizing: border-box;
+  }
+  @media (min-width: 990px) {
+    .ldc-customizer-section {
+      padding: 0 6px 24px;
+    }
+  }
+  .ldc-customizer-section * {
+    box-sizing: border-box;
+  }
+
+  /* ------------------- VIEW 1: GALLERY VIEW ------------------- */
+  .ldc-gallery-container {
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .ldc-gallery-hero {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    height: 480px;
+    margin-top: calc(var(--header-height, 60px) * -1);
+    padding: calc(var(--header-height, 60px) + 20px) 20px 20px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 0;
+    margin-bottom: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .ldc-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 1;
+  }
+  .ldc-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    color: #fff;
+  }
+  .ldc-hero-subtitle {
+    font-family: 'ldc-font', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #e5c158;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .ldc-hero-title {
+    font-family: 'ldc-font', sans-serif;
+    font-size: clamp(36px, 5vw, 54px);
+    margin: 0 0 16px 0;
+    line-height: 1.1;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .ldc-hero-desc {
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 30px 0;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .ldc-hero-btn {
+    display: inline-block;
+    padding: 12px 35px;
+    border: 1px solid #fff;
+    color: #fff;
+    font-family: 'ldc-font', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: transparent;
+  }
+  .ldc-hero-btn:hover {
+    background: #fff;
+    color: var(--ldc-burgundy);
+  }
+
+  /* 2. PROMOTIONAL FEATURE BANNERS — scattered as bento tiles inside the product grid */
+  .ldc-promo-banner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+    text-decoration: none;
+    overflow: hidden;
+  }
+  .ldc-promo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.1) 100%);
+    z-index: 1;
+    transition: background 0.3s ease;
+  }
+  .ldc-promo-banner:hover .ldc-promo-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.2) 100%);
+  }
+  .ldc-promo-content {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    text-align: left;
+  }
+  .ldc-promo-title {
+    font-family: 'ldc-font', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+    font-weight: normal;
+    color: #fff;
+  }
+  .ldc-promo-desc {
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* 3. CATALOGUE HEADER */
+  .ldc-catalog-section-header {
+    text-align: center;
+    max-width: 1300px;
+    margin: 0 auto 40px;
+  }
+  .ldc-catalog-section-title {
+    font-family: 'ldc-font', sans-serif;
+    font-size: clamp(28px, 4vw, 36px);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin: 0 0 28px 0;
+    font-weight: normal;
+    color: var(--ldc-burgundy);
+  }
+
+  /* PRICE & SORT FILTER BAR */
+  .ldc-filter-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .ldc-price-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .ldc-chip {
+    background: transparent;
+    border: 1px solid rgba(90, 31, 38, 0.2);
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Canela', serif;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--ldc-burgundy);
+    padding: 7px 16px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .ldc-chip:hover {
+    border-color: var(--ldc-burgundy);
+  }
+
+  .ldc-chip.active {
+    background: var(--ldc-burgundy);
+    border-color: var(--ldc-burgundy);
+    color: var(--ldc-white);
+  }
+
+  .ldc-sort-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ldc-sort-label {
+    font-family: 'ldc-font', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    white-space: nowrap;
+  }
+
+  .ldc-sort-select-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .ldc-sort-select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid var(--ldc-burgundy);
+    border-bottom: 1.5px solid var(--ldc-burgundy);
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .ldc-sort-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #fff;
+    border: 1px solid rgba(90, 31, 38, 0.2);
+    border-radius: 20px;
+    padding: 7px 34px 7px 16px;
+    font-family: 'Canela', serif;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    color: var(--ldc-burgundy);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .ldc-sort-select:hover,
+  .ldc-sort-select:focus {
+    border-color: var(--ldc-burgundy);
+    outline: none;
+  }
+
+  @media (min-width: 768px) {
+    .ldc-filter-bar {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      text-align: left;
+    }
+
+    .ldc-price-chips {
+      justify-content: flex-start;
+    }
+  }
+
+  /* GALLERY GRID */
+  .ldc-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: dense;
+    grid-auto-rows: 1fr;
+    gap: 28px 20px;
+  }
+  @media (min-width: 990px) {
+    .ldc-gallery-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px 28px;
+    }
+  }
+
+  /* GALLERY CARD STYLE */
+  .ldc-product-card {
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+  .ldc-card-img-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f4f2;
+    border-radius: 0;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 15px;
+  }
+  .ldc-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .ldc-product-card:hover .ldc-card-img {
+    transform: scale(1.05);
+  }
+  .ldc-card-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .ldc-card-name {
+    font-family: 'ldc-font', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 4px 0;
+    font-weight: normal;
+    color: var(--ldc-burgundy);
+  }
+  .ldc-card-price {
+    font-size: 14px;
+    font-weight: normal;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  .ldc-card-colors-title {
+    display: none;
+  }
+  .ldc-card-swatches {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+  .ldc-swatch-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    padding: 1px;
+    transition: all 0.2s ease;
+  }
+  .ldc-swatch-dot span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  .ldc-swatch-dot.active {
+    border-color: var(--ldc-burgundy);
+  }
+  /* ------------------- VIEW 2: IMMERSIVE WIZARD ------------------- */
+  .ldc-wizard-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+  }
+
+  /* WIZARD HEADER */
+  .ldc-wiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 30px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    background: #fafaf9;
+  }
+  .ldc-wiz-back-arrow-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'ldc-font', sans-serif;
+    color: var(--ldc-burgundy);
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+  .ldc-wiz-progress-wrap {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 40px;
+    position: relative;
+    padding-top: 6px;
+  }
+  .ldc-wiz-progress-bar {
+    height: 4px;
+    background: var(--ldc-gold);
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .ldc-wiz-progress-wrap::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 2px;
+    z-index: 0;
+  }
+  .ldc-wiz-progress-bar {
+    position: relative;
+    z-index: 1;
+  }
+  .ldc-wiz-progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 12px;
+    font-family: 'ldc-font', sans-serif;
+    letter-spacing: 0.05em;
+    color: #666;
+    text-transform: uppercase;
+  }
+  .ldc-wiz-progress-step {
+    color: var(--ldc-burgundy);
+    font-weight: bold;
+  }
+  .ldc-wiz-close-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    font-family: 'ldc-font', sans-serif;
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+  .ldc-wiz-close-btn:hover {
+    color: var(--ldc-burgundy);
+  }
+
+  /* WIZARD LAYOUT Split */
+  .ldc-wiz-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 990px) {
+    .ldc-wiz-layout {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+
+  /* LEFT SIDE: PREVIEW */
+  .ldc-wiz-left {
+    background: #fbfbf9;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  @media (min-width: 990px) {
+    .ldc-wiz-left {
+      border-bottom: none;
+      border-right: 1px solid rgba(0,0,0,0.06);
+      padding: 60px;
+    }
+  }
+  .ldc-preview-card {
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+  }
+  .ldc-preview-kicker {
+    font-family: 'ldc-font', sans-serif;
+    color: var(--ldc-gold);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .ldc-preview-title {
+    font-family: 'ldc-font', sans-serif;
+    font-size: clamp(24px, 3.5vw, 36px);
+    margin: 0 0 30px 0;
+    font-weight: normal;
+    text-transform: lowercase;
+  }
+  .ldc-preview-image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.02);
+    overflow: hidden;
+  }
+  .ldc-preview-main-img {
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+    position: relative;
+    z-index: 2;
+  }
+  /* Lens Overlay System to mimic glass color selection */
+  .ldc-preview-lens-overlay {
+    position: absolute;
+    width: 65%;
+    height: 35%;
+    top: 32%;
+    left: 17.5%;
+    border-radius: 4px;
+    z-index: 3;
+    opacity: 0; /* Updated dynamically */
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+  .ldc-preview-specs {
+    margin-top: 30px;
+    font-size: 13px;
+    color: #888;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* RIGHT SIDE: CONTROLS & STEP WIZARD */
+  .ldc-wiz-right {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  @media (min-width: 990px) {
+    .ldc-wiz-right {
+      padding: 50px;
+    }
+  }
+  .ldc-step-panel {
+    display: none;
+  }
+  .ldc-step-panel.active {
+    display: block;
+    animation: fadeIn 0.4s ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .ldc-step-kicker {
+    font-family: 'ldc-font', sans-serif;
+    color: var(--ldc-gold);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .ldc-step-title {
+    font-family: 'ldc-font', sans-serif;
+    font-size: clamp(24px, 3vw, 32px);
+    margin: 0 0 10px 0;
+    font-weight: normal;
+    text-transform: lowercase;
+  }
+  .ldc-step-desc {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  /* ------------------- STEP 1: OPTIONS LIST ------------------- */
+  .ldc-options-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .ldc-option-card {
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.25s ease;
+  }
+  .ldc-option-card:hover {
+    border-color: var(--ldc-burgundy);
+    background: #fbfbf9;
+  }
+  .ldc-option-card.active {
+    border-color: var(--ldc-burgundy);
+    background: rgba(90, 31, 38, 0.03);
+    box-shadow: 0 4px 12px rgba(90, 31, 38, 0.05);
+  }
+  .ldc-opt-info {
+    flex: 1;
+  }
+  .ldc-opt-title {
+    font-family: 'ldc-font', sans-serif;
+    font-size: 18px;
+    margin-bottom: 4px;
+    font-weight: normal;
+  }
+  .ldc-opt-desc {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.4;
+  }
+  .ldc-opt-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--ldc-burgundy);
+    margin-left: 20px;
+  }
+
+  /* ------------------- STEP 2: PRESCRIPTION UPLOAD ------------------- */
+  .ldc-upload-container {
+    border: 1px dashed rgba(0,0,0,0.15);
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    background: #fafaf9;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .ldc-upload-container:hover {
+    border-color: var(--ldc-burgundy);
+    background: #fff;
+  }
+  .ldc-upload-icon {
+    color: var(--ldc-burgundy);
+    margin-bottom: 16px;
+    opacity: 0.7;
+  }
+  .ldc-upload-text-main {
+    font-family: 'ldc-font', sans-serif;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .ldc-upload-text-sub {
+    font-size: 12px;
+    color: #888;
+  }
+  .ldc-upload-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  .ldc-success-icon {
+    color: #2e7d32;
+  }
+  .ldc-success-title {
+    font-family: 'ldc-font', sans-serif;
+    font-size: 18px;
+    color: #2e7d32;
+  }
+  .ldc-success-filename {
+    font-size: 14px;
+    color: #555;
+    background: rgba(0,0,0,0.04);
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin-top: 5px;
+  }
+  .ldc-upload-replace-btn {
+    background: none;
+    border: 1px solid var(--ldc-burgundy);
+    color: var(--ldc-burgundy);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'ldc-font', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+  }
+  .ldc-upload-replace-btn:hover {
+    background: var(--ldc-burgundy);
+    color: #fff;
+  }
+  .ldc-upload-error {
+    color: #d32f2f;
+    margin-top: 15px;
+    font-size: 13px;
+  }
+
+  /* ------------------- STEP 3: LENS COLOUR SELECTION ------------------- */
+  .ldc-swatch-section-title {
+    font-family: 'ldc-font', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #777;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    font-weight: normal;
+  }
+  .ldc-swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 16px;
+  }
+  .ldc-lens-swatch-card {
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ldc-lens-swatch-card:hover {
+    border-color: var(--ldc-burgundy);
+  }
+  .ldc-lens-swatch-card.active {
+    border-color: var(--ldc-burgundy);
+    box-shadow: 0 4px 12px rgba(90, 31, 38, 0.08);
+    background: rgba(90, 31, 38, 0.02);
+  }
+  .ldc-lens-swatch-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    margin-bottom: 8px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .ldc-lens-swatch-name {
+    font-size: 13px;
+    line-height: 1.3;
+    font-family: 'ldc-font', sans-serif;
+  }
+
+  /* ------------------- STEP 4: SUMMARY ------------------- */
+  .ldc-summary-card {
+    background: #fafaf9;
+    border-radius: 10px;
+    padding: 24px;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .ldc-summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+  .ldc-summary-label {
+    color: #666;
+  }
+  .ldc-summary-val {
+    font-family: 'ldc-font', sans-serif;
+    color: var(--ldc-burgundy);
+    font-weight: 500;
+  }
+  .ldc-summary-divider {
+    height: 1px;
+    background: rgba(0,0,0,0.06);
+    margin: 16px 0;
+  }
+  .ldc-summary-total {
+    font-size: 18px;
+    margin-bottom: 0;
+  }
+  .ldc-summary-total .ldc-summary-label {
+    font-weight: bold;
+    color: var(--ldc-burgundy);
+  }
+  .ldc-summary-total .ldc-summary-val {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  /* WIZARD FOOTER NAVIGATION */
+  .ldc-wiz-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    padding-top: 30px;
+    margin-top: 40px;
+  }
+  .ldc-wiz-price-display {
+    display: flex;
+    flex-direction: column;
+  }
+  .ldc-wiz-price-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 2px;
+  }
+  .ldc-wiz-price-amount {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--ldc-burgundy);
+  }
+  .ldc-wiz-actions {
+    display: flex;
+    gap: 15px;
+  }
+  .ldc-wiz-btn-primary {
+    background: var(--ldc-burgundy);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 28px;
+    cursor: pointer;
+    font-family: 'ldc-font', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+  .ldc-wiz-btn-primary:hover {
+    background: var(--ldc-gold);
+    color: var(--ldc-burgundy);
+  }
+</style>
+
+<script>
+  (function() {
+    // Helper to determine color swatch by name
+    function getSwatchColor(colorName) {
+      const name = colorName.toLowerCase();
+      if (name.includes('emerald') || name.includes('green')) return '#2E3B33';
+      if (name.includes('amber') || name.includes('orange') || name.includes('gold')) return '#b87333';
+      if (name.includes('riviera') || name.includes('blue')) return '#1e3d59';
+      if (name.includes('oak') || name.includes('brown')) return '#8b5a2b';
+      if (name.includes('obsidian') || name.includes('black')) return '#111111';
+      if (name.includes('tortoise')) return '#5c4033';
+      if (name.includes('honey')) return '#e4a010';
+      if (name.includes('crystal') || name.includes('clear')) return '#e2f0d9';
+      if (name.includes('silver')) return '#c0c0c0';
+      if (name.includes('rose')) return '#b76e79';
+      return '#cccccc';
+    }
+
+    // ------------------- DYNAMIC CONFIGURATION & DATA -------------------
+    let modelsData = {
+      {%- if collection.products.size > 0 -%}
+        {%- for product in collection.products -%}
+          "{{ product.handle }}": {
+            name: "{{ product.title | escape }}",
+            price: {{ product.price | divided_by: 100 | default: 650 }},
+            url: "{{ product.url }}",
+            hoverImg: "{{ product.images[1] | default: product.featured_image | image_url: width: 1400 }}",
+            colors: [
+              {%- for variant in product.variants -%}
+                {
+                  name: "{{ variant.title | escape }}",
+                  swatch: getSwatchColor("{{ variant.title | escape }}"),
+                  img: "{{ variant.featured_image | default: product.featured_image | image_url: width: 1400 }}",
+                  id: {{ variant.id }}
+                }{%- unless forloop.last -%},{%- endunless -%}
+              {%- endfor -%}
+            ]
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      {%- endif -%}
+    };
+
+    // If no dynamic products found, fall back to mock data
+    if (Object.keys(modelsData).length === 0) {
+      modelsData = {
+        park: {
+          name: 'Park',
+          price: 650,
+          hoverImg: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068',
+          colors: [
+            { name: 'Emerald', swatch: '#2E3B33', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056' },
+            { name: 'Amber', swatch: '#b87333', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068' },
+            { name: 'Riviera', swatch: '#1e3d59', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056' },
+            { name: 'Oak', swatch: '#8b5a2b', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068' }
+          ]
+        },
+        soho: {
+          name: 'Soho',
+          price: 720,
+          hoverImg: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056',
+          colors: [
+            { name: 'Obsidian', swatch: '#111111', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056' },
+            { name: 'Tortoise', swatch: '#5c4033', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068' },
+            { name: 'Honey', swatch: '#e4a010', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056' },
+            { name: 'Crystal', swatch: '#e2f0d9', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068' }
+          ]
+        },
+        monaco: {
+          name: 'Monaco',
+          price: 800,
+          hoverImg: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068',
+          colors: [
+            { name: 'Gold', swatch: '#d4af37', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056' },
+            { name: 'Silver', swatch: '#c0c0c0', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068' },
+            { name: 'Rose Gold', swatch: '#b76e79', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056' },
+            { name: 'Matte Black', swatch: '#222222', img: 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068' }
+          ]
+        }
+      };
+    }
+
+    const lensTypes = [
+      { id: 'sig-tints', name: 'Signature Tints', desc: 'Custom colored non-prescription lenses.', upgrade: 150 },
+      { id: 'sig-tints-rx', name: 'Signature Tints + Prescription', desc: 'Custom colored prescription lenses.', upgrade: 180 },
+      { id: 'digital-blue', name: 'Digital Blue', desc: 'Blue-light filtering lenses for everyday screen use.', upgrade: 200 },
+      { id: 'optical-clear', name: 'Optical Clear', desc: 'Clear prescription lenses.', upgrade: 180 }
+    ];
+
+    const solidColors = [
+      { name: 'Azure Blue', color: '#1e88e5', opacity: 0.5 },
+      { name: 'Champagne', color: '#f7e7ce', opacity: 0.3 },
+      { name: 'Emerald', color: '#2e7d32', opacity: 0.4 },
+      { name: 'Honey Gold', color: '#fbc02d', opacity: 0.45 },
+      { name: 'Lavender Mist', color: '#b39ddb', opacity: 0.4 },
+      { name: 'Amber', color: '#ffb300', opacity: 0.45 },
+      { name: 'Rose Blush', color: '#f48fb1', opacity: 0.4 },
+      { name: 'Riviera Blue', color: '#00acc1', opacity: 0.4 },
+      { name: 'Turquoise', color: '#00838f', opacity: 0.45 },
+      { name: 'Burnt Amber', color: '#d84315', opacity: 0.5 },
+      { name: 'Olive', color: '#558b2f', opacity: 0.45 },
+      { name: 'Royal Violet', color: '#6a1b9a', opacity: 0.5 }
+    ];
+
+    const gradientColors = [
+      { name: 'Golden Dusk Fade', color: 'linear-gradient(to bottom, #fbc02d 0%, #d84315 100%)', opacity: 0.55 },
+      { name: 'Coastal Fade', color: 'linear-gradient(to bottom, #1e88e5 0%, #f7e7ce 100%)', opacity: 0.5 },
+      { name: 'Chestnut Fade', color: 'linear-gradient(to bottom, #8b5a2b 0%, #e9e2d6 100%)', opacity: 0.5 },
+      { name: 'Ocean Fade', color: 'linear-gradient(to bottom, #00838f 0%, #b39ddb 100%)', opacity: 0.55 },
+      { name: 'Smoke Fade', color: 'linear-gradient(to bottom, #37474f 0%, rgba(255,255,255,0) 100%)', opacity: 0.6 },
+      { name: 'Forest Fade', color: 'linear-gradient(to bottom, #2e7d32 0%, #fbc02d 100%)', opacity: 0.5 },
+      { name: 'Classic Green Fade', color: 'linear-gradient(to bottom, #1b5e20 0%, rgba(255,255,255,0) 100%)', opacity: 0.55 },
+      { name: 'Lagoon Fade', color: 'linear-gradient(to bottom, #00acc1 0%, #558b2f 100%)', opacity: 0.5 },
+      { name: 'Bordeaux Fade', color: 'linear-gradient(to bottom, #5a1f26 0%, #f48fb1 100%)', opacity: 0.55 },
+      { name: 'Ruby Fade', color: 'linear-gradient(to bottom, #c62828 0%, rgba(255,255,255,0) 100%)', opacity: 0.5 },
+      { name: 'Espresso Fade', color: 'linear-gradient(to bottom, #4e342e 0%, rgba(255,255,255,0) 100%)', opacity: 0.6 },
+      { name: 'Silver Fade', color: 'linear-gradient(to bottom, #b0bec5 0%, rgba(255,255,255,0) 100%)', opacity: 0.4 },
+      { name: 'Sunset Fade', color: 'linear-gradient(to bottom, #ff7043 0%, #ffca28 100%)', opacity: 0.5 }
+    ];
+
+    // ------------------- APPLICATION STATE -------------------
+    let state = {
+      modelKey: Object.keys(modelsData)[0],
+      frameColorIndex: 0,
+      lensTypeId: 'sig-tints',
+      rxFile: null,
+      lensColorName: null,
+      lensColorHex: null,
+      lensColorType: null, // 'solid' or 'gradient'
+      currentStep: 1,
+      totalSteps: 4 // Signature Tints has 4 steps: Type, Rx (cond), Color, Review. Let's make step numbers dynamic based on flow!
+    };
+
+    // ------------------- STEP ROUTING LOGIC -------------------
+    // Step panels indices relative to state steps:
+    // We map step index to actual DOM panels:
+    // Panel 1: Type
+    // Panel 2: Prescription
+    // Panel 3: Color Select
+    // Panel 4: Review
+    function getStepsFlow() {
+      const type = state.lensTypeId;
+      if (type === 'sig-tints') {
+        return [1, 3, 4]; // Panel 1 (Type) -> Panel 3 (Color) -> Panel 4 (Review)
+      } else if (type === 'sig-tints-rx') {
+        return [1, 2, 3, 4]; // Panel 1 (Type) -> Panel 2 (Prescription) -> Panel 3 (Color) -> Panel 4 (Review)
+      } else if (type === 'digital-blue') {
+        return [1, 4]; // Panel 1 (Type) -> Panel 4 (Review)
+      } else if (type === 'optical-clear') {
+        return [1, 2, 4]; // Panel 1 (Type) -> Panel 2 (Prescription) -> Panel 4 (Review)
+      }
+      return [1, 4];
+    }
+
+    // ------------------- INITIALIZE GALLERY VIEW -------------------
+    window.onload = function() {
+      renderGallery();
+      initInteractive();
+    };
+
+    let activePriceFilter = 'all';
+    let activeSort = 'featured';
+
+    function priceMatches(price, filter) {
+      if (filter === 'all') return true;
+      if (filter === 'under-700') return price < 700;
+      if (filter === '700-800') return price >= 700 && price <= 800;
+      if (filter === 'over-800') return price > 800;
+      return true;
+    }
+
+    function ldcApplyFilters() {
+      const cards = document.querySelectorAll('.ldc-product-card');
+      cards.forEach(card => {
+        const price = parseFloat(card.getAttribute('data-price'));
+        const matches = priceMatches(price, activePriceFilter);
+
+        if (matches) {
+          card.style.display = 'flex';
+          setTimeout(() => card.style.opacity = '1', 50);
+        } else {
+          card.style.opacity = '0';
+          setTimeout(() => card.style.display = 'none', 300);
+        }
+      });
+    }
+
+    window.ldcFilterPrice = function(filter) {
+      activePriceFilter = filter;
+      const tabsWrap = document.getElementById('ldc-price-tabs');
+      if (tabsWrap) {
+        tabsWrap.querySelectorAll('.ldc-chip').forEach(tab => tab.classList.remove('active'));
+        const clickedTab = Array.from(tabsWrap.querySelectorAll('.ldc-chip')).find(tab =>
+          tab.getAttribute('onclick').includes(`'${filter}'`)
+        );
+        if (clickedTab) clickedTab.classList.add('active');
+      }
+      ldcApplyFilters();
+    };
+
+    window.ldcSortGallery = function(sortValue) {
+      activeSort = sortValue;
+      renderGallery();
+      ldcApplyFilters();
+    };
+
+    function getSortedModelKeys() {
+      const keys = Object.keys(modelsData);
+      if (activeSort === 'price-asc') {
+        return keys.sort((a, b) => modelsData[a].price - modelsData[b].price);
+      }
+      if (activeSort === 'price-desc') {
+        return keys.sort((a, b) => modelsData[b].price - modelsData[a].price);
+      }
+      if (activeSort === 'name-asc') {
+        return keys.sort((a, b) => modelsData[a].name.localeCompare(modelsData[b].name));
+      }
+      return keys;
+    }
+
+    function renderGallery() {
+      const grid = document.getElementById('ldc-gallery-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      getSortedModelKeys().forEach(key => {
+        const model = modelsData[key];
+        const defaultColor = model.colors[0];
+
+        // Create Card Element
+        const card = document.createElement('div');
+        card.className = 'ldc-product-card';
+        card.setAttribute('data-model', key);
+        card.setAttribute('data-price', model.price);
+
+        card.innerHTML = `
+          <div class="ldc-card-img-wrap">
+            <img src="${defaultColor.img}" alt="${model.name} Eyewear" class="ldc-card-img" id="img-${key}">
+          </div>
+          <div class="ldc-card-meta">
+            <h2 class="ldc-card-name">${model.name}</h2>
+            <div class="ldc-card-price">AED ${model.price}</div>
+          </div>
+          <div class="ldc-card-swatches" id="swatches-${key}">
+            <!-- Swatches -->
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          if (model.url) {
+            window.location.href = model.url;
+          } else {
+            ldcLaunchCustomizer(key);
+          }
+        });
+
+        grid.appendChild(card);
+
+        // Render Swatches
+        const swatchContainer = document.getElementById(`swatches-${key}`);
+        model.colors.forEach((col, idx) => {
+          const swDot = document.createElement('div');
+          swDot.className = `ldc-swatch-dot ${idx === 0 ? 'active' : ''}`;
+          swDot.innerHTML = `<span style="background-color: ${col.swatch};"></span>`;
+          
+          swDot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Update Card Image
+            document.getElementById(`img-${key}`).src = col.img;
+            
+            // Remove active from siblings
+            swatchContainer.querySelectorAll('.ldc-swatch-dot').forEach(el => el.classList.remove('active'));
+            swDot.classList.add('active');
+
+            // Save choice in case they click customize immediately
+            if (state.modelKey === key) {
+              state.frameColorIndex = idx;
+            }
+          });
+
+          swatchContainer.appendChild(swDot);
+        });
+      });
+
+      scatterPromoTiles(grid);
+    }
+
+    // Insert the two promo banners at fixed slots so they line up with the grid's row layout
+    const PROMO_TILE_POSITIONS = [2, 6];
+
+    function scatterPromoTiles(grid) {
+      const tpl = document.getElementById('ldc-promo-tiles-template');
+      if (!tpl) return;
+      const tiles = Array.from(tpl.content.cloneNode(true).children);
+
+      tiles.forEach((tile, i) => {
+        const cards = Array.from(grid.children).filter(el => !el.classList.contains('ldc-bento-tile'));
+        const position = PROMO_TILE_POSITIONS[i];
+        const referenceCard = cards[position];
+        if (referenceCard) {
+          grid.insertBefore(tile, referenceCard);
+        } else {
+          grid.appendChild(tile);
+        }
+      });
+    }
+
+    // ------------------- INTERACTIVE WIZARD LOGIC -------------------
+    window.ldcLaunchCustomizer = function(modelKey) {
+      state.modelKey = modelKey;
+      
+      // Determine which color was selected in card swatches
+      const swContainer = document.getElementById(`swatches-${modelKey}`);
+      const activeDotIdx = Array.from(swContainer.children).findIndex(dot => dot.classList.contains('active'));
+      state.frameColorIndex = activeDotIdx !== -1 ? activeDotIdx : 0;
+
+      // Set state default
+      state.currentStep = 1;
+
+      // Render Step lists
+      renderStep1Options();
+      renderStep3Swatches();
+
+      // Show wizard screen, hide gallery
+      document.getElementById('ldc-gallery-view').style.display = 'none';
+      document.getElementById('ldc-wizard-view').style.display = 'block';
+
+      // Update Preview
+      updatePreview();
+      updateStepView();
+    };
+
+    window.ldcExitCustomizer = function() {
+      document.getElementById('ldc-wizard-view').style.display = 'none';
+      document.getElementById('ldc-gallery-view').style.display = 'block';
+    };
+
+    function updatePreview() {
+      const model = modelsData[state.modelKey];
+      const color = model.colors[state.frameColorIndex];
+
+      document.getElementById('ldc-preview-model-name').textContent = model.name;
+      document.getElementById('ldc-preview-frame-color').textContent = `${color.name} Frame`;
+      document.getElementById('ldc-preview-frame-img').src = color.img;
+
+      // Apply Lens Color overlay simulation
+      const overlay = document.getElementById('ldc-preview-lens-overlay');
+      if (state.lensColorHex && (state.lensTypeId === 'sig-tints' || state.lensTypeId === 'sig-tints-rx')) {
+        overlay.style.background = state.lensColorHex;
+        overlay.style.opacity = state.lensColorOpacity || 0.45;
+      } else if (state.lensTypeId === 'digital-blue') {
+        overlay.style.background = 'rgba(30, 144, 255, 0.15)'; // Blue light filter tint
+        overlay.style.opacity = 1;
+      } else {
+        overlay.style.background = 'transparent';
+        overlay.style.opacity = 0;
+      }
+    }
+
+    function renderStep1Options() {
+      const container = document.getElementById('ldc-lens-type-options');
+      if (!container) return;
+      container.innerHTML = '';
+
+      lensTypes.forEach(t => {
+        const div = document.createElement('div');
+        div.className = `ldc-option-card ${state.lensTypeId === t.id ? 'active' : ''}`;
+        div.innerHTML = `
+          <div class="ldc-opt-info">
+            <div class="ldc-opt-title">${t.name}</div>
+            <div class="ldc-opt-desc">${t.desc}</div>
+          </div>
+          <div class="ldc-opt-price">+ AED ${t.upgrade}</div>
+        `;
+
+        div.onclick = () => {
+          state.lensTypeId = t.id;
+          container.querySelectorAll('.ldc-option-card').forEach(el => el.classList.remove('active'));
+          div.classList.add('active');
+          
+          // Clear selections if incompatible
+          if (t.id === 'digital-blue' || t.id === 'optical-clear') {
+            state.lensColorName = null;
+            state.lensColorHex = null;
+          } else if (!state.lensColorName) {
+            // Default to first solid color
+            state.lensColorName = solidColors[0].name;
+            state.lensColorHex = solidColors[0].color;
+            state.lensColorOpacity = solidColors[0].opacity;
+            state.lensColorType = 'solid';
+          }
+
+          updatePreview();
+          updatePricing();
+        };
+
+        container.appendChild(div);
+      });
+    }
+
+    function renderStep3Swatches() {
+      // Solid Swatches
+      const solidContainer = document.getElementById('ldc-solid-swatches');
+      if (solidContainer) {
+        solidContainer.innerHTML = '';
+        solidColors.forEach(c => {
+          const card = document.createElement('div');
+          card.className = `ldc-lens-swatch-card ${state.lensColorName === c.name ? 'active' : ''}`;
+          card.innerHTML = `
+            <div class="ldc-lens-swatch-circle" style="background-color: ${c.color};"></div>
+            <div class="ldc-lens-swatch-name">${c.name}</div>
+          `;
+          card.onclick = () => {
+            selectLensColor(c.name, c.color, c.opacity, 'solid');
+            solidContainer.querySelectorAll('.ldc-lens-swatch-card').forEach(el => el.classList.remove('active'));
+            document.getElementById('ldc-gradient-swatches').querySelectorAll('.ldc-lens-swatch-card').forEach(el => el.classList.remove('active'));
+            card.classList.add('active');
+          };
+          solidContainer.appendChild(card);
+        });
+      }
+
+      // Gradient Swatches
+      const gradContainer = document.getElementById('ldc-gradient-swatches');
+      if (gradContainer) {
+        gradContainer.innerHTML = '';
+        gradientColors.forEach(c => {
+          const card = document.createElement('div');
+          card.className = `ldc-lens-swatch-card ${state.lensColorName === c.name ? 'active' : ''}`;
+          card.innerHTML = `
+            <div class="ldc-lens-swatch-circle" style="background: ${c.color};"></div>
+            <div class="ldc-lens-swatch-name">${c.name}</div>
+          `;
+          card.onclick = () => {
+            selectLensColor(c.name, c.color, c.opacity, 'gradient');
+            gradContainer.querySelectorAll('.ldc-lens-swatch-card').forEach(el => el.classList.remove('active'));
+            document.getElementById('ldc-solid-swatches').querySelectorAll('.ldc-lens-swatch-card').forEach(el => el.classList.remove('active'));
+            card.classList.add('active');
+          };
+          gradContainer.appendChild(card);
+        });
+      }
+    }
+
+    function selectLensColor(name, color, opacity, type) {
+      state.lensColorName = name;
+      state.lensColorHex = color;
+      state.lensColorOpacity = opacity;
+      state.lensColorType = type;
+      updatePreview();
+    }
+
+    function updatePricing() {
+      const model = modelsData[state.modelKey];
+      const upgrade = lensTypes.find(t => t.id === state.lensTypeId).upgrade;
+      const total = model.price + upgrade;
+
+      // Update in right sidebar footer
+      document.getElementById('ldc-wiz-price-amount').textContent = `AED ${total}`;
+
+      // Update in Summary card (Step 5)
+      document.getElementById('ldc-sum-frame-price').textContent = `AED ${model.price}`;
+      document.getElementById('ldc-sum-lens-price').textContent = `+ AED ${upgrade}`;
+      document.getElementById('ldc-sum-total-price').textContent = `AED ${total}`;
+    }
+
+    function updateStepView() {
+      const flow = getStepsFlow();
+      const panelIdx = flow[state.currentStep - 1];
+
+      // Hide all panels
+      document.querySelectorAll('.ldc-step-panel').forEach(p => p.classList.remove('active'));
+      
+      // Show correct panel
+      document.getElementById(`ldc-step-panel-${panelIdx}`).classList.add('active');
+
+      // Update progress bar width
+      const pct = ((state.currentStep - 1) / (flow.length - 1)) * 100;
+      document.getElementById('ldc-progress-bar').style.width = `${pct}%`;
+
+      // Update top progress labels
+      document.getElementById('ldc-wiz-step-num').textContent = `Step ${state.currentStep} of ${flow.length}`;
+      
+      const stepNames = {
+        1: 'Choose Lens Type',
+        2: 'Add Your Prescription',
+        3: 'Select Lens Color',
+        4: 'Review Customization'
+      };
+      document.getElementById('ldc-wiz-step-name').textContent = stepNames[panelIdx];
+
+      // If last step, show Add to Cart, hide Next
+      if (state.currentStep === flow.length) {
+        document.getElementById('ldc-wiz-next-btn').style.display = 'none';
+        document.getElementById('ldc-wiz-cart-btn').style.display = 'flex';
+        renderSummaryCard();
+      } else {
+        document.getElementById('ldc-wiz-next-btn').style.display = 'flex';
+        document.getElementById('ldc-wiz-cart-btn').style.display = 'none';
+      }
+
+      updatePricing();
+    }
+
+    window.ldcNextStep = function() {
+      const flow = getStepsFlow();
+      
+      // Validation checks before proceeding
+      const currentPanelId = flow[state.currentStep - 1];
+      if (currentPanelId === 2 && !state.rxFile) {
+        // Must upload a file
+        alert('Please upload your prescription file to continue.');
+        return;
+      }
+
+      if (state.currentStep < flow.length) {
+        state.currentStep++;
+        updateStepView();
+      }
+    };
+
+    window.ldcPrevStep = function() {
+      if (state.currentStep > 1) {
+        state.currentStep--;
+        updateStepView();
+      } else {
+        ldcExitCustomizer();
+      }
+    };
+
+    function renderSummaryCard() {
+      const model = modelsData[state.modelKey];
+      const color = model.colors[state.frameColorIndex];
+      const type = lensTypes.find(t => t.id === state.lensTypeId);
+
+      document.getElementById('ldc-sum-model').textContent = model.name;
+      document.getElementById('ldc-sum-frame-color').textContent = color.name;
+      document.getElementById('ldc-sum-lens-type').textContent = type.name;
+
+      const lensColorRow = document.querySelector('.id-lens-color-row');
+      if (state.lensColorName) {
+        lensColorRow.style.display = 'flex';
+        document.getElementById('ldc-sum-lens-color').textContent = `${state.lensColorName} (${state.lensColorType})`;
+      } else {
+        lensColorRow.style.display = 'none';
+      }
+
+      const rxRow = document.querySelector('.id-rx-uploaded-row');
+      if (type.id.includes('rx') || type.id === 'optical-clear') {
+        rxRow.style.display = 'flex';
+        document.getElementById('ldc-sum-rx-uploaded').textContent = state.rxFile ? 'Yes' : 'No';
+      } else {
+        rxRow.style.display = 'none';
+      }
+    }
+
+    // ------------------- FILE UPLOAD RX SYSTEM -------------------
+    function initInteractive() {
+      const zone = document.getElementById('ldc-upload-zone');
+      const input = document.getElementById('ldc-rx-file-input');
+
+      if (zone && input) {
+        zone.onclick = () => input.click();
+        
+        zone.ondragover = (e) => {
+          e.preventDefault();
+          zone.style.borderColor = 'var(--ldc-burgundy)';
+        };
+
+        zone.ondragleave = () => {
+          zone.style.borderColor = 'rgba(0,0,0,0.15)';
+        };
+
+        zone.ondrop = (e) => {
+          e.preventDefault();
+          zone.style.borderColor = 'rgba(0,0,0,0.15)';
+          if (e.dataTransfer.files.length > 0) {
+            handleFileSelect(e.dataTransfer.files[0]);
+          }
+        };
+
+        input.onchange = () => {
+          if (input.files.length > 0) {
+            handleFileSelect(input.files[0]);
+          }
+        };
+      }
+    }
+
+    window.ldcTriggerUpload = function() {
+      document.getElementById('ldc-rx-file-input').click();
+    };
+
+    function handleFileSelect(file) {
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+      if (!validTypes.includes(file.type)) {
+        document.getElementById('ldc-upload-error').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('ldc-upload-error').style.display = 'none';
+      state.rxFile = file;
+
+      // Display success UI
+      document.getElementById('ldc-upload-zone').style.display = 'none';
+      document.getElementById('ldc-upload-success').style.display = 'flex';
+      document.getElementById('ldc-uploaded-filename').textContent = file.name;
+    }
+
+    // ------------------- CART SUBMIT ACTION -------------------
+    window.ldcAddToCart = function() {
+      const model = modelsData[state.modelKey];
+      const color = model.colors[state.frameColorIndex];
+      const type = lensTypes.find(t => t.id === state.lensTypeId);
+
+      // Construct cart line item properties
+      const properties = {
+        'Model': model.name,
+        'Frame Color': color.name,
+        'Lens Type': type.name,
+        'Lens Finish': state.lensColorType ? (state.lensColorType === 'solid' ? 'Solid Tint' : 'Gradient Tint') : 'N/A',
+        'Lens Color': state.lensColorName || 'Clear / Default',
+      };
+
+      if (state.rxFile) {
+        properties['Prescription File'] = state.rxFile.name; // In real Shopify store, this would upload the file to Shopify CDN or custom host
+      }
+
+      const cartBtn = document.getElementById('ldc-wiz-cart-btn');
+      cartBtn.disabled = true;
+      cartBtn.textContent = 'Adding to Cart...';
+
+      // We will make an AJAX post request to Shopify /cart/add.js
+      // To ensure that this works dynamically on mock data, we add a generic custom product variant id if present in the catalog, 
+      // or we simulate adding the item. In the real store, the developer would map state.modelKey to a Shopify product variant ID.
+      // We will look for any variant or use a placeholder, and attach properties.
+      
+      const variantId = color.id || 42106553827490;
+
+      const formData = {
+        items: [{
+          id: variantId,
+          quantity: 1,
+          properties: properties
+        }]
+      };
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        cartBtn.textContent = 'Success!';
+        setTimeout(() => {
+          cartBtn.disabled = false;
+          cartBtn.textContent = 'Add to Cart';
+          
+          // Open the cart drawer if it exists in the theme
+          const cartDrawer = document.getElementById('CartDrawer') || document.getElementById('cart-drawer');
+          if (cartDrawer) {
+            cartDrawer.setAttribute('open', '');
+          } else {
+            // Redirect to standard cart page
+            window.location.href = '/cart';
+          }
+        }, 1500);
+      })
+      .catch(error => {
+        console.error('Error adding customized product to cart:', error);
+        alert('Customized item added to your custom setup (mock simulation). All properties: ' + JSON.stringify(properties));
+        cartBtn.disabled = false;
+        cartBtn.textContent = 'Add to Cart';
+      });
+    };
+
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Eyewear Catalog Section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Hero Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Lifestyle Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_kicker",
+      "label": "Hero Kicker Text",
+      "default": "bespoke collection"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "design your signature frames"
+    },
+    {
+      "type": "text",
+      "id": "hero_desc",
+      "label": "Hero Description",
+      "default": "Select a model below to begin customizing your premium lenses."
+    },
+    {
+      "type": "text",
+      "id": "hero_cta_label",
+      "label": "Hero CTA Button Text",
+      "default": "explore collection"
+    },
+    {
+      "type": "url",
+      "id": "hero_cta_link",
+      "label": "Hero CTA Link"
+    },
+    {
+      "type": "header",
+      "content": "Promotional Banner 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo1_image",
+      "label": "Promo 1 Lifestyle Image"
+    },
+    {
+      "type": "text",
+      "id": "promo1_title",
+      "label": "Promo 1 Title",
+      "default": "Custom Prescription Lenses"
+    },
+    {
+      "type": "text",
+      "id": "promo1_desc",
+      "label": "Promo 1 Description",
+      "default": "Aesthetic tints matched with precise vision correction."
+    },
+    {
+      "type": "url",
+      "id": "promo1_link",
+      "label": "Promo 1 Link"
+    },
+    {
+      "type": "header",
+      "content": "Promotional Banner 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo2_image",
+      "label": "Promo 2 Lifestyle Image"
+    },
+    {
+      "type": "text",
+      "id": "promo2_title",
+      "label": "Promo 2 Title",
+      "default": "Premium Bio-Acetate"
+    },
+    {
+      "type": "text",
+      "id": "promo2_desc",
+      "label": "Promo 2 Description",
+      "default": "Handcrafted frame materials for lightweight luxury comfort."
+    },
+    {
+      "type": "url",
+      "id": "promo2_link",
+      "label": "Promo 2 Link"
+    },
+    {
+      "type": "header",
+      "content": "Product Grid"
+    },
+    {
+      "type": "text",
+      "id": "catalog_heading",
+      "label": "Grid Section Heading",
+      "default": "new products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Eyewear Catalog Section"
+    }
+  ]
+}
+{% endschema %}

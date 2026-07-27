@@ -167,14 +167,7 @@
   </sticky-add-to-cart>
 {% endif %}
 
-{% render 'product-information-content',
-  product_media_size: closest.product.media.size,
-  section_id: section.id,
-  settings: section.settings,
-  media_gallery: media_gallery,
-  product_details: product_details,
-  additional_blocks: additional_blocks
-%}
+{% render 'c-custom-product-page' %}
 
 {% stylesheet %}
   .sticky-add-to-cart__bar {

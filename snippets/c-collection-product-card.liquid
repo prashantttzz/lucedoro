@@ -1,0 +1,102 @@
+{%- comment -%}
+  Custom Product Card for Collection Page
+  Accepts:
+  - product: {Object} Product Liquid object
+{%- endcomment -%}
+
+{% capture product_data_json %}
+{
+  "id": {{ product.id }},
+  "title": {{ product.title | json }},
+  "handle": {{ product.handle | json }},
+  "price": {{ product.price }},
+  "featured_image": {% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 600 | json }}{% else %}null{% endif %},
+  "variants": [
+    {% for variant in product.variants %}
+      {
+        "id": {{ variant.id }},
+        "title": {{ variant.title | json }},
+        "price": {{ variant.price }},
+        "available": {{ variant.available }},
+        "featured_image": {
+          "src": {% if variant.featured_image != blank %}{{ variant.featured_image | image_url: width: 800 | json }}{% else %}null{% endif %}
+        }
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+{% endcapture %}
+
+<a
+  href="{{ product.url }}"
+  class="c-product-card ldc-animate"
+>
+  <script type="application/json" class="product-json-data">
+    {{ product_data_json }}
+  </script>
+  <div class="c-product-card__image-container">
+    {%- if product.featured_image != blank -%}
+      <img
+        src="{{ product.featured_image | image_url: width: 800 }}"
+        alt="{{ product.featured_image.alt | escape | default: product.title }}"
+        loading="lazy"
+        width="{{ product.featured_image.width }}"
+        height="{{ product.featured_image.height }}"
+      >
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+
+    {%- if product.tags contains 'NEW' or product.tags contains 'New' or product.tags contains 'new' -%}
+      <div class="c-product-card__badge">NEW IN</div>
+    {%- endif -%}
+  </div>
+
+  <div class="c-product-card__swatches">
+    {%- assign color_option_index = -1 -%}
+    {%- for option in product.options_with_values -%}
+      {%- assign option_name_downcase = option.name | downcase -%}
+      {%- if option_name_downcase == 'color'
+        or option_name_downcase == 'colour'
+        or option_name_downcase == 'couleur'
+      -%}
+        {%- assign color_option_index = forloop.index0 -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if color_option_index != -1 -%}
+      {%- assign colors = product.options_with_values[color_option_index].values -%}
+      {%- for color in colors -%}
+        {%- assign swatch_color = color | downcase | handleize -%}
+        {%- assign bg_color = '#dddddd' -%}
+
+        {%- case swatch_color -%}
+          {%- when 'black' -%}
+            {%- assign bg_color = '#000000' -%}
+          {%- when 'tortoise' -%}
+            {%- assign bg_color = '#6b3e1b' -%}
+          {%- when 'caramel' -%}
+            {%- assign bg_color = '#c68e58' -%}
+          {%- when 'clear' -%}
+            {%- assign bg_color = '#e8e8e8' -%}
+          {%- when 'green' -%}
+            {%- assign bg_color = '#2a4b3c' -%}
+          {%- when 'chestnut' -%}
+            {%- assign bg_color = '#8b4513' -%}
+          {%- when 'slate-blue' -%}
+            {%- assign bg_color = '#4a5b6d' -%}
+        {%- endcase -%}
+
+        <div class="c-product-card__swatch" style="background-color: {{ bg_color }};" title="{{ color }}"></div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  <div class="c-product-card__info">
+    <h3 class="c-product-card__title">{{ product.title | downcase }}</h3>
+    <div class="c-product-card__price">
+      {{ product.price | money }}
+    </div>
+  </div>
+</a>

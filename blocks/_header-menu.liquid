@@ -78,126 +78,185 @@
     %}
 
     {% capture children %}
-      {% for link in block_settings.menu.links %}
-        <li
-          role="presentation"
-          class="menu-list__list-item"
-          on:focus="/activate"
-          on:blur="/deactivate"
-          on:pointerenter="/activate"
-          on:pointerleave="/deactivate"
+      <!-- Link 1: Home -->
+      <li
+        role="presentation"
+        class="menu-list__list-item"
+        on:focus="/activate"
+        on:blur="/deactivate"
+        on:pointerenter="/activate"
+        on:pointerleave="/deactivate"
+      >
+        <a
+          href="/"
+          data-skip-node-update="true"
+          class="menu-list__link"
+          aria-controls="submenu-home"
+          aria-haspopup="true"
+          aria-expanded="false"
+          ref="menuitem"
         >
-          <a
-            href="{{ link.url }}"
-            data-skip-node-update="true"
-            class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}"
-            {%- assign downcase_title = link.title | downcase -%}
-            {%- assign has_dropdown = false -%}
-            {%- if link.links != blank or forloop.first == true -%}
-              {%- assign has_dropdown = true -%}
-            {%- endif -%}
-            {%- if has_dropdown -%}
-              aria-controls="submenu-{{ forloop.index }}"
-              aria-haspopup="true"
-              aria-expanded="false"
-            {%- endif -%}
-            ref="menuitem"
+          <span class="menu-list__link-title">HOME</span>
+        </a>
+        <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
+          <div
+            id="submenu-home"
+            class="menu-list__submenu-inner"
+            style="{% render 'submenu-font-styles', settings: block_settings %}"
           >
-            <span class="menu-list__link-title">
-              {%- if forloop.first == true -%}
-                Shop
-              {%- else -%}
-                {{- link.title -}}
-              {%- endif -%}
-            </span>
-          </a>
-          {%- if has_dropdown -%}
-            <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
+            <div class="mega-menu section section--full-width-margin section--{{ section.settings.section_width }}">
               <div
-                id="submenu-{{ forloop.index }}"
-                class="menu-list__submenu-inner"
-                style="{% render 'submenu-font-styles', settings: block_settings %}"
+                class="mega-menu__grid"
+                style="display: flex; justify-content: space-between;"
               >
-                {% assign list_id = 'MegaMenuList-' | append: forloop.index %}
-                <div class="mega-menu section section--full-width-margin section--{{ section.settings.section_width }}">
-                  <div
-                    class="mega-menu__grid"
-                    data-menu-grid-id="{{ list_id }}"
-                    style="display: flex; justify-content: space-between;"
-                  >
-                    {% if forloop.first == true %}
-                      <ul class="mega-menu__list list-unstyled" style="display: flex; gap: 80px; padding: 20px 0;">
-                        <!-- Column 1: New Arrivals -->
-                        <li class="mega-menu__column">
-                          <a href="/collections/all" class="mega-menu__link mega-menu__link--parent">
-                            <span class="wrap-text">new arrivals</span>
-                          </a>
-                          <ul class="list-unstyled">
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">oversized frames</span></a></li>
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">slim profiles</span></a></li>
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">gradient lenses</span></a></li>
-                          </ul>
-                        </li>
+                <ul class="mega-menu__list list-unstyled" style="display: flex; gap: 80px; padding: 20px 0;">
+                  <li class="mega-menu__column">
+                    <a href="/#our-story" class="mega-menu__link mega-menu__link--parent">
+                      <span class="wrap-text">about us</span>
+                    </a>
+                    <ul class="list-unstyled">
+                      <li style="margin-bottom: 12px;"><a href="/#our-story" class="mega-menu__link"><span class="wrap-text">our story</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/#join-the-club" class="mega-menu__link"><span class="wrap-text">join the club</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">customizer drawer</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">featured collection</span></a></li>
+                    </ul>
+                  </li>
+                </ul>
 
-                        <!-- Column 2: Best Sellers -->
-                        <li class="mega-menu__column">
-                          <a href="/collections/all" class="mega-menu__link mega-menu__link--parent">
-                            <span class="wrap-text">best sellers</span>
-                          </a>
-                          <ul class="list-unstyled">
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">shop all</span></a></li>
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">square classics</span></a></li>
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">rounded shapes</span></a></li>
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">dark lenses</span></a></li>
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">light tints</span></a></li>
-                          </ul>
-                        </li>
-
-                        <!-- Column 3: Shop by Style -->
-                        <li class="mega-menu__column">
-                          <a href="/collections/all" class="mega-menu__link mega-menu__link--parent">
-                            <span class="wrap-text">shop by style</span>
-                          </a>
-                          <ul class="list-unstyled">
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">shop all</span></a></li>
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">acetate frames</span></a></li>
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">metal frames</span></a></li>
-                            <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">limited drops</span></a></li>
-                          </ul>
-                        </li>
-                      </ul>
-
-                      <aside class="mega-menu__content mega-menu__content--feature">
-                        <a href="/collections/all" class="mega-menu__feature-panel">
-                          <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056" alt="Featured sunglasses collection" class="mega-menu__feature-image" loading="lazy">
-                          <div class="mega-menu__feature-overlay"></div>
-                          <div class="mega-menu__feature-copy">
-                            <p class="mega-menu__feature-kicker">featured edit</p>
-                            <h3 class="mega-menu__feature-title">signature sunglasses</h3>
-                            <p class="mega-menu__feature-text">Discover standout shapes, rich tones, and easy everyday frames.</p>
-                          </div>
-                        </a>
-                      </aside>
-                    {% else %}
-                      {% render 'mega-menu-list',
-                        parent_link: link,
-                        id: list_id,
-                        section: section,
-                        grid_columns_count: 6,
-                        grid_columns_count_tablet: 4,
-                        grid_columns_count_collection_images: 8,
-                        menu_content_type: menu_content_type,
-                        content_aspect_ratio: ratio,
-                        image_border_radius: image_border_radius
-                      %}
-                    {% endif %}
-                  </div>
-                </div>
+                <aside class="mega-menu__content mega-menu__content--feature">
+                  <a href="/" class="mega-menu__feature-panel">
+                    <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_9.35.24_PM.jpg?v=1784652068" alt="Luce D'Oro Club" class="mega-menu__feature-image" loading="lazy">
+                    <div class="mega-menu__feature-overlay"></div>
+                    <div class="mega-menu__feature-copy">
+                      <p class="mega-menu__feature-kicker">welcome</p>
+                      <h3 class="mega-menu__feature-title">luce d'oro club</h3>
+                      <p class="mega-menu__feature-text">Frames for bright days and sharp looks.</p>
+                    </div>
+                  </a>
+                </aside>
               </div>
             </div>
-          {%- endif -%}
-        </li>
-      {% endfor %}
+          </div>
+        </div>
+      </li>
+
+      <!-- Link 2: Shop -->
+      <li
+        role="presentation"
+        class="menu-list__list-item"
+        on:focus="/activate"
+        on:blur="/deactivate"
+        on:pointerenter="/activate"
+        on:pointerleave="/deactivate"
+      >
+        <a
+          href="/collections/all"
+          data-skip-node-update="true"
+          class="menu-list__link"
+          aria-controls="submenu-collections"
+          aria-haspopup="true"
+          aria-expanded="false"
+          ref="menuitem"
+        >
+          <span class="menu-list__link-title">SHOP</span>
+        </a>
+        <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
+          <div
+            id="submenu-collections"
+            class="menu-list__submenu-inner"
+            style="{% render 'submenu-font-styles', settings: block_settings %}"
+          >
+            <div class="mega-menu section section--full-width-margin section--{{ section.settings.section_width }}">
+              <div
+                class="mega-menu__grid"
+                style="display: flex; justify-content: space-between;"
+              >
+                <ul class="mega-menu__list list-unstyled" style="display: flex; gap: 80px; padding: 20px 0;">
+                  <!-- Column 1: All Collections -->
+                  <li class="mega-menu__column">
+                    <a href="/collections/all" class="mega-menu__link mega-menu__link--parent">
+                      <span class="wrap-text">all collections</span>
+                    </a>
+                    <ul class="list-unstyled">
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">shop all sunglasses</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">best sellers</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">new arrivals</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">limited drops</span></a></li>
+                    </ul>
+                  </li>
+
+                  <!-- Column 2: By Frame Style -->
+                  <li class="mega-menu__column">
+                    <a href="/collections/all" class="mega-menu__link mega-menu__link--parent">
+                      <span class="wrap-text">by style</span>
+                    </a>
+                    <ul class="list-unstyled">
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">acetate frames</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">metal frames</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">oversized profiles</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">classic round</span></a></li>
+                    </ul>
+                  </li>
+
+                  <!-- Column 3: Custom Lenses -->
+                  <li class="mega-menu__column">
+                    <a href="/collections/all" class="mega-menu__link mega-menu__link--parent">
+                      <span class="wrap-text">custom lenses</span>
+                    </a>
+                    <ul class="list-unstyled">
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">polarized lenses</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">gradient tints</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">custom lens colors</span></a></li>
+                    </ul>
+                  </li>
+                </ul>
+
+                <aside class="mega-menu__content mega-menu__content--feature">
+                  <a href="/collections/all" class="mega-menu__feature-panel">
+                    <img src="https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM_3.jpg?v=1784350056" alt="Featured sunglasses collection" class="mega-menu__feature-image" loading="lazy">
+                    <div class="mega-menu__feature-overlay"></div>
+                    <div class="mega-menu__feature-copy">
+                      <p class="mega-menu__feature-kicker">featured edit</p>
+                      <h3 class="mega-menu__feature-title">signature sunglasses</h3>
+                      <p class="mega-menu__feature-text">Discover standout shapes, rich tones, and easy everyday frames.</p>
+                    </div>
+                  </a>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <!-- Link 3: Contact Us -->
+      <li
+        role="presentation"
+        class="menu-list__list-item"
+      >
+        <a
+          href="mailto:support@lucedoro.com"
+          data-skip-node-update="true"
+          class="menu-list__link"
+          ref="menuitem"
+        >
+          <span class="menu-list__link-title">CONTACT US</span>
+        </a>
+      </li>
+
+      <!-- Link 4: Customization -->
+      <li
+        role="presentation"
+        class="menu-list__list-item"
+      >
+        <a
+          href="/collections/all"
+          data-skip-node-update="true"
+          class="menu-list__link"
+          ref="menuitem"
+        >
+          <span class="menu-list__link-title" style="color: #e5c158; font-weight: bold; letter-spacing: 0.1em;">CUSTOMIZATION</span>
+        </a>
+      </li>
       <li
         class="menu-list__list-item"
         role="presentation"

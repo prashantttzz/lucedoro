@@ -182,11 +182,15 @@ h6,
 /* Explicit size scale up for navigation links */
 .menu-list__link-title {
   font-family: 'Canela' !important;
-  font-size: 1.05rem !important;
-  font-weight: 400 !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
   line-height: 1.2 !important;
-  letter-spacing: 0.02em !important;
-  text-transform: none !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+.menu-list__list-item {
+  padding-inline: 18px !important;
 }
 
 /* Header Padding Override */
@@ -525,14 +529,14 @@ body {
   margin-bottom: 12px !important;
 }
 
-/* Mega Menu Child Links (All-Caps sans-serif/serif) */
+/* Mega Menu Child Links */
 .mega-menu__column ul li a.mega-menu__link,
 .mega-menu__column ul li a.mega-menu__link span,
 .mega-menu__column ul li a.mega-menu__link * {
   font-family: 'Canela', serif !important;
-  text-transform: uppercase !important;
-  font-size: 11px !important;
-  letter-spacing: 0.15em !important;
+  text-transform: lowercase !important;
+  font-size: 13px !important;
+  letter-spacing: 0.04em !important;
   color: #FAFAF7 !important;
   /* Brand Off-White link text */
   font-weight: 500 !important;
@@ -679,4 +683,214 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #8c765c;
+}
+
+/* ==========================================================================
+   Cart Drawer — brand styling (Luce D'Oro Club)
+   ========================================================================== */
+
+.cart-drawer__dialog {
+  background-color: var(--ldc-white) !important;
+  border-left: 1px solid rgba(90, 31, 38, 0.12) !important;
+  box-shadow: -12px 0 40px rgba(90, 31, 38, 0.1) !important;
+}
+
+.cart-drawer__header,
+.cart-drawer__content,
+.cart-drawer__summary {
+  background-color: var(--ldc-white) !important;
+}
+
+.cart-drawer__header {
+  border-bottom: 1px solid rgba(90, 31, 38, 0.1) !important;
+}
+
+.cart-drawer__heading {
+  font-family: 'ldc-font' !important;
+  font-weight: normal !important;
+  text-transform: lowercase !important;
+  letter-spacing: normal !important;
+  font-size: clamp(20px, 2.4vw, 26px) !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+.cart-drawer__close-button {
+  color: var(--ldc-burgundy) !important;
+  background-color: transparent !important;
+  transition: opacity 0.2s ease;
+}
+
+.cart-drawer__close-button:hover {
+  opacity: 0.6;
+}
+
+/* Cart bubble on the drawer heading, in gold */
+.cart-drawer__heading .cart-bubble__background {
+  background-color: var(--ldc-gold) !important;
+}
+
+.cart-drawer__heading .cart-bubble__text {
+  color: var(--ldc-white) !important;
+  font-weight: 600 !important;
+}
+
+/* Line items */
+.cart-drawer__items .cart-items__table-row {
+  border-bottom: 1px solid rgba(90, 31, 38, 0.08) !important;
+}
+
+.cart-items__media-container {
+  background-color: var(--ldc-beige, #E9E2D6);
+  border-radius: 2px;
+}
+
+.cart-items__media-image {
+  mix-blend-mode: multiply;
+}
+
+.cart-items__title {
+  font-family: 'Canela' !important;
+  font-weight: 600 !important;
+  text-transform: lowercase !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+.cart-items__details {
+  color: var(--ldc-burgundy) !important;
+}
+
+.cart-items__variants,
+.cart-items__properties {
+  text-transform: none !important;
+}
+
+.cart-items__price,
+.cart-items__price * {
+  font-family: 'Canela' !important;
+  font-weight: 600 !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+.cart-items__price .compare-at-price {
+  font-weight: 400 !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+/* Quantity selector */
+.cart-items__quantity .quantity-selector {
+  border-color: rgba(90, 31, 38, 0.18) !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+.cart-items__remove {
+  color: var(--ldc-burgundy) !important;
+}
+
+.cart-items__remove:hover {
+  color: var(--ldc-burgundy) !important;
+}
+
+/* Empty cart state */
+.cart-drawer--empty .cart-drawer__heading {
+  font-size: clamp(18px, 2vw, 22px) !important;
+}
+
+.cart-items__empty-button {
+  background-color: var(--ldc-burgundy) !important;
+  color: var(--ldc-white) !important;
+  font-family: 'Canela' !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  border-radius: 2px !important;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.cart-items__empty-button:hover {
+  background-color: #3d0c11 !important;
+  transform: translateY(-1px);
+}
+
+/* Summary panel */
+.cart-drawer__summary {
+  border-top: 1px solid rgba(90, 31, 38, 0.1);
+}
+
+.cart__summary-totals:not(:has(.cart-actions)) {
+  border-block-start: 1px solid rgba(90, 31, 38, 0.1) !important;
+}
+
+.cart__original-total-label,
+.cart__total-label,
+.cart-note__label,
+.cart-discount__label {
+  font-family: 'Canela' !important;
+  font-size: 11px !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+.cart__total-value {
+  font-family: 'ldc-font' !important;
+  font-weight: normal !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+.cart__original-total-value,
+.cart__discount-value {
+  font-family: 'Canela' !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+/* Cart note / discount accordions */
+.cart-actions {
+  border-color: rgba(90, 31, 38, 0.1) !important;
+}
+
+.cart-actions__divider {
+  border-color: rgba(90, 31, 38, 0.1) !important;
+}
+
+.cart-note__instructions,
+.cart-discount__input {
+  background-color: var(--ldc-white) !important;
+  border-color: rgba(90, 31, 38, 0.2) !important;
+  color: var(--ldc-burgundy) !important;
+  font-family: 'Canela' !important;
+}
+
+.cart-discount__button {
+  color: var(--ldc-burgundy) !important;
+}
+
+.cart-discount__pill {
+  background-color: var(--ldc-beige, #E9E2D6) !important;
+  color: var(--ldc-burgundy) !important;
+  text-transform: none !important;
+}
+
+/* Checkout button — matches the customizer's primary CTA styling */
+.cart__checkout-button {
+  background-color: var(--ldc-burgundy) !important;
+  color: var(--ldc-white) !important;
+  border: none !important;
+  border-radius: 2px !important;
+  font-family: 'Canela' !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.cart__checkout-button:hover {
+  background-color: #3d0c11 !important;
+  transform: translateY(-1px);
+}
+
+.cart__checkout-button:disabled {
+  background-color: rgba(90, 31, 38, 0.3) !important;
+  transform: none;
 }

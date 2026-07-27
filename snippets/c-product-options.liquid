@@ -1,0 +1,84 @@
+<div class="c-variant-picker">
+  {%- unless product.has_only_default_variant -%}
+    {%- for option in product.options_with_values -%}
+      <div class="c-variant-picker__group">
+        <div class="c-variant-picker__header">
+          <label class="c-variant-picker__label">
+            {{ option.name }}
+            {% if option.name == 'Color' or option.name == 'Colour' %}
+              <span x-text="selectedVariant.options[{{ forloop.index0 }}]"></span>
+            {% endif %}
+          </label>
+          
+          {%- if option.name == 'Size' -%}
+            <a href="#size-guide" class="c-variant-picker__link">Size Chart</a>
+          {%- endif -%}
+        </div>
+
+        {%- if option.name == 'Color' or option.name == 'Colour' -%}
+          <div class="c-variant-picker__swatches">
+            {%- for value in option.values -%}
+              {%- assign variant_for_swatch = product.variants | where: "option1", value | first -%}
+              {%- if variant_for_swatch == blank -%}
+                 {%- assign variant_for_swatch = product.variants | where: "option2", value | first -%}
+              {%- endif -%}
+              {%- if variant_for_swatch == blank -%}
+                 {%- assign variant_for_swatch = product.variants | where: "option3", value | first -%}
+              {%- endif -%}
+              
+              {%- assign swatch_img = variant_for_swatch.featured_image | default: product.featured_image -%}
+              
+              <button 
+                type="button"
+                class="c-variant-picker__swatch"
+                :class="{ 'is-active': selectedVariant.options[{{ forloop.index0 }}] === '{{ value | escape }}' }"
+                style="background-image: url('{{ swatch_img | image_url: width: 100 }}')"
+                title="{{ value | escape }}"
+                @click="selectOption({{ forloop.index0 }}, '{{ value | escape }}')"
+              >
+                <span class="visually-hidden">{{ value }}</span>
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div class="c-variant-picker__buttons">
+            {%- for value in option.values -%}
+              <button 
+                type="button"
+                class="c-variant-picker__button"
+                :class="{ 'is-active': selectedVariant.options[{{ forloop.index0 }}] === '{{ value | escape }}' }"
+                @click="selectOption({{ forloop.index0 }}, '{{ value | escape }}')"
+                {% comment %} Note: For true availability per option, more complex logic is needed, simplified here {% endcomment %}
+              >
+                {{ value }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  {%- endunless -%}
+
+  <!-- Add to Cart -->
+  <button 
+    type="button"
+    class="c-add-to-cart"
+    :class="{ 'is-loading': isAdding }"
+    :disabled="!isAvailable || isAdding"
+    @click="addToCart"
+  >
+    <span x-show="!isAdding && isAvailable">Add to Cart</span>
+    <span x-show="!isAvailable" style="display: none;">Sold Out</span>
+  </button>
+
+  <!-- Availability Status -->
+  <div class="c-availability">
+    <div class="c-availability__item" x-show="isAvailable">
+      <svg viewBox="0 0 14 14"><path d="M5.5 11L2 7.5l1.4-1.4 2.1 2.1 5.1-5.1L12 4.5 5.5 11z"/></svg>
+      <span>In Stock, ready to ship</span>
+    </div>
+    <div class="c-availability__item c-availability__item--out" x-show="!isAvailable" style="display: none;">
+      <span>Out of Stock</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,336 @@
+{%- comment -%}
+  Customizer Sidebar Drawer Component
+{%- endcomment -%}
+
+<script
+  src="{{ 'dialog.js' | asset_url }}"
+  type="module"
+></script>
+
+<dialog-component
+  id="c-customizer-drawer"
+  class="c-customizer-drawer"
+>
+  <dialog
+    ref="dialog"
+    class="c-drawer-dialog dialog-modal dialog-drawer"
+    scroll-lock
+    aria-labelledby="c-drawer-title-step-1"
+  >
+    <div class="c-drawer-panel">
+      <div id="c-drawer-step-1" class="c-drawer-step">
+        <div class="c-drawer-header">
+          <h2 class="c-drawer-title" id="c-drawer-title-step-1">select the frame color</h2>
+          <button
+            type="button"
+            ref="closeButton"
+            on:click="/closeDialog"
+            class="button button-unstyled close-button c-drawer-close"
+            aria-label="Close"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="c-drawer-body">
+          <div class="c-drawer-product-summary">
+            <div class="c-drawer-product-info">
+              <span class="c-drawer-product-name" id="c-drawer-product-title"></span>
+              <span class="c-drawer-product-price" id="c-drawer-product-price"></span>
+            </div>
+
+            <div class="c-drawer-main-preview">
+              <img id="c-drawer-preview-img" src="" alt="" class="c-drawer-preview-img">
+              <div class="c-drawer-preview-badge">
+                <span>Glass color*</span>
+                <span class="c-drawer-lens-name" id="c-drawer-selected-lens-name">G15</span>
+              </div>
+            </div>
+
+            <div class="c-drawer-match-note">
+              <span>*selection of lenses recommended for this frame.</span>
+              <span class="c-drawer-tag-match">perfect match</span>
+            </div>
+
+            <div class="c-drawer-frame-swatches" id="c-drawer-swatches-container"></div>
+
+            <div class="c-drawer-lens-tabs" style="margin-top: 24px;">
+              <button type="button" class="is-active">lens type</button>
+            </div>
+            <div class="c-drawer-lens-types" id="c-drawer-lens-type-container"></div>
+          </div>
+        </div>
+
+        <div class="c-drawer-footer">
+          <button
+            type="button"
+            id="c-drawer-customize-btn"
+            class="c-drawer-btn c-drawer-btn--primary"
+            onclick="goToStep(2)"
+          >
+            add & customize lenses
+          </button>
+        </div>
+      </div>
+
+      <div id="c-drawer-step-2" class="c-drawer-step" style="display: none;">
+        <div class="c-drawer-header c-drawer-header--step2">
+          <button type="button" class="c-drawer-back" onclick="goToStep(1)">
+            <span class="c-drawer-back-text">< previous</span>
+          </button>
+          <h2 class="c-drawer-title" id="c-drawer-title-step-2">select your lens color</h2>
+          <button
+            type="button"
+            on:click="/closeDialog"
+            class="button button-unstyled close-button c-drawer-close"
+            aria-label="Close"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="c-drawer-body">
+          <div class="c-drawer-mini-product">
+            <img id="c-drawer-mini-img" src="" alt="" class="c-drawer-mini-img">
+            <div class="c-drawer-mini-title" id="c-drawer-mini-title"></div>
+          </div>
+
+          <div class="c-drawer-lens-tabs">
+            <button type="button" class="is-active">lens color</button>
+          </div>
+
+          <div class="c-drawer-lens-list" id="c-drawer-lens-list-container"></div>
+        </div>
+
+        <div class="c-drawer-footer">
+          <button
+            type="button"
+            id="c-drawer-add-lenses-btn"
+            class="c-drawer-btn c-drawer-btn--primary"
+            onclick="addToCartWithLenses()"
+          >
+            add to cart with lenses
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</dialog-component>
+
+<script>
+  (function() {
+    if (window.__ldcCustomizerDrawerInitialized) return;
+    window.__ldcCustomizerDrawerInitialized = true;
+
+    let currentProduct = null;
+    let selectedVariant = null;
+    let selectedLensType = { id: 'standard', name: 'Standard', price: 0 };
+    let selectedLensColor = { id: 'g15', name: 'G15', color: '#2a4b3c' };
+
+    const mockLensTypes = [
+      { id: 'standard', name: 'Standard', price: 0 },
+      { id: 'polarized', name: 'Polarized', price: 30 },
+      { id: 'bluelight', name: 'Blue Light Block', price: 20 },
+      { id: 'transition', name: 'Transitions', price: 50 }
+    ];
+
+    const mockLenses = [
+      { id: 'g15', name: 'G15', color: '#2a4b3c' },
+      { id: 'yellow', name: 'Yellow', color: '#f4d03f' },
+      { id: 'blue', name: 'Light Blue', color: '#85c1e9' },
+      { id: 'brown', name: 'Brown', color: '#8b4513' },
+      { id: 'orange', name: 'Orange', color: '#e67e22' },
+      { id: 'green', name: 'Light Green', color: '#abebc6' },
+      { id: 'purple', name: 'Purple', color: '#8e44ad' }
+    ];
+
+    window.openCustomizerDrawer = function(cardEl) {
+      const jsonScript = cardEl.querySelector('.product-json-data');
+      if (!jsonScript) return;
+
+      try {
+        currentProduct = JSON.parse(jsonScript.textContent);
+        selectedVariant = currentProduct.variants ? currentProduct.variants[0] : null;
+        selectedLensType = mockLensTypes[0];
+        selectedLensColor = mockLenses[0];
+
+        renderStep1();
+        renderStep2();
+        goToStep(1);
+
+        const drawer = document.getElementById('c-customizer-drawer');
+        if (drawer && typeof drawer.showDialog === 'function') {
+          drawer.showDialog();
+        } else if (drawer) {
+          drawer.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        }
+      } catch (err) {
+        console.error('Error opening customizer drawer:', err);
+      }
+    };
+
+    window.closeCustomizerDrawer = function() {
+      const drawer = document.getElementById('c-customizer-drawer');
+      if (drawer && typeof drawer.closeDialog === 'function') {
+        drawer.closeDialog();
+      } else if (drawer) {
+        drawer.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    };
+
+    window.goToStep = function(stepNum) {
+      const s1 = document.getElementById('c-drawer-step-1');
+      const s2 = document.getElementById('c-drawer-step-2');
+      if (s1 && s2) {
+        if (stepNum === 1) {
+          s1.style.display = 'flex';
+          s2.style.display = 'none';
+        } else {
+          s1.style.display = 'none';
+          s2.style.display = 'flex';
+        }
+      }
+    };
+
+    function renderStep1() {
+      if (!currentProduct) return;
+
+      document.getElementById('c-drawer-product-title').textContent = (currentProduct.title || '').toLowerCase();
+      document.getElementById('c-drawer-product-price').textContent = ((selectedVariant ? selectedVariant.price : currentProduct.price) / 100).toFixed(2) + ' EUR';
+      
+      const mainImg = selectedVariant && selectedVariant.featured_image && selectedVariant.featured_image.src ? selectedVariant.featured_image.src : currentProduct.featured_image;
+      document.getElementById('c-drawer-preview-img').src = mainImg;
+      document.getElementById('c-drawer-selected-lens-name').textContent = selectedLensColor ? selectedLensColor.name : 'Standard';
+
+      const container = document.getElementById('c-drawer-swatches-container');
+      container.innerHTML = '';
+
+      if (currentProduct.variants && currentProduct.variants.length > 0) {
+        currentProduct.variants.forEach((v) => {
+          const swatch = document.createElement('div');
+          swatch.className = 'c-drawer-frame-swatch' + (selectedVariant && v.id === selectedVariant.id ? ' is-active' : '');
+          
+          const vImgSrc = v.featured_image && v.featured_image.src ? v.featured_image.src : mainImg;
+          swatch.innerHTML = `
+            <img src="${vImgSrc}" alt="${v.title}">
+            <span class="c-drawer-swatch-title">${v.title}</span>
+          `;
+
+          swatch.onclick = () => {
+            selectedVariant = v;
+            renderStep1();
+            renderStep2();
+          };
+
+          container.appendChild(swatch);
+        });
+      }
+
+      const typeContainer = document.getElementById('c-drawer-lens-type-container');
+      if (typeContainer) {
+        typeContainer.innerHTML = '';
+        mockLensTypes.forEach((lensType) => {
+          const item = document.createElement('div');
+          item.className = 'c-drawer-lens-type' + (selectedLensType && selectedLensType.id === lensType.id ? ' is-selected' : '');
+          item.innerHTML = `
+            <span class="c-drawer-lens-type-title">${lensType.name}</span>
+            <span class="c-drawer-lens-type-price">+${lensType.price} EUR</span>
+          `;
+          item.onclick = () => {
+            selectedLensType = lensType;
+            renderStep1();
+            renderStep2();
+          };
+          typeContainer.appendChild(item);
+        });
+      }
+    }
+
+    function renderStep2() {
+      if (!currentProduct) return;
+
+      const mainImg = selectedVariant && selectedVariant.featured_image && selectedVariant.featured_image.src ? selectedVariant.featured_image.src : currentProduct.featured_image;
+      document.getElementById('c-drawer-mini-img').src = mainImg;
+      document.getElementById('c-drawer-mini-title').textContent = (currentProduct.title || '').toLowerCase();
+
+      const listContainer = document.getElementById('c-drawer-lens-list-container');
+      listContainer.innerHTML = '';
+
+      mockLenses.forEach((lens) => {
+        const item = document.createElement('div');
+        item.className = 'c-drawer-lens-item' + (selectedLensColor && selectedLensColor.id === lens.id ? ' is-selected' : '');
+        item.innerHTML = `
+          <span class="c-drawer-lens-dot" style="background-color: ${lens.color};"></span>
+          <span class="c-drawer-lens-title">${lens.name}</span>
+        `;
+        item.onclick = () => {
+          selectedLensColor = lens;
+          renderStep1();
+          renderStep2();
+        };
+        listContainer.appendChild(item);
+      });
+    }
+
+    window.buyFrameOnly = function() {
+      postToCart({});
+    };
+
+    window.addToCartWithLenses = function() {
+      postToCart({
+        'Lens Type': selectedLensType ? selectedLensType.name : 'Standard',
+        'Lens Color': selectedLensColor ? selectedLensColor.name : 'Standard'
+      });
+    };
+
+    function postToCart(properties) {
+      if (!selectedVariant) return;
+      
+      const btn = document.getElementById('c-drawer-add-lenses-btn');
+      if (btn) btn.textContent = 'ADDING...';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{
+            id: selectedVariant.id,
+            quantity: 1,
+            properties: properties
+          }]
+        })
+      })
+      .then(res => {
+        if (res.ok) {
+          document.documentElement.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true }));
+          closeCustomizerDrawer();
+          alert('Added to cart!');
+        } else {
+          alert('Failed to add to cart');
+        }
+      })
+      .catch(err => console.error(err))
+      .finally(() => {
+        if (btn) btn.textContent = 'ADD TO CART WITH LENSES';
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeCustomizerDrawer();
+    });
+
+    document.addEventListener('click', (event) => {
+      const trigger = event.target.closest('[data-customizer-trigger]');
+      if (!trigger) return;
+
+      event.preventDefault();
+      window.openCustomizerDrawer(trigger);
+    });
+  })();
+</script>

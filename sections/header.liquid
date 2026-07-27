@@ -14,15 +14,11 @@
     assign search_style = 'modal'
   endif
 
-  if section.settings.enable_transparent_header_home and template.name == 'index'
-    assign transparent = 'always'
-    assign transparent_color_scheme = section.settings.home_color_scheme
-  elsif section.settings.enable_transparent_header_product and template.name == 'product'
-    assign transparent = 'always'
-    assign transparent_color_scheme = section.settings.product_color_scheme
-  elsif section.settings.enable_transparent_header_collection and template.name == 'collection'
-    assign transparent = 'always'
-    assign transparent_color_scheme = section.settings.collection_color_scheme
+  if section.settings.enable_transparent_header_home
+    if template.name == 'index' or template.name == 'collection'
+      assign transparent = 'always'
+      assign transparent_color_scheme = section.settings.home_color_scheme
+    endif
   endif
 
   if section.settings.enable_sticky_header == 'always'
@@ -357,6 +353,37 @@
       {{ navigation_bar }}
     </div>
   {% endif %}
+
+  {% unless template.name == 'index' or template.name == 'collection' %}
+    <style>
+      .header-section,
+      header-component,
+      .header,
+      .header__row {
+        background-color: rgba(0, 0, 0, 0.65) !important;
+        background: rgba(0, 0, 0, 0.65) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+      }
+      
+      .header__row {
+        border-bottom: none !important;
+      }
+      
+      header-component .menu-list__link,
+      header-component .header-actions__action,
+      header-component .header-logo,
+      header-component .currency-code,
+      header-component .icon-caret {
+        color: #fafaf7 !important;
+      }
+
+      header-component .menu-list__link:hover,
+      header-component .header-actions__action:hover {
+        color: #C6A15B !important;
+      }
+    </style>
+  {% endunless %}
 </header-component>
 
 <script
