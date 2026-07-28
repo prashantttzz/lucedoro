@@ -953,9 +953,12 @@ body {
 }
 
 /* --- Buttons ------------------------------------------------------------
-   Small uppercase tracking matches the hero CTA and cart checkout button. */
-.account-actions__link.button,
-.account-actions__shop-login shop-login-button {
+   Small uppercase tracking matches the hero CTA and cart checkout button.
+
+   shop-login-button is deliberately NOT styled here. It is a Shop-owned custom
+   element that paints its own violet button; giving it a burgundy background
+   only tints the strip around that button rather than restyling it. */
+.account-actions__link.button {
   background-color: var(--ldc-burgundy) !important;
   color: var(--ldc-white) !important;
   border: 1px solid var(--ldc-burgundy) !important;
@@ -966,6 +969,26 @@ body {
   text-transform: uppercase !important;
   padding: 12px 18px !important;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* The panel's own padding is the only gutter these should have. Without an
+   explicit border-box + 100% width the padding above pushes each button wider
+   than the panel, so they overhang both edges. */
+.account-actions__link.button,
+.account-actions__link.button-secondary,
+.account-actions__shop-login,
+.account-actions__shop-login shop-login-button {
+  box-sizing: border-box !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.account-actions__shop-login {
+  background: none !important;
+  overflow: hidden !important;
 }
 
 .account-actions__link.button:hover {

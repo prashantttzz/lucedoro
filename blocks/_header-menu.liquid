@@ -109,16 +109,38 @@
                 class="mega-menu__grid"
                 style="display: flex; justify-content: space-between;"
               >
+                {%- comment -%}
+                  Anchors use Shopify's auto-generated #shopify-section-{id}
+                  wrapper ids, keyed to the section ids in templates/index.json.
+                  The sections themselves carry no hand-written ids, so the
+                  previous /#our-story and /#join-the-club targets matched
+                  nothing and simply landed at the top of the page.
+                {%- endcomment -%}
                 <ul class="mega-menu__list list-unstyled" style="display: flex; gap: 80px; padding: 20px 0;">
                   <li class="mega-menu__column">
-                    <a href="/#our-story" class="mega-menu__link mega-menu__link--parent">
-                      <span class="wrap-text">About Us</span>
+                    <a href="/" class="mega-menu__link mega-menu__link--parent">
+                      <span class="wrap-text">Explore</span>
                     </a>
                     <ul class="list-unstyled">
-                      <li style="margin-bottom: 12px;"><a href="/#our-story" class="mega-menu__link"><span class="wrap-text">Our Story</span></a></li>
-                      <li style="margin-bottom: 12px;"><a href="/#join-the-club" class="mega-menu__link"><span class="wrap-text">Join the Club</span></a></li>
-                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">Customizer Drawer</span></a></li>
-                      <li style="margin-bottom: 12px;"><a href="/collections/all" class="mega-menu__link"><span class="wrap-text">Featured Collection</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-hero" class="mega-menu__link"><span class="wrap-text">Customize Your Frame</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-custom_featured_collection" class="mega-menu__link"><span class="wrap-text">Signature Eyewear</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-custom_parallax_image" class="mega-menu__link"><span class="wrap-text">The Look</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-custom_our_story" class="mega-menu__link"><span class="wrap-text">Our Story</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-custom_bento_grid" class="mega-menu__link"><span class="wrap-text">Everyday Icons</span></a></li>
+                    </ul>
+                  </li>
+
+                  <li class="mega-menu__column">
+                    <a href="/#shopify-section-custom_our_story" class="mega-menu__link mega-menu__link--parent">
+                      <span class="wrap-text">Join the Club</span>
+                    </a>
+                    <ul class="list-unstyled">
+                      <li style="margin-bottom: 12px;">
+                        <a href="{{ settings.social_instagram_link | default: 'https://instagram.com' }}" target="_blank" rel="noopener" class="mega-menu__link"><span class="wrap-text">Instagram</span></a>
+                      </li>
+                      <li style="margin-bottom: 12px;">
+                        <a href="{{ settings.social_tiktok_link | default: 'https://tiktok.com' }}" target="_blank" rel="noopener" class="mega-menu__link"><span class="wrap-text">TikTok</span></a>
+                      </li>
                     </ul>
                   </li>
                 </ul>
@@ -489,6 +511,11 @@
     --submenu-content-animation: opacity calc(var(--submenu-animation-speed) * 0.75) var(--animation-easing);
 
     visibility: hidden;
+    /* Every submenu occupies the same absolutely-positioned rectangle, so a
+       closed one still sits under the cursor. Without this it can catch the
+       :hover below as the pointer travels down from its trigger and swap itself
+       in for the submenu the user actually opened. */
+    pointer-events: none;
     background-color: var(--color-background);
     position: absolute;
     width: 100%;
@@ -510,6 +537,7 @@
     --submenu-content-opacity: 1;
 
     visibility: visible;
+    pointer-events: auto;
   }
 
   .menu-list__submenu-inner,

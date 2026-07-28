@@ -2,6 +2,18 @@
   Premium Full-Page Eyewear & Lens Customizer for Luce D'Oro Club
 {% endcomment %}
 
+{%- comment -%}
+  On /collections and any other template without a collection in scope, fall
+  back to the "all" collection so the page renders the same catalogue as
+  /collections/all rather than an empty grid.
+{%- endcomment -%}
+{%- liquid
+  assign ldc_collection = collection
+  if ldc_collection == blank or ldc_collection.products.size == 0
+    assign ldc_collection = collections.all
+  endif
+-%}
+
 <div class="ldc-customizer-section color-{{ section.settings.color_scheme }}">
   <!-- VIEW 1: FRAME GALLERY SELECTION -->
   <div id="ldc-gallery-view" class="ldc-gallery-container">
@@ -9,7 +21,7 @@
     {%- liquid
       assign hero_img = section.settings.hero_image
       if hero_img == blank
-        assign hero_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/3b75f2ddfac856aa943476807d98db17.jpg?v=1785240943'
+        assign hero_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/c4c274d0d2c12adfdb9370087bcefc91.jpg?v=1785251229'
       else
         assign hero_url = hero_img | image_url: width: 2400
       endif
@@ -69,7 +81,7 @@
 
     <!-- 3. PRODUCT CATALOGUE HEADER -->
     <div class="ldc-catalog-section-header">
-      <h2 class="ldc-catalog-section-title">{{ section.settings.catalog_heading | default: 'New Products' | escape }}</h2>
+      <h2 class="ldc-catalog-section-title">{{ section.settings.catalog_heading | default: 'All Collection' | escape }}</h2>
 
       <!-- Price & Sort Filters -->
       <div class="ldc-filter-bar">
@@ -292,6 +304,14 @@
 </div>
 
 <style>
+  /* The hero breaks out to 100vw, which counts the vertical scrollbar's width —
+     on desktop that overhangs the viewport by ~15px and produces a horizontal
+     scrollbar. Clip it at the page level; `clip` rather than `hidden` so it does
+     not turn body into a scroll container and kill position: sticky. */
+  body:has(.ldc-customizer-section) {
+    overflow-x: clip;
+  }
+
   /* ------------------- CORE DESIGN VARIABLES ------------------- */
   .ldc-customizer-section {
     font-family: 'Canela', serif;
@@ -320,7 +340,7 @@
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    height: 480px;
+    height: 640px;
     margin-top: calc(var(--header-height, 60px) * -1);
     padding: calc(var(--header-height, 60px) + 20px) 20px 20px;
     border-radius: 0;
@@ -343,7 +363,7 @@
     width: 100%;
     height: 170%;
     background-size: cover;
-    background-position: center;
+    background-position: center top;
     background-repeat: no-repeat;
     z-index: 0;
     will-change: transform;
@@ -359,7 +379,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+    background: rgba(0, 0, 0, 0.45);
     z-index: 1;
     pointer-events: none;
   }
@@ -386,41 +406,6 @@
     }
   }
 
-  /* Fixed 3:2 rectangle on phones — the 480px desktop height reads as a tall
-     panel on a narrow viewport. */
-  @media (max-width: 767px) {
-    .ldc-gallery-hero {
-      height: auto;
-      aspect-ratio: 4 / 3;
-      margin-bottom: 36px;
-      padding: calc(var(--header-height, 60px) + 12px) 18px 18px;
-    }
-
-    /* The desktop scale overwhelms a 3:2 rectangle on a phone. */
-    .ldc-hero-subtitle {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      margin-bottom: 7px;
-    }
-
-    .ldc-hero-title {
-      font-size: clamp(19px, 5.6vw, 26px);
-      margin: 0 0 9px 0;
-      line-height: 1.15;
-    }
-
-    .ldc-hero-desc {
-      font-size: 12px;
-      line-height: 1.5;
-      margin: 0 0 16px 0;
-    }
-
-    .ldc-hero-btn {
-      padding: 9px 22px;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-    }
-  }
   .ldc-hero-content {
     position: relative;
     z-index: 2;
@@ -1311,6 +1296,56 @@
     background: var(--ldc-gold);
     color: var(--ldc-burgundy);
   }
+
+  /* Phone overrides live at the end of the stylesheet on purpose. A media query
+     adds no specificity, so these only win by coming after the base rules they
+     override (.ldc-hero-title, .ldc-card-name and friends are declared above). */
+  @media (max-width: 767px) {
+    /* The 640px desktop height reads as a squat band on a narrow viewport. */
+    .ldc-gallery-hero {
+      height: auto;
+      aspect-ratio: 3 / 4;
+      margin-bottom: 36px;
+      padding: calc(var(--header-height, 60px) + 12px) 18px 18px;
+    }
+
+    .ldc-hero-subtitle {
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      margin-bottom: 7px;
+    }
+
+    .ldc-hero-title {
+      font-size: clamp(19px, 5.6vw, 26px);
+      margin: 0 0 9px 0;
+      line-height: 1.15;
+    }
+
+    .ldc-hero-desc {
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0 0 16px 0;
+    }
+
+    .ldc-hero-btn {
+      padding: 9px 22px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    /* Two cards per row on a phone leaves little width for an uppercase,
+       wide-tracked name — 18px wraps to three lines. */
+    .ldc-card-name {
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .ldc-card-price {
+      font-size: 11px;
+    }
+  }
 </style>
 
 <script>
@@ -1382,8 +1417,8 @@
 
     // ------------------- DYNAMIC CONFIGURATION & DATA -------------------
     let modelsData = {
-      {%- if collection.products.size > 0 -%}
-        {%- for product in collection.products -%}
+      {%- if ldc_collection.products.size > 0 -%}
+        {%- for product in ldc_collection.products -%}
           "{{ product.handle }}": {
             name: "{{ product.title | escape }}",
             price: {{ product.price | divided_by: 100 | default: 650 }},
@@ -2150,7 +2185,7 @@
       "type": "text",
       "id": "catalog_heading",
       "label": "Grid Section Heading",
-      "default": "New Products"
+      "default": "All Collection"
     }
   ],
   "presets": [
