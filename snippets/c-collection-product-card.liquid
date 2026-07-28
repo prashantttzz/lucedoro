@@ -47,9 +47,6 @@
       {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
     {%- endif -%}
 
-    {%- if product.tags contains 'NEW' or product.tags contains 'New' or product.tags contains 'new' -%}
-      <div class="c-product-card__badge">NEW IN</div>
-    {%- endif -%}
   </div>
 
   <div class="c-product-card__swatches">
@@ -94,7 +91,7 @@
   </div>
 
   <div class="c-product-card__info">
-    <h3 class="c-product-card__title">{{ product.title | downcase }}</h3>
+    <h3 class="c-product-card__title">{{ product.title }}</h3>
     <div class="c-product-card__price">
       {{ product.price | money }}
     </div>

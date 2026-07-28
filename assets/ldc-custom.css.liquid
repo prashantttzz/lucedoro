@@ -20,8 +20,12 @@
   --font-body--family: 'Canela' !important;
   --font-paragraph--family: 'Canela' !important;
   --font-family: 'Canela' !important;
-  --font-subheading--family: 'Canela' !important;
-  --font-accent--family: 'Canela' !important;
+  /* Secondary/script roles belong to Playwrite (see assets/ldc-fonts.css.liquid).
+     Canela stays the primary face for headings and body copy. */
+  --font-subheading--family: var(--ldc-font-script) !important;
+  --font-subheading--style: italic !important;
+  --font-accent--family: var(--ldc-font-script) !important;
+  --font-accent--style: italic !important;
 
   --font-heading-family: 'Canela' !important;
   --font-heading--family: 'Canela' !important;
@@ -374,16 +378,21 @@ body {
 #header-component .menu-list,
 #header-component .menu-list__list-item,
 #header-component .header__inline-menu,
-#header-component [class*="color-scheme-"]:not(.menu-list__submenu-inner):not(.mega-menu) {
+/* The drawer is inside #header-component and carries a color-scheme class, so it
+   matches this catch-all. It owns its background image (snippets/header-drawer.liquid)
+   and must be excluded, or the shorthand below wipes it. */
+#header-component [class*="color-scheme-"]:not(.menu-list__submenu-inner):not(.mega-menu):not(.menu-drawer):not(.menu-drawer *) {
   background-color: transparent !important;
   background: transparent !important;
 }
 
-/* Header is transparent by default, transitions to forest green on hover or open */
+/* Header stays transparent in every state. On hover the backdrop image painted by
+   .header__row--top::before (sections/header.liquid) spans the strip and the open
+   panel as one surface — an opaque colour here would cut it into a separate bar. */
 #header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])),
 #header-component:has(.menu-list__submenu:hover),
 #header-component:has([aria-expanded='true']) {
-  background-color: #111111 !important;
+  background-color: transparent !important;
   color: var(--ldc-white) !important;
 }
 
@@ -395,7 +404,7 @@ body {
 #header-component:has([aria-expanded='true']) .header__columns,
 #header-component:has([aria-expanded='true']) .header-menu,
 #header-component:has([aria-expanded='true']) .header-menu__inner {
-  background-color: #111111 !important;
+  background-color: transparent !important;
 }
 
 /* Default colors for transparent header */
@@ -534,7 +543,6 @@ body {
 .mega-menu__column ul li a.mega-menu__link span,
 .mega-menu__column ul li a.mega-menu__link * {
   font-family: 'Canela', serif !important;
-  text-transform: lowercase !important;
   font-size: 13px !important;
   letter-spacing: 0.04em !important;
   color: #FAFAF7 !important;
@@ -708,7 +716,6 @@ body {
 .cart-drawer__heading {
   font-family: 'Canela' !important;
   font-weight: normal !important;
-  text-transform: lowercase !important;
   letter-spacing: normal !important;
   font-size: clamp(20px, 2.4vw, 26px) !important;
   color: var(--ldc-burgundy) !important;
@@ -724,13 +731,17 @@ body {
   opacity: 0.6;
 }
 
-/* Cart bubble on the drawer heading, in gold */
-.cart-drawer__heading .cart-bubble__background {
-  background-color: var(--ldc-gold) !important;
+/* Cart count badge — burgundy everywhere (header icon and drawer heading). */
+.cart-bubble__background {
+  background-color: var(--ldc-burgundy) !important;
+}
+
+.cart-bubble__text,
+.cart-bubble__text-count {
+  color: var(--ldc-white) !important;
 }
 
 .cart-drawer__heading .cart-bubble__text {
-  color: var(--ldc-white) !important;
   font-weight: 600 !important;
 }
 
@@ -751,7 +762,6 @@ body {
 .cart-items__title {
   font-family: 'Canela' !important;
   font-weight: 600 !important;
-  text-transform: lowercase !important;
   color: var(--ldc-burgundy) !important;
 }
 
@@ -893,4 +903,103 @@ body {
 .cart__checkout-button:disabled {
   background-color: rgba(90, 31, 38, 0.3) !important;
   transform: none;
+}
+/* ===========================================================================
+   ACCOUNT POPOVER / DRAWER
+   The customer dialog behind the header user icon. Ships with the theme's
+   default popover chrome (rounded corners, generic buttons); these rules bring
+   it onto the brand: off-white ground, burgundy ink, Canela, square edges.
+   =========================================================================== */
+
+.account-popover__panel,
+.account-drawer__dialog,
+.account-actions {
+  background-color: var(--ldc-white) !important;
+  color: var(--ldc-burgundy) !important;
+}
+
+.account-popover__panel {
+  border: 1px solid rgba(90, 31, 38, 0.16) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 18px 44px rgba(90, 31, 38, 0.14) !important;
+  min-width: 24rem !important;
+}
+
+.account-drawer__dialog {
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+/* --- Header ------------------------------------------------------------- */
+.account-actions__header {
+  border-bottom: 1px solid rgba(90, 31, 38, 0.1);
+  padding-bottom: 18px !important;
+}
+
+.account-actions__title {
+  font-family: 'Canela', serif !important;
+  font-size: 22px !important;
+  font-weight: normal !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+  color: var(--ldc-burgundy) !important;
+  line-height: 1.2 !important;
+}
+
+.account-actions__email {
+  font-size: 12px !important;
+  letter-spacing: 0.02em;
+  color: rgba(90, 31, 38, 0.6) !important;
+}
+
+/* --- Buttons ------------------------------------------------------------
+   Small uppercase tracking matches the hero CTA and cart checkout button. */
+.account-actions__link.button,
+.account-actions__shop-login shop-login-button {
+  background-color: var(--ldc-burgundy) !important;
+  color: var(--ldc-white) !important;
+  border: 1px solid var(--ldc-burgundy) !important;
+  border-radius: 2px !important;
+  font-family: 'Canela', serif !important;
+  font-size: 11px !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  padding: 12px 18px !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.account-actions__link.button:hover {
+  background-color: #3d0c11 !important;
+  border-color: #3d0c11 !important;
+}
+
+.account-actions__link.button-secondary {
+  background-color: transparent !important;
+  color: var(--ldc-burgundy) !important;
+  border: 1px solid rgba(90, 31, 38, 0.25) !important;
+  border-radius: 2px !important;
+  font-family: 'Canela', serif !important;
+  font-size: 11px !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  padding: 12px 14px !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.account-actions__link.button-secondary:hover {
+  background-color: rgba(90, 31, 38, 0.05) !important;
+  border-color: var(--ldc-burgundy) !important;
+}
+
+.account-actions__list {
+  gap: 10px !important;
+}
+
+/* --- Drawer close button ------------------------------------------------ */
+.account-drawer__close-button {
+  color: var(--ldc-burgundy) !important;
+}
+
+.account-drawer__close-button:hover {
+  opacity: 0.6;
 }

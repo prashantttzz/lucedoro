@@ -3,3 +3,7 @@
 *.tmp.*
 *.swp
 *~
+
+# `sed -i` writes sedXXXXXX alongside the target before renaming it into place.
+sed??????
+sed*

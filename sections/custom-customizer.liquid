@@ -9,12 +9,13 @@
     {%- liquid
       assign hero_img = section.settings.hero_image
       if hero_img == blank
-        assign hero_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM.jpg?v=1784350056'
+        assign hero_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/3b75f2ddfac856aa943476807d98db17.jpg?v=1785240943'
       else
         assign hero_url = hero_img | image_url: width: 2400
       endif
     -%}
-    <div class="ldc-gallery-hero" style="background-image: url('{{ hero_url }}');">
+    <div class="ldc-gallery-hero">
+      <div class="ldc-gallery-hero__bg" style="background-image: url('{{ hero_url }}');"></div>
       <div class="ldc-hero-overlay"></div>
       <div class="ldc-hero-content">
         {%- if section.settings.hero_kicker != blank -%}
@@ -68,25 +69,25 @@
 
     <!-- 3. PRODUCT CATALOGUE HEADER -->
     <div class="ldc-catalog-section-header">
-      <h2 class="ldc-catalog-section-title">{{ section.settings.catalog_heading | default: 'new products' | escape }}</h2>
+      <h2 class="ldc-catalog-section-title">{{ section.settings.catalog_heading | default: 'New Products' | escape }}</h2>
 
       <!-- Price & Sort Filters -->
       <div class="ldc-filter-bar">
         <div class="ldc-price-chips" id="ldc-price-tabs">
-          <button type="button" class="ldc-chip active" onclick="ldcFilterPrice('all')">all prices</button>
-          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('under-700')">under aed 700</button>
-          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('700-800')">aed 700&ndash;800</button>
-          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('over-800')">over aed 800</button>
+          <button type="button" class="ldc-chip active" onclick="ldcFilterPrice('all')">All Prices</button>
+          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('under-700')">Under AED 700</button>
+          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('700-800')">AED 700&ndash;800</button>
+          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('over-800')">Over AED 800</button>
         </div>
 
         <div class="ldc-sort-wrap">
-          <label for="ldc-sort-select" class="ldc-sort-label">sort by</label>
+          <label for="ldc-sort-select" class="ldc-sort-label">Sort by</label>
           <div class="ldc-sort-select-wrap">
             <select id="ldc-sort-select" class="ldc-sort-select" onchange="ldcSortGallery(this.value)">
-              <option value="featured">featured</option>
-              <option value="price-asc">price: low to high</option>
-              <option value="price-desc">price: high to low</option>
-              <option value="name-asc">name: a &ndash; z</option>
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A &ndash; Z</option>
             </select>
           </div>
         </div>
@@ -322,8 +323,6 @@
     height: 480px;
     margin-top: calc(var(--header-height, 60px) * -1);
     padding: calc(var(--header-height, 60px) + 20px) 20px 20px;
-    background-size: cover;
-    background-position: center;
     border-radius: 0;
     margin-bottom: 60px;
     display: flex;
@@ -334,14 +333,93 @@
     overflow: hidden;
     z-index: 1;
   }
+
+  /* Separate layer so it can be translated for parallax without moving the
+     overlay or the copy. Oversized top/bottom to hide the edges as it drifts. */
+  .ldc-gallery-hero__bg {
+    position: absolute;
+    top: -35%;
+    left: 0;
+    width: 100%;
+    height: 170%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  /* Same treatment as the homepage hero: a soft body gradient that deepens
+     toward the bottom, plus a stronger top band so the transparent header's
+     white nav stays legible against the image. */
   .ldc-hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.25);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
     z-index: 1;
+    pointer-events: none;
+  }
+
+  .ldc-hero-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0.28) 55%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    pointer-events: none;
+  }
+
+  @media (max-width: 767px) {
+    .ldc-hero-overlay::before {
+      height: 140px;
+    }
+  }
+
+  /* Fixed 3:2 rectangle on phones — the 480px desktop height reads as a tall
+     panel on a narrow viewport. */
+  @media (max-width: 767px) {
+    .ldc-gallery-hero {
+      height: auto;
+      aspect-ratio: 4 / 3;
+      margin-bottom: 36px;
+      padding: calc(var(--header-height, 60px) + 12px) 18px 18px;
+    }
+
+    /* The desktop scale overwhelms a 3:2 rectangle on a phone. */
+    .ldc-hero-subtitle {
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      margin-bottom: 7px;
+    }
+
+    .ldc-hero-title {
+      font-size: clamp(19px, 5.6vw, 26px);
+      margin: 0 0 9px 0;
+      line-height: 1.15;
+    }
+
+    .ldc-hero-desc {
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0 0 16px 0;
+    }
+
+    .ldc-hero-btn {
+      padding: 9px 22px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
   }
   .ldc-hero-content {
     position: relative;
@@ -540,7 +618,6 @@
     font-family: 'Canela', serif;
     font-size: 12px;
     letter-spacing: 0.02em;
-    text-transform: lowercase;
     color: var(--ldc-burgundy);
     cursor: pointer;
     transition: border-color 0.2s ease;
@@ -563,6 +640,94 @@
 
     .ldc-price-chips {
       justify-content: flex-start;
+    }
+  }
+
+  /* ---- MOBILE STOREFRONT LAYOUT -------------------------------------------
+     Centred, wrapping filters read as a landing page rather than a shop. On
+     phones the chips become a single edge-to-edge scroll rail and the sort
+     control sits on its own row, which is the pattern shoppers expect. */
+  @media (max-width: 767px) {
+    .ldc-catalog-section-header {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .ldc-catalog-section-title {
+      font-size: 20px;
+      letter-spacing: 0.1em;
+      margin: 0 0 16px 0;
+      text-align: left;
+    }
+
+    .ldc-filter-bar {
+      align-items: stretch;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: var(--ldc-white);
+      padding-block: 10px;
+      margin-block: -10px 4px;
+    }
+
+    /* Price chips are desktop-only; sort alone keeps the mobile bar clean. */
+    .ldc-price-chips {
+      display: none;
+    }
+
+    .ldc-sort-wrap {
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .ldc-sort-select {
+      font-size: 12px;
+      padding: 8px 34px 8px 15px;
+      min-height: 34px;
+    }
+
+    /* Tighter rhythm and left-aligned copy — centred product text is an
+       editorial look, not a catalogue one. */
+    .ldc-gallery-grid {
+      gap: 22px 12px;
+    }
+
+    .ldc-card-img-wrap {
+      aspect-ratio: 4 / 5;
+      margin-bottom: 10px;
+    }
+
+    .ldc-product-card {
+      text-align: left;
+    }
+
+    .ldc-card-meta {
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .ldc-card-name {
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .ldc-card-price {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .ldc-card-swatches {
+      justify-content: flex-start;
+      gap: 6px;
+      margin-bottom: 0;
+    }
+
+    .ldc-swatch-dot {
+      width: 14px;
+      height: 14px;
     }
   }
 
@@ -801,7 +966,6 @@
     font-size: clamp(24px, 3.5vw, 36px);
     margin: 0 0 30px 0;
     font-weight: normal;
-    text-transform: lowercase;
   }
   .ldc-preview-image-container {
     position: relative;
@@ -882,7 +1046,6 @@
     font-size: clamp(24px, 3vw, 32px);
     margin: 0 0 10px 0;
     font-weight: normal;
-    text-transform: lowercase;
   }
   .ldc-step-desc {
     font-size: 15px;
@@ -1149,6 +1312,55 @@
     color: var(--ldc-burgundy);
   }
 </style>
+
+<script>
+  (function () {
+    // Parallax drift on the collection hero banner.
+    function initHeroParallax() {
+      const bg = document.querySelector('.ldc-gallery-hero__bg');
+      const container = document.querySelector('.ldc-gallery-hero');
+      if (!bg || !container) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      let ticking = false;
+
+      function update() {
+        ticking = false;
+
+        const rect = container.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        if (rect.bottom < 0 || rect.top > viewportHeight) return;
+
+        // 0 as the banner enters from the bottom, 1 once it has left the top.
+        const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
+
+        // The bg layer is inset -35% and 170% tall, so it can travel 35% of the
+        // container height each way before an edge shows. Stay under that.
+        const maxShift = rect.height * 0.32;
+        const shift = (progress - 0.5) * 2 * maxShift;
+
+        bg.style.transform = 'translate3d(0, ' + shift.toFixed(2) + 'px, 0)';
+      }
+
+      function requestTick() {
+        if (!ticking) {
+          window.requestAnimationFrame(update);
+          ticking = true;
+        }
+      }
+
+      window.addEventListener('scroll', requestTick, { passive: true });
+      window.addEventListener('resize', requestTick, { passive: true });
+      update();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHeroParallax);
+    } else {
+      initHeroParallax();
+    }
+  })();
+</script>
 
 <script>
   (function() {
@@ -1853,14 +2065,13 @@
     {
       "type": "text",
       "id": "hero_kicker",
-      "label": "Hero Kicker Text",
-      "default": "bespoke collection"
+      "label": "Hero Kicker Text"
     },
     {
       "type": "text",
       "id": "hero_title",
       "label": "Hero Title",
-      "default": "design your signature frames"
+      "default": "Design Your Signature Frames"
     },
     {
       "type": "text",
@@ -1872,7 +2083,7 @@
       "type": "text",
       "id": "hero_cta_label",
       "label": "Hero CTA Button Text",
-      "default": "explore collection"
+      "default": "Explore Collection"
     },
     {
       "type": "url",
@@ -1939,7 +2150,7 @@
       "type": "text",
       "id": "catalog_heading",
       "label": "Grid Section Heading",
-      "default": "new products"
+      "default": "New Products"
     }
   ],
   "presets": [

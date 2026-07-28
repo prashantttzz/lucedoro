@@ -1,10 +1,105 @@
+/* ---------------------------------------------------------------------------
+   Typography
+
+   Canela  — primary display face (headings, brand marks).
+   Playwrite AU SA — secondary script face, always italic. Loaded from Google
+   Fonts in layout/theme.liquid. It maps onto the theme's "subheading" and
+   "accent" font roles so every section that already uses those variables picks
+   it up without per-section overrides.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --ldc-font-script: 'Playwrite AU SA', 'Segoe Script', cursive;
+}
+
+/* Take over the theme's secondary font roles site-wide. */
+:root,
+.color-scheme-1,
+.color-scheme-2,
+.color-scheme-3,
+.color-scheme-4,
+.color-scheme-5 {
+  --font-subheading--family: var(--ldc-font-script);
+  --font-subheading--style: italic;
+  --font-accent--family: var(--ldc-font-script);
+  --font-accent--style: italic;
+}
+
 h1, h2, h3, .hero__heading, .hero__heading * {
   font-family: 'Canela', serif !important;
 }
+
 /* Header store name (Luce D’Oro Club) */
 .header__heading,
 .header__heading a,
 .header__heading span,
 .header__heading-link {
   font-family: 'Canela', serif !important;
+}
+
+/* Secondary content — the kickers, eyebrows and section subtitles that sit
+   alongside Canela headings. Playwrite is a handwriting face, so it is used for
+   these short brand accents only. Functional UI chrome (form labels, facet and
+   cart labels, variant pickers, quantity fields) deliberately stays on Canela:
+   a script face there hurts legibility at small sizes.
+
+   These need !important AND class specificity — ldc-custom.css.liquid loads
+   after this file and pins `body, p, a, span…` to Canela with !important. */
+.ldc-script,
+
+/* navigation + drawer */
+.menu-drawer__featured-content-label,
+.menu-drawer__footer-label,
+.menu-drawer__menu-item--mainlist,
+.menu-drawer__brand-title,
+.mega-menu__link--parent,
+
+/* section eyebrows + subtitles */
+.c-pdp-kicker,
+.c-pdp-section-label,
+.c-pdp-similar-kicker,
+.c-collection-banner__subtitle,
+.cfc-subheading,
+.ldc-hero-subtitle,
+.ldc-preview-kicker,
+.ldc-step-kicker {
+  font-family: var(--ldc-font-script) !important;
+  font-style: italic !important;
+}
+
+/* Playwrite has long ascenders and descenders; it needs more leading than the
+   theme's default 1.15 or they collide with the neighbouring line. */
+.ldc-script,
+.menu-drawer__featured-content-label,
+.menu-drawer__footer-label,
+.menu-drawer__menu-item--mainlist,
+.menu-drawer__brand-title,
+.mega-menu__link--parent,
+.c-pdp-kicker,
+.c-pdp-section-label,
+.c-pdp-similar-kicker,
+.c-collection-banner__subtitle,
+.cfc-subheading,
+.ldc-hero-subtitle,
+.ldc-preview-kicker,
+.ldc-step-kicker {
+  line-height: 1.6 !important;
+}
+
+/* Playwrite ships no bold; synthesised weight muddies the strokes. It also
+   reads poorly in caps, and several of these classes set uppercase elsewhere. */
+.ldc-script,
+.c-pdp-kicker,
+.c-pdp-section-label,
+.c-pdp-similar-kicker,
+.c-collection-banner__subtitle,
+.cfc-subheading,
+.ldc-hero-subtitle,
+.ldc-preview-kicker,
+.ldc-step-kicker,
+.menu-drawer__featured-content-label,
+.menu-drawer__footer-label {
+  font-weight: 400 !important;
+  text-transform: none !important;
+  letter-spacing: 0.01em !important;
 }

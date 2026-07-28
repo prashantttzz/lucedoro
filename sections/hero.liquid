@@ -24,7 +24,10 @@
         <h1 class="parallax-hero-heading">{{ section.settings.heading }}</h1>
       {% endif %}
       {% if section.settings.button_label != blank %}
-        <a href="{{ section.settings.button_link | default: '#' }}" class="parallax-hero-btn">
+        <a
+          href="{{ section.settings.button_link | default: routes.all_products_collection_url }}"
+          class="parallax-hero-btn"
+        >
           {{- section.settings.button_label -}}
         </a>
       {% endif %}
@@ -148,7 +151,6 @@
     letter-spacing: 0.05em;
     margin-bottom: 24px;
     line-height: 1.25;
-    text-transform: lowercase;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
 
@@ -275,7 +277,7 @@
       "type": "text",
       "id": "button_label",
       "label": "Button Label",
-      "default": "customize"
+      "default": "Customize"
     },
     {
       "type": "url",

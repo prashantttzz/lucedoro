@@ -1,4 +1,4 @@
-{% assign default_banner_bg = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-17_at_10.31.08_PM.jpg?v=1784350056' %}
+{% assign default_banner_bg = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/3b75f2ddfac856aa943476807d98db17.jpg?v=1785240943' %}
 {% assign banner_bg = default_banner_bg %}
 {% if section.settings.banner_image %}
   {% assign banner_bg = section.settings.banner_image | image_url: width: 3840 %}
@@ -11,8 +11,8 @@
   <div class="c-collection-banner__overlay"></div>
   <div class="c-collection-banner__overlay-top"></div>
   <div class="c-collection-banner__content">
-    <h1 class="c-collection-banner__title">customize your sunglasses</h1>
-    <p class="c-collection-banner__subtitle">in three simple steps.</p>
+    <h1 class="c-collection-banner__title">Customize Your Sunglasses</h1>
+    <p class="c-collection-banner__subtitle">In three simple steps.</p>
   </div>
 </div>
 
@@ -23,24 +23,40 @@
       const container = document.querySelector('.c-collection-banner');
       if (!bannerBg || !container) return;
 
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
       let ticking = false;
+
       function updateParallax() {
+        ticking = false;
+
         const rect = container.getBoundingClientRect();
         const windowHeight = window.innerHeight;
-        
-        if (rect.top <= windowHeight && rect.bottom >= 0) {
-          const scrollDistance = windowHeight - rect.top;
-          bannerBg.style.transform = `translate3d(0, ${scrollDistance * 0.25}px, 0)`;
-        }
-        ticking = false;
+
+        if (rect.bottom < 0 || rect.top > windowHeight) return;
+
+        // 0 when the banner's top edge sits at the bottom of the viewport,
+        // 1 once it has scrolled fully past the top.
+        const progress = (windowHeight - rect.top) / (windowHeight + rect.height);
+
+        // The bg wrapper is inset -25% top and 150% tall, so it can travel a
+        // quarter of the container height in either direction before exposing
+        // an edge. Stay inside that budget.
+        const maxShift = rect.height * 0.22;
+        const shift = (progress - 0.5) * 2 * maxShift;
+
+        bannerBg.style.transform = 'translate3d(0, ' + shift.toFixed(2) + 'px, 0)';
       }
 
-      window.addEventListener('scroll', function() {
+      function requestTick() {
         if (!ticking) {
           window.requestAnimationFrame(updateParallax);
           ticking = true;
         }
-      }, { passive: true });
+      }
+
+      window.addEventListener('scroll', requestTick, { passive: true });
+      window.addEventListener('resize', requestTick, { passive: true });
 
       updateParallax();
     }
@@ -58,7 +74,7 @@
   <div class="c-collection__header">
     <div class="c-collection__actions">
       <div class="c-collection__sort">
-        <label for="SortBy" class="c-collection__sort-label">SORT BY:</label>
+        <label for="SortBy" class="c-collection__sort-label">Sort by</label>
         <select name="sort_by" id="SortBy" class="c-collection__sort-select" onchange="location.href = this.value">
           {%- assign current_sort_by = collection.sort_by | default: collection.default_sort_by -%}
           {%- for option in collection.sort_options -%}

@@ -161,6 +161,14 @@
   if collapse_header_paddings_class
     assign class = class | append: ' ' | append: collapse_header_paddings_class
   endif
+
+  ##
+  # Templates with no dark hero behind the header need the image backdrop
+  # painted permanently, not only while a mega menu is open — otherwise the
+  # light nav text sits on the page's off-white background and disappears.
+  unless template.name == 'index' or template.name == 'collection'
+    assign class = class | append: ' header--persistent-backdrop'
+  endunless
 %}
 
 {% capture localization_markup %}
@@ -379,7 +387,8 @@
 
     #header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header__row--top::before,
     #header-component:has(.menu-list__submenu:hover) .header__row--top::before,
-    #header-component:has(.mega-menu__list:hover) .header__row--top::before {
+    #header-component:has(.mega-menu__list:hover) .header__row--top::before,
+    #header-component.header--persistent-backdrop .header__row--top::before {
       opacity: 1;
     }
 

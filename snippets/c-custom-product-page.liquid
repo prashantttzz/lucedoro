@@ -59,11 +59,9 @@
     <div class="c-pdp-right">
       <!-- Progress Bar & Top Navigation (Revealed when customization starts) -->
       <div class="c-pdp-header" id="c-pdp-header" style="display: none;">
-        <div class="c-pdp-progress-track">
-          <div id="c-pdp-progress-bar" class="c-pdp-progress-bar" style="width: 33.33%;"></div>
-        </div>
+        <div class="c-pdp-progress-track" id="c-pdp-progress-track" role="presentation"></div>
         <div class="c-pdp-step-indicator">
-          <span id="c-pdp-step-label">step 1 of 3</span>
+          <span id="c-pdp-step-label">Step 1 of 3</span>
           <a href="/collections/all" class="c-pdp-close-btn" aria-label="Close customizer">&times;</a>
         </div>
       </div>
@@ -73,7 +71,7 @@
         <!-- Product Overview & Default Description -->
         <div class="c-pdp-overview" id="c-pdp-overview">
           <div class="c-pdp-title-row">
-            <h1 class="c-pdp-product-name">{{ product.title | downcase }}</h1>
+            <h1 class="c-pdp-product-name">{{ product.title }}</h1>
             <div class="c-pdp-product-price">{{ product.price | money }}</div>
           </div>
 
@@ -127,7 +125,7 @@
                   onclick="pdpSelectVariant(this, {{ variant.id }}, '{{ variant.featured_image | image_url: width: 1400 }}')"
                 >
                   <img src="{{ variant.featured_image | image_url: width: 200 }}" alt="{{ variant.title }}">
-                  <span>{{ variant.title | downcase }}</span>
+                  <span>{{ variant.title }}</span>
                 </div>
               {% endfor %}
             </div>
@@ -151,30 +149,48 @@
           <span class="c-pdp-kicker">customization wizard</span>
           <h2 class="c-pdp-heading">add your prescription</h2>
 
-          <div class="c-pdp-upload-container" id="c-pdp-upload-zone" onclick="document.getElementById('c-pdp-rx-file-input').click()">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" class="c-pdp-upload-icon">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-            </svg>
-            <div class="c-pdp-upload-text-main">click or drag to upload prescription</div>
-            <div class="c-pdp-upload-text-sub">support files: .jpg, .png, .pdf (max 10mb)</div>
-            <input type="file" id="c-pdp-rx-file-input" style="display: none;" accept=".jpg,.jpeg,.png,.pdf">
+          <div
+            class="c-pdp-upload-container"
+            id="c-pdp-upload-zone"
+            role="button"
+            tabindex="0"
+            aria-describedby="c-pdp-upload-hint"
+          >
+            <span class="c-pdp-upload-icon-ring">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" class="c-pdp-upload-icon">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+              </svg>
+            </span>
+            <div class="c-pdp-upload-text-main">
+              Drag &amp; drop your prescription
+              <span class="c-pdp-upload-browse">or browse files</span>
+            </div>
+            <div class="c-pdp-upload-formats" id="c-pdp-upload-hint">
+              <span>JPG</span>
+              <span>PNG</span>
+              <span>PDF</span>
+              <span class="c-pdp-upload-maxsize">Up to 10 MB</span>
+            </div>
+            <input type="file" id="c-pdp-rx-file-input" hidden accept=".jpg,.jpeg,.png,.pdf">
           </div>
 
           <div class="c-pdp-upload-success" id="c-pdp-upload-success" style="display: none;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="c-pdp-success-icon">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
+            <span class="c-pdp-success-icon-ring">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="c-pdp-success-icon">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </span>
             <div class="c-pdp-upload-success-info">
-              <div class="c-pdp-success-title">prescription uploaded successfully</div>
               <div class="c-pdp-success-filename" id="c-pdp-uploaded-filename"></div>
+              <div class="c-pdp-success-meta" id="c-pdp-uploaded-meta"></div>
             </div>
-            <button type="button" class="c-pdp-upload-replace-btn" onclick="event.stopPropagation(); document.getElementById('c-pdp-rx-file-input').click()">replace file</button>
+            <div class="c-pdp-upload-actions">
+              <button type="button" class="c-pdp-upload-replace-btn" id="c-pdp-upload-replace-btn">Replace</button>
+              <button type="button" class="c-pdp-upload-remove-btn" id="c-pdp-upload-remove-btn" aria-label="Remove uploaded prescription">&times;</button>
+            </div>
           </div>
 
-          <div class="c-pdp-upload-error" id="c-pdp-upload-error" style="display: none;">
-            please upload a valid jpg, png, or pdf file.
-          </div>
+          <div class="c-pdp-upload-error" id="c-pdp-upload-error" style="display: none;" role="alert"></div>
 
           <button
             type="button"
@@ -228,7 +244,7 @@
           <div class="c-pdp-summary-card">
             <div class="c-pdp-summary-row">
               <span>frame model</span>
-              <strong>{{ product.title | downcase }}</strong>
+              <strong>{{ product.title }}</strong>
             </div>
             <div class="c-pdp-summary-row">
               <span>frame color</span>
@@ -290,8 +306,8 @@
   <!-- Similar Products Section -->
   <section class="c-pdp-similar-section">
     <div class="c-pdp-similar-header">
-      <span class="c-pdp-similar-kicker">curated collection</span>
-      <h2 class="c-pdp-similar-title">similar frames</h2>
+      <span class="c-pdp-similar-kicker">Curated Collection</span>
+      <h2 class="c-pdp-similar-title">Similar Frames</h2>
     </div>
 
     <div class="c-pdp-similar-grid">
@@ -299,7 +315,7 @@
       {% assign count = 0 %}
       {% for rec in rec_products %}
         {% if rec.id != product.id and count < 4 %}
-          <a href="{{ rec.url }}" class="c-pdp-sim-card">
+          <a href="{{ routes.all_products_collection_url }}" class="c-pdp-sim-card">
             <div class="c-pdp-sim-image-box">
               {% if rec.featured_image != blank %}
                 <img src="{{ rec.featured_image | image_url: width: 600 }}" alt="{{ rec.title }}" loading="lazy">
@@ -309,7 +325,7 @@
               <div class="c-pdp-sim-hover-tag">view frame &rarr;</div>
             </div>
             <div class="c-pdp-sim-info">
-              <h3 class="c-pdp-sim-name">{{ rec.title | downcase }}</h3>
+              <h3 class="c-pdp-sim-name">{{ rec.title }}</h3>
               <span class="c-pdp-sim-price">{{ rec.price | money }}</span>
             </div>
           </a>
@@ -487,29 +503,36 @@
     margin-bottom: 32px;
   }
 
+  /* One segment per step in the active flow — remaining work is legible at a
+     glance instead of being inferred from a percentage width. */
   .c-pdp-progress-track {
+    display: flex;
+    gap: 5px;
     width: 100%;
-    height: 2px;
-    background: rgba(90, 31, 38, 0.08);
-    border-radius: 1px;
-    overflow: hidden;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
-  .c-pdp-progress-bar {
-    height: 100%;
+  .c-pdp-progress-track span {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(90, 31, 38, 0.1);
+    transition: background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .c-pdp-progress-track span.is-filled {
     background: #5a1f26;
-    transition: width 0.4s ease;
   }
 
   .c-pdp-step-indicator {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
-    letter-spacing: 0.1em;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: #8c8275;
-    text-transform: lowercase;
+    font-variant-numeric: tabular-nums;
   }
 
   .c-pdp-close-btn {
@@ -538,7 +561,6 @@
     font-weight: normal;
     margin-bottom: 20px;
     color: #5a1f26;
-    text-transform: lowercase;
     line-height: 1.15;
   }
 
@@ -642,7 +664,6 @@
     font-weight: 500;
     cursor: pointer;
     margin-bottom: 16px;
-    text-transform: lowercase;
     transition: opacity 0.2s ease;
   }
   .c-pdp-back-btn:hover {
@@ -688,39 +709,65 @@
     display: block;
     margin-top: 4px;
     color: #2c2c2c;
-    text-transform: lowercase;
   }
 
   /* Step 1 Vintage Minimal Options List */
   .c-pdp-options-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
+  /* Bordered tiles with a radio marker. The previous flat rows gave no
+     affordance that they were selectable, and no visible selected state
+     beyond a slightly bolder title. */
   .c-pdp-type-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 4px;
-    margin-bottom: 0;
-    border: none;
-    border-bottom: 1px solid rgba(90, 31, 38, 0.08);
-    border-radius: 0;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid rgba(90, 31, 38, 0.14);
+    border-radius: 3px;
     cursor: pointer;
     background: transparent;
-    transition: all 0.2s ease;
+    transition: border-color 0.22s ease, background-color 0.22s ease;
   }
 
-  .c-pdp-type-card:hover,
+  .c-pdp-type-card::before {
+    content: '';
+    flex: 0 0 auto;
+    order: -1;
+    width: 15px;
+    height: 15px;
+    border: 1px solid rgba(90, 31, 38, 0.35);
+    border-radius: 50%;
+    transition: border-color 0.22s ease, box-shadow 0.22s ease;
+  }
+
+  .c-pdp-type-card:hover {
+    border-color: rgba(90, 31, 38, 0.4);
+    background: rgba(90, 31, 38, 0.02);
+  }
+
   .c-pdp-type-card.is-selected {
-    background: transparent;
-    border-bottom-color: #5a1f26;
+    border-color: #5a1f26;
+    background: rgba(90, 31, 38, 0.04);
+  }
+
+  .c-pdp-type-card.is-selected::before {
+    border-color: #5a1f26;
+    box-shadow: inset 0 0 0 4px #5a1f26;
   }
 
   .c-pdp-type-card.is-selected .c-pdp-type-title {
     color: #5a1f26;
     font-weight: 600;
+  }
+
+  .c-pdp-type-card:focus-visible {
+    outline: 2px solid #5a1f26;
+    outline-offset: 2px;
   }
 
   .c-pdp-type-info {
@@ -750,78 +797,185 @@
 
   /* Step 2 Prescription Upload UI */
   .c-pdp-upload-container {
-    border: 1px dashed rgba(90, 31, 38, 0.25);
-    border-radius: 4px;
-    padding: 36px 20px;
-    text-align: center;
-    background: #f4f1ea;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .c-pdp-upload-container:hover {
-    border-color: #5a1f26;
-    background: #fff;
-  }
-  .c-pdp-upload-icon {
-    color: #5a1f26;
-    margin-bottom: 14px;
-    opacity: 0.7;
-  }
-  .c-pdp-upload-text-main {
-    font-size: 15px;
-    color: #2c2c2c;
-    margin-bottom: 6px;
-    text-transform: lowercase;
-  }
-  .c-pdp-upload-text-sub {
-    font-size: 11px;
-    color: #8c8275;
-  }
-  .c-pdp-upload-success {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
-    padding: 28px 20px;
-    border: 1px solid rgba(90, 31, 38, 0.12);
+    border: 1px dashed rgba(90, 31, 38, 0.3);
     border-radius: 4px;
-    background: #f4f1ea;
+    padding: 34px 20px;
     text-align: center;
+    background: #faf8f4;
+    cursor: pointer;
+    transition: border-color 0.25s ease, background-color 0.25s ease;
   }
-  .c-pdp-success-icon {
-    color: #3d6b3d;
+
+  .c-pdp-upload-container:hover {
+    border-color: rgba(90, 31, 38, 0.55);
+    background: #fff;
   }
-  .c-pdp-success-title {
+
+  .c-pdp-upload-container:focus-visible {
+    outline: 2px solid #5a1f26;
+    outline-offset: 3px;
+  }
+
+  /* Applied by the dragenter/dragover handlers. */
+  .c-pdp-upload-container.is-dragover {
+    border-color: #5a1f26;
+    border-style: solid;
+    background: rgba(90, 31, 38, 0.05);
+  }
+
+  .c-pdp-upload-icon-ring {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(90, 31, 38, 0.07);
+    color: #5a1f26;
+    margin-bottom: 14px;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .c-pdp-upload-container:hover .c-pdp-upload-icon-ring,
+  .c-pdp-upload-container.is-dragover .c-pdp-upload-icon-ring {
+    transform: translateY(-2px) scale(1.05);
+  }
+
+  .c-pdp-upload-text-main {
     font-size: 14px;
+    color: #2c2c2c;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .c-pdp-upload-browse {
+    display: block;
+    color: #5a1f26;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Format chips read faster than a run-on "support files:" sentence. */
+  .c-pdp-upload-formats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: #8c8275;
+  }
+
+  .c-pdp-upload-formats span {
+    border: 1px solid rgba(90, 31, 38, 0.16);
+    border-radius: 2px;
+    padding: 3px 7px;
+  }
+
+  .c-pdp-upload-maxsize {
+    border: 0 !important;
+    padding: 3px 0 !important;
+  }
+
+  /* Uploaded state: a compact row, so it reads as a file attached to the form
+     rather than a full-height replacement panel. */
+  .c-pdp-upload-success {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 14px;
+    border: 1px solid rgba(90, 31, 38, 0.16);
+    border-radius: 4px;
+    background: #faf8f4;
+    text-align: left;
+  }
+
+  .c-pdp-success-icon-ring {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(61, 107, 61, 0.12);
     color: #3d6b3d;
-    text-transform: lowercase;
   }
+
+  .c-pdp-upload-success-info {
+    flex: 1;
+    min-width: 0;
+  }
+
   .c-pdp-success-filename {
-    font-size: 12px;
-    color: #6e675f;
-    background: rgba(90, 31, 38, 0.06);
-    padding: 5px 12px;
-    border-radius: 20px;
-    margin-top: 4px;
+    font-size: 13px;
+    color: #2c2c2c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
+  .c-pdp-success-meta {
+    font-size: 11px;
+    color: #8c8275;
+    margin-top: 2px;
+  }
+
+  .c-pdp-upload-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+  }
+
   .c-pdp-upload-replace-btn {
     background: none;
-    border: 1px solid #5a1f26;
+    border: 1px solid rgba(90, 31, 38, 0.3);
     color: #5a1f26;
-    padding: 7px 14px;
-    border-radius: 4px;
+    padding: 6px 12px;
+    border-radius: 3px;
     cursor: pointer;
     font-size: 11px;
-    text-transform: lowercase;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
+
   .c-pdp-upload-replace-btn:hover {
     background: #5a1f26;
+    border-color: #5a1f26;
     color: #fff;
   }
-  .c-pdp-upload-error {
+
+  .c-pdp-upload-remove-btn {
+    background: none;
+    border: 0;
+    color: #8c8275;
+    font-size: 20px;
+    line-height: 1;
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .c-pdp-upload-remove-btn:hover {
     color: #a13a3a;
-    margin-top: 14px;
+    background: rgba(161, 58, 58, 0.08);
+  }
+
+  .c-pdp-upload-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #a13a3a;
+    background: rgba(161, 58, 58, 0.07);
+    border-radius: 3px;
+    padding: 10px 12px;
+    margin-top: 12px;
     font-size: 12px;
   }
 
@@ -840,7 +994,6 @@
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.05em;
-    text-transform: lowercase;
     color: #8c8275;
     cursor: pointer;
     border-bottom: 2px solid transparent;
@@ -991,7 +1144,6 @@
     font-size: 13px;
     margin-bottom: 12px;
     color: #6e675f;
-    text-transform: lowercase;
   }
 
   .c-pdp-summary-row strong {
@@ -1085,7 +1237,6 @@
     font-size: clamp(28px, 3.5vw, 42px);
     font-weight: normal;
     color: #ffffff !important;
-    text-transform: lowercase;
     margin: 0;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
   }
@@ -1191,7 +1342,6 @@
     font-weight: 500;
     color: #ffffff !important;
     margin: 0;
-    text-transform: lowercase;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
   }
 
@@ -1264,7 +1414,10 @@
       return [1, 4];
     }
 
-    let flow = [1];
+    // Frame select -> tint -> summary. Matches getStepsFlow('sig-tints').
+    const DEFAULT_FLOW = [1, 3, 4];
+
+    let flow = DEFAULT_FLOW.slice();
     let flowIndex = 0;
 
     window.pdpSelectVariant = function(el, vId, imgSrc) {
@@ -1299,7 +1452,10 @@
     window.pdpStartCustomizing = function() {
       document.getElementById('c-pdp-overview').style.display = 'none';
       document.getElementById('c-pdp-header').style.display = 'block';
-      flow = [1];
+      // Provisional flow: the real length is only known once a lens type is
+      // picked on step 1. Seed the common 3-step path so the indicator reads
+      // "step 1 of 3" rather than "step 1 of 1".
+      flow = DEFAULT_FLOW.slice();
       flowIndex = 0;
       pdpShowPanel(1);
     };
@@ -1313,8 +1469,23 @@
     function pdpShowPanel(panel) {
       [1, 2, 3, 4].forEach(n => document.getElementById(`c-pdp-step-${n}`).style.display = n === panel ? 'block' : 'none');
 
-      document.getElementById('c-pdp-step-label').textContent = `step ${flowIndex + 1} of ${flow.length}`;
-      document.getElementById('c-pdp-progress-bar').style.width = ((flowIndex + 1) / flow.length * 100) + '%';
+      document.getElementById('c-pdp-step-label').textContent = `Step ${flowIndex + 1} of ${flow.length}`;
+
+      // Segmented progress: one bar per step in the current flow, so the
+      // remaining work is legible at a glance rather than inferred from a
+      // percentage width.
+      const track = document.getElementById('c-pdp-progress-track');
+      if (track) {
+        if (track.children.length !== flow.length) {
+          track.innerHTML = '';
+          for (let i = 0; i < flow.length; i += 1) {
+            track.appendChild(document.createElement('span'));
+          }
+        }
+        Array.from(track.children).forEach((seg, i) => {
+          seg.className = i <= flowIndex ? 'is-filled' : '';
+        });
+      }
 
       if (panel === 3 && selectedColorType) {
         window.pdpSwitchTintTab(selectedColorType);
@@ -1358,6 +1529,9 @@
       lensTypes.forEach(t => {
         const card = document.createElement('div');
         card.className = 'c-pdp-type-card' + (selectedType && selectedType.id === t.id ? ' is-selected' : '');
+        card.setAttribute('role', 'radio');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-checked', selectedType && selectedType.id === t.id ? 'true' : 'false');
         card.innerHTML = `
           <div class="c-pdp-type-info">
             <div class="c-pdp-type-title">${t.title}</div>
@@ -1375,6 +1549,12 @@
           flow = getStepsFlow(t.id);
           flowIndex = 0;
           window.pdpNextStep();
+        };
+        card.onkeydown = (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.onclick();
+          }
         };
         container.appendChild(card);
       });
@@ -1410,32 +1590,104 @@
 
     // ------------------- PRESCRIPTION UPLOAD -------------------
     const rxInput = document.getElementById('c-pdp-rx-file-input');
-    if (rxInput) {
-      rxInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
+    const rxZone = document.getElementById('c-pdp-upload-zone');
+
+    if (rxInput && rxZone) {
+      const VALID_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
+      const MAX_BYTES = 10 * 1024 * 1024;
+
+      const errorEl = document.getElementById('c-pdp-upload-error');
+      const successEl = document.getElementById('c-pdp-upload-success');
+      const continueBtn = document.getElementById('c-pdp-rx-continue-btn');
+
+      function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+
+      function showError(message) {
+        rxFile = null;
+        errorEl.textContent = message;
+        errorEl.style.display = 'flex';
+        successEl.style.display = 'none';
+        rxZone.style.display = 'flex';
+        continueBtn.style.display = 'none';
+      }
+
+      function clearFile() {
+        rxFile = null;
+        rxInput.value = '';
+        errorEl.style.display = 'none';
+        successEl.style.display = 'none';
+        rxZone.style.display = 'flex';
+        continueBtn.style.display = 'none';
+      }
+
+      function acceptFile(file) {
         if (!file) return;
 
-        const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-        const errorEl = document.getElementById('c-pdp-upload-error');
-        const zoneEl = document.getElementById('c-pdp-upload-zone');
-        const successEl = document.getElementById('c-pdp-upload-success');
-        const continueBtn = document.getElementById('c-pdp-rx-continue-btn');
-
-        if (!validTypes.includes(file.type)) {
-          errorEl.style.display = 'block';
-          successEl.style.display = 'none';
-          zoneEl.style.display = 'block';
-          continueBtn.style.display = 'none';
-          rxFile = null;
+        if (!VALID_TYPES.includes(file.type)) {
+          showError('That file type isn’t supported. Please upload a JPG, PNG, or PDF.');
           return;
         }
 
-        errorEl.style.display = 'none';
+        if (file.size > MAX_BYTES) {
+          showError('That file is ' + formatSize(file.size) + '. Please upload a file under 10 MB.');
+          return;
+        }
+
         rxFile = file;
-        zoneEl.style.display = 'none';
+        errorEl.style.display = 'none';
+        rxZone.style.display = 'none';
         successEl.style.display = 'flex';
         continueBtn.style.display = 'block';
         document.getElementById('c-pdp-uploaded-filename').textContent = file.name;
+        document.getElementById('c-pdp-uploaded-meta').textContent =
+          formatSize(file.size) + ' · Uploaded';
+      }
+
+      rxInput.addEventListener('change', (e) => acceptFile(e.target.files[0]));
+
+      rxZone.addEventListener('click', () => rxInput.click());
+      rxZone.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          rxInput.click();
+        }
+      });
+
+      // The copy invites dragging, so wire it up. dragover must be cancelled or
+      // the browser navigates to the dropped file instead of firing `drop`.
+      ['dragenter', 'dragover'].forEach((evt) => {
+        rxZone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          rxZone.classList.add('is-dragover');
+        });
+      });
+
+      ['dragleave', 'dragend'].forEach((evt) => {
+        rxZone.addEventListener(evt, (e) => {
+          // Ignore bubbling from children, or the highlight flickers.
+          if (evt === 'dragleave' && rxZone.contains(e.relatedTarget)) return;
+          rxZone.classList.remove('is-dragover');
+        });
+      });
+
+      rxZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        rxZone.classList.remove('is-dragover');
+        acceptFile(e.dataTransfer.files && e.dataTransfer.files[0]);
+      });
+
+      document.getElementById('c-pdp-upload-replace-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        rxInput.click();
+      });
+
+      document.getElementById('c-pdp-upload-remove-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        clearFile();
       });
     }
 
