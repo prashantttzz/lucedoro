@@ -38,12 +38,12 @@ html {
 }
 
 :root {
-  --font-body-family: 'Canela' !important;
-  --font-body--family: 'Canela' !important;
-  --font-paragraph--family: 'Canela' !important;
-  --font-family: 'Canela' !important;
-  /* Secondary/script roles belong to Playwrite (see assets/ldc-fonts.css.liquid).
-     Canela stays the primary face for headings and body copy. */
+  /* Playwrite is the site-wide body/secondary face; Canela stays on headings
+     and on functional controls (see the rules further down this file). */
+  --font-body-family: var(--ldc-font-script) !important;
+  --font-body--family: var(--ldc-font-script) !important;
+  --font-paragraph--family: var(--ldc-font-script) !important;
+  --font-family: var(--ldc-font-script) !important;
   --font-subheading--family: var(--ldc-font-script) !important;
   --font-subheading--style: italic !important;
   --font-accent--family: var(--ldc-font-script) !important;
@@ -120,16 +120,60 @@ html {
   background: var(--ldc-white) !important;
 }
 
+/* Body copy — Playwrite everywhere (home, collection, product, pages, cart…).
+   Playwrite ships no bold and has tall ascenders/descenders, so it needs extra
+   leading and must never be synthetically emboldened. */
 body,
 p,
 li,
 a,
+span,
+small,
+blockquote,
+figcaption,
+dd,
+dt,
+td,
+th,
+label,
+legend,
+summary,
+.rte,
+.rte * {
+  font-family: var(--ldc-font-script) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  line-height: 1.7 !important;
+  letter-spacing: 0.01em !important;
+  text-transform: none !important;
+}
+
+/* Functional chrome stays on Canela: a script face at small sizes hurts
+   legibility and breaks alignment in inputs, buttons and the price/qty UI. */
 button,
 input,
 textarea,
 select,
-label {
-  font-family: 'Canela' !important;
+option,
+.button,
+.button *,
+[class*="price"],
+[class*="badge"],
+.quantity-selector,
+.quantity-selector *,
+.variant-option,
+.variant-option *,
+.facets,
+.facets *,
+.header__icon,
+.header__icon *,
+.menu-list__link-title,
+.cart-item__name,
+.cart-item__details,
+.cart-item__details * {
+  font-family: 'Canela', serif !important;
+  font-style: normal !important;
+  line-height: 1.15 !important;
 }
 
 body,
@@ -174,6 +218,12 @@ h3,
 h4,
 h5,
 h6,
+h1 *,
+h2 *,
+h3 *,
+h4 *,
+h5 *,
+h6 *,
 .hero__heading,
 .hero__heading *,
 .hero__subheading,
@@ -191,6 +241,7 @@ h6,
 .header__heading-logo,
 .header__heading-logo-wrapper {
   font-family: 'Canela' !important;
+  font-style: normal !important;
   font-weight: normal !important;
   text-transform: none !important;
   letter-spacing: normal !important;
@@ -303,15 +354,18 @@ body {
 .footer-content a,
 .footer-content p,
 .footer-content span {
-  font-family: 'Canela', serif !important;
+  font-family: var(--ldc-font-script) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
   color: #FAFAF7 !important;
   /* Off White */
 }
 
+/* Playwrite reads poorly in caps, so footer links keep sentence case. */
 .footer-content a {
-  text-transform: uppercase !important;
-  font-size: 11px !important;
-  letter-spacing: 0.15em !important;
+  text-transform: none !important;
+  font-size: 12px !important;
+  letter-spacing: 0.04em !important;
   transition: color 0.3s ease;
 }
 

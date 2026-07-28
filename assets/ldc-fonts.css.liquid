@@ -38,10 +38,11 @@ h1, h2, h3, .hero__heading, .hero__heading * {
 }
 
 /* Secondary content — the kickers, eyebrows and section subtitles that sit
-   alongside Canela headings. Playwrite is a handwriting face, so it is used for
-   these short brand accents only. Functional UI chrome (form labels, facet and
-   cart labels, variant pickers, quantity fields) deliberately stays on Canela:
-   a script face there hurts legibility at small sizes.
+   alongside Canela headings. Playwrite is now the site-wide body face too (see
+   ldc-custom.css.liquid); these selectors stay so the accents keep their script
+   styling even where a section overrides the body rule. Functional UI chrome
+   (buttons, inputs, facets, variant pickers, quantity/price fields) deliberately
+   stays on Canela: a script face there hurts legibility at small sizes.
 
    These need !important AND class specificity — ldc-custom.css.liquid loads
    after this file and pins `body, p, a, span…` to Canela with !important. */
