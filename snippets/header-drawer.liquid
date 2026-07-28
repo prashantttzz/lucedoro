@@ -74,10 +74,18 @@
       "
     >
       <div class="menu-drawer__header-brand">
-        <div class="menu-drawer__brand-badge">
-          <span class="menu-drawer__brand-title">LUCE D'ORO</span>
-          <span class="menu-drawer__brand-tag">CLUB</span>
-        </div>
+        <a href="{{ routes.root_url }}" class="menu-drawer__brand-badge">
+          {% if settings.logo != blank %}
+            {% render 'image',
+              image: settings.logo,
+              class: 'menu-drawer__brand-logo-image',
+              height: settings.logo_height,
+              text_fallback: shop.name
+            %}
+          {% else %}
+            <span class="menu-drawer__brand-title">{{ shop.name }}</span>
+          {% endif %}
+        </a>
         <button
           class="button close-button menu-drawer__close-button"
           type="button"
@@ -750,12 +758,31 @@
         </div>
       {% endif %}
 
-      <div class="menu-drawer__bottom-card">
-        <div class="menu-drawer__club-note">
-          <span class="menu-drawer__club-heading">LUCE D'ORO CLUB</span>
-          <p class="menu-drawer__club-subtext">Exclusive Eyewear & Couture</p>
+      <div class="menu-drawer__footer">
+        <div class="menu-drawer__footer-row">
+          <span class="menu-drawer__footer-label">Follow us</span>
+          <div class="menu-drawer__footer-socials">
+            <a
+              href="{{ settings.social_instagram_link | default: 'https://instagram.com' }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="menu-drawer__footer-social"
+              aria-label="Instagram"
+            >
+              <svg class="menu-drawer__footer-social-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">{%- render 'icon', icon: 'instagram' -%}</svg>
+            </a>
+            <a
+              href="{{ settings.social_facebook_link | default: 'https://facebook.com' }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="menu-drawer__footer-social"
+              aria-label="Facebook"
+            >
+              <svg class="menu-drawer__footer-social-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false">{%- render 'icon', icon: 'facebook' -%}</svg>
+            </a>
+          </div>
         </div>
-        <a href="/collections/all" class="menu-drawer__explore-btn">EXPLORE COLLECTION</a>
+        <p class="menu-drawer__footer-copyright">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</p>
       </div>
     </div>
     <div
@@ -1412,17 +1439,17 @@
     }
 
     .menu-drawer {
-      width: min(88vw, 380px) !important;
-      max-width: min(88vw, 380px) !important;
+      width: min(88vw, 400px) !important;
+      max-width: min(88vw, 400px) !important;
       background: radial-gradient(
-        circle at 10% 10%,
-        rgba(198, 161, 91, 0.08) 0%,
-        rgba(13, 13, 13, 0.98) 75%
+        circle at 100% 0%,
+        rgba(198, 161, 91, 0.1) 0%,
+        rgba(13, 13, 13, 0.98) 60%
       ) !important;
       background-color: #0d0d0d !important;
       color: #fafaf7 !important;
-      border-right: 1px solid rgba(198, 161, 91, 0.28) !important;
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6) !important;
+      border-right: 1px solid rgba(198, 161, 91, 0.24) !important;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65) !important;
       padding-top: 0 !important;
       overflow-x: hidden;
       overscroll-behavior: contain;
@@ -1470,51 +1497,58 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 22px;
-      border-bottom: 1px solid rgba(198, 161, 91, 0.22);
-      background: rgba(13, 13, 13, 0.95);
+      gap: 10px;
+      padding: 22px 22px;
+      border-bottom: 1px solid rgba(198, 161, 91, 0.16);
+      background: rgba(13, 13, 13, 0.98);
+      backdrop-filter: blur(6px);
     }
 
     .menu-drawer__brand-badge {
       display: flex;
-      flex-direction: column;
-      gap: 2px;
+      align-items: center;
+      text-decoration: none !important;
+      transition: opacity 0.25s ease;
+    }
+
+    .menu-drawer__brand-badge:hover {
+      opacity: 0.8;
+    }
+
+    .menu-drawer__brand-logo-image {
+      height: 46px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
     }
 
     .menu-drawer__brand-title {
-      font-family: 'ldc-font', sans-serif !important;
-      font-size: 22px !important;
+      font-family: var(--font-heading--family, 'ldc-font'), sans-serif !important;
+      font-size: 26px !important;
       color: #fafaf7 !important;
       letter-spacing: 0.04em !important;
       line-height: 1 !important;
     }
 
-    .menu-drawer__brand-tag {
-      font-family: 'Canela', serif !important;
-      font-size: 9px !important;
-      letter-spacing: 0.25em !important;
-      color: #c6a15b !important;
-      text-transform: uppercase !important;
-    }
-
     .menu-drawer__close-button {
-      width: 36px !important;
-      height: 36px !important;
+      width: 38px !important;
+      height: 38px !important;
       border-radius: 50% !important;
-      border: 1px solid rgba(198, 161, 91, 0.35) !important;
-      background: rgba(198, 161, 91, 0.08) !important;
+      border: 1px solid rgba(198, 161, 91, 0.3) !important;
+      background: rgba(198, 161, 91, 0.06) !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       color: #fafaf7 !important;
       padding: 0 !important;
-      transition: all 0.3s ease !important;
+      flex-shrink: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
       cursor: pointer;
     }
 
     .menu-drawer__close-button:hover {
       border-color: #c6a15b !important;
-      background: rgba(198, 161, 91, 0.2) !important;
+      background: rgba(198, 161, 91, 0.18) !important;
       transform: rotate(90deg) !important;
       color: #c6a15b !important;
     }
@@ -1535,44 +1569,74 @@
     }
 
     .menu-drawer__menu {
-      padding-inline: 20px;
-      padding-top: 10px;
+      padding-inline: 22px;
+      padding-top: 36px;
+      counter-reset: menu-drawer-index;
     }
 
     .menu-drawer__menu > .menu-drawer__list-item {
       min-height: auto;
     }
 
+    .menu-drawer__menu > .menu-drawer__list-item + .menu-drawer__list-item {
+      margin-top: 2px;
+    }
+
     .menu-drawer__list-item--divider,
     .menu-drawer__menu-container--divider {
-      border-block-end: 1px solid rgba(198, 161, 91, 0.12);
+      border-block-end: none;
     }
 
     .menu-drawer__menu-item {
-      padding: 14px 10px;
+      padding: 14px 0;
       align-items: center;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      justify-content: flex-end;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .menu-drawer__menu-item--mainlist {
+      counter-increment: menu-drawer-index;
       min-height: auto;
-      font-family: 'ldc-font', sans-serif !important;
-      font-size: 22px !important;
-      line-height: 1.25 !important;
+      display: flex;
+      align-items: baseline;
+      justify-content: flex-end;
+      gap: 12px;
+      font-family: var(--font-heading--family, 'ldc-font'), serif !important;
+      font-style: italic;
+      font-size: 36px !important;
+      line-height: 1.15 !important;
       font-weight: 400 !important;
       color: #fafaf7 !important;
-      letter-spacing: 0.03em !important;
+      letter-spacing: 0.01em !important;
+      text-align: right;
       border-bottom: 1px solid rgba(250, 250, 247, 0.06);
+    }
+
+    .menu-drawer__menu-item--mainlist::before {
+      content: '0' counter(menu-drawer-index);
+      font-family: var(--font-body--family, 'Canela'), sans-serif;
+      font-style: normal;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: #c6a15b !important;
+      transform: translateY(-8px);
+      order: -1;
+      transition: opacity 0.3s ease;
+      opacity: 0.85;
     }
 
     .menu-drawer__menu-item--mainlist:hover,
     .menu-drawer__menu-item--mainlist.menu-drawer__menu-item--active {
       color: #c6a15b !important;
-      padding-left: 16px !important;
+      padding-left: 0 !important;
+    }
+
+    .menu-drawer__menu-item--mainlist:hover::before {
+      opacity: 1;
     }
 
     .menu-drawer__menu-item--parent {
-      font-family: 'ldc-font', sans-serif !important;
+      font-family: var(--font-heading--family, 'ldc-font'), sans-serif !important;
       font-size: 19px !important;
       line-height: 1.15 !important;
       font-weight: normal !important;
@@ -1587,12 +1651,11 @@
     }
 
     .menu-drawer__menu-item--child {
-      font-family: 'Canela', serif !important;
-      font-size: 12px !important;
+      font-family: var(--font-body--family, 'Canela'), serif !important;
+      font-size: 13px !important;
       line-height: 1.5 !important;
       font-weight: 500 !important;
-      letter-spacing: 0.16em !important;
-      text-transform: uppercase !important;
+      letter-spacing: 0.04em !important;
       color: rgba(250, 250, 247, 0.72) !important;
       padding-top: 8px;
       padding-bottom: 8px;
@@ -1615,7 +1678,7 @@
     }
 
     .menu-drawer__back-button {
-      font-family: 'ldc-font', sans-serif !important;
+      font-family: var(--font-heading--family, 'ldc-font'), sans-serif !important;
       font-size: 18px !important;
       color: #fafaf7 !important;
       padding: 16px 20px !important;
@@ -1650,62 +1713,79 @@
     .menu-drawer__account {
       color: rgba(250, 250, 247, 0.85);
       font-size: 12px;
-      font-family: 'Canela', serif;
-      letter-spacing: 0.12em;
-      text-transform: uppercase !important;
+      font-family: var(--font-body--family, 'Canela'), serif;
+      letter-spacing: 0.04em;
     }
 
-    .menu-drawer__bottom-card {
-      margin: 16px 18px 24px 18px;
-      padding: 20px 16px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(198, 161, 91, 0.08) 0%, rgba(90, 31, 38, 0.15) 100%);
-      border: 1px solid rgba(198, 161, 91, 0.25);
-      text-align: center;
+    .menu-drawer__footer {
+      position: relative;
+      margin-top: auto;
+      padding: 22px 22px 26px;
+      background: linear-gradient(180deg, rgba(198, 161, 91, 0) 0%, rgba(198, 161, 91, 0.05) 100%);
+    }
+
+    .menu-drawer__footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 22px;
+      right: 22px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(198, 161, 91, 0.5), rgba(198, 161, 91, 0.05));
+    }
+
+    .menu-drawer__footer-row {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .menu-drawer__footer-label {
+      font-family: var(--font-body--family, 'Canela'), serif;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: rgba(250, 250, 247, 0.5);
+    }
+
+    .menu-drawer__footer-socials {
+      display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .menu-drawer__club-heading {
-      font-family: 'ldc-font', sans-serif !important;
-      font-size: 18px !important;
-      color: #fafaf7 !important;
-      letter-spacing: 0.04em !important;
-      display: block;
+    .menu-drawer__footer-social {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(198, 161, 91, 0.28);
+      color: rgba(250, 250, 247, 0.8);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .menu-drawer__club-subtext {
-      font-family: 'Canela', serif !important;
-      font-size: 11px !important;
-      letter-spacing: 0.12em !important;
-      color: rgba(250, 250, 247, 0.7) !important;
-      margin: 0;
-      text-transform: uppercase !important;
+    .menu-drawer__footer-social:hover {
+      border-color: #c6a15b;
+      background: rgba(198, 161, 91, 0.14);
+      color: #c6a15b;
+      transform: translateY(-2px);
     }
 
-    .menu-drawer__explore-btn {
-      display: inline-block !important;
-      background: #c6a15b !important;
-      color: #0f0f0f !important;
-      padding: 10px 22px !important;
-      border-radius: 3px !important;
-      font-family: 'Canela', serif !important;
-      font-size: 10px !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.16em !important;
-      text-transform: uppercase !important;
-      text-decoration: none !important;
-      transition: all 0.3s ease !important;
-      box-shadow: 0 4px 14px rgba(198, 161, 91, 0.3) !important;
-      margin-top: 4px;
+    .menu-drawer__footer-social-icon {
+      width: 15px;
+      height: 15px;
+      fill: currentColor;
     }
 
-    .menu-drawer__explore-btn:hover {
-      background: #fafaf7 !important;
-      color: #0f0f0f !important;
-      transform: translateY(-2px) !important;
+    .menu-drawer__footer-copyright {
+      margin: 16px 0 0;
+      font-family: var(--font-body--family, 'Canela'), serif;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: rgba(250, 250, 247, 0.32);
+      text-align: center;
     }
 
     .menu-drawer__featured-content {
