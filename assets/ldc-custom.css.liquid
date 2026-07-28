@@ -1,12 +1,4 @@
 @font-face {
-  font-family: 'ldc-font';
-  src: url('{{ "ldc-font.woff2" | asset_url }}') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'Canela';
   src: url('{{ "Canela-Regular-Trial.otf" | asset_url }}') format('opentype');
   font-weight: 400;
@@ -31,14 +23,14 @@
   --font-subheading--family: 'Canela' !important;
   --font-accent--family: 'Canela' !important;
 
-  --font-heading-family: 'ldc-font' !important;
-  --font-heading--family: 'ldc-font' !important;
-  --font-h1--family: 'ldc-font' !important;
-  --font-h2--family: 'ldc-font' !important;
-  --font-h3--family: 'ldc-font' !important;
-  --font-h4--family: 'ldc-font' !important;
-  --font-h5--family: 'ldc-font' !important;
-  --font-h6--family: 'ldc-font' !important;
+  --font-heading-family: 'Canela' !important;
+  --font-heading--family: 'Canela' !important;
+  --font-h1--family: 'Canela' !important;
+  --font-h2--family: 'Canela' !important;
+  --font-h3--family: 'Canela' !important;
+  --font-h4--family: 'Canela' !important;
+  --font-h5--family: 'Canela' !important;
+  --font-h6--family: 'Canela' !important;
   --font-paragraph--case: none !important;
   --font-h1--case: none !important;
   --font-h2--case: none !important;
@@ -172,7 +164,7 @@ h6,
 .header__heading span,
 .header__heading-logo,
 .header__heading-logo-wrapper {
-  font-family: 'ldc-font' !important;
+  font-family: 'Canela' !important;
   font-weight: normal !important;
   text-transform: none !important;
   letter-spacing: normal !important;
@@ -269,7 +261,7 @@ body {
 .footer-content h4,
 .footer-content .h4,
 .footer-content [class*="heading"] {
-  font-family: 'ldc-font' !important;
+  font-family: 'Canela' !important;
   font-style: normal !important;
   text-transform: none !important;
   color: #E9E2D6 !important;
@@ -452,21 +444,28 @@ body {
   stroke: var(--ldc-white) !important;
 }
 
-/* Mega Menu Dropdown Panel styling */
+/* Mega Menu Dropdown Panel styling.
+   The backdrop image is painted once by #header-component .header__row--top::before
+   (see sections/header.liquid) so the header strip and the panel are a single
+   continuous surface. These layers stay transparent — giving them their own
+   `cover` image would render a second, misaligned copy and produce a visible seam. */
 .menu-list__submenu-inner,
 .mega-menu {
-  background-color: #111111 !important;
+  background: transparent !important;
   color: #FAFAF7 !important;
   border: none !important;
 }
 
 .menu-list__submenu {
-  background-color: #111111 !important;
+  background: transparent !important;
   clip-path: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
   transform: translate3d(0, -4px, 0) !important;
-  transition: opacity 0.16s ease-out, transform 0.16s ease-out, visibility 0.16s linear !important;
+  /* Matched to the backdrop's height transition so panel and surface move as one. */
+  transition: opacity var(--submenu-animation-speed) var(--ease-out-cubic),
+    transform var(--submenu-animation-speed) var(--ease-out-cubic),
+    visibility var(--submenu-animation-speed) linear !important;
   margin-top: -1px;
   padding-top: 0 !important;
   padding-left: 0 !important;
@@ -490,7 +489,8 @@ body {
 .menu-list__list-item:hover,
 .menu-list__list-item:has([aria-expanded='true']) {
   --submenu-content-opacity: 1 !important;
-  --submenu-content-animation: opacity 0.14s linear !important;
+  --submenu-content-animation: opacity calc(var(--submenu-animation-speed) * 0.6) var(--ease-out-cubic)
+    calc(var(--submenu-animation-speed) * 0.25) !important;
 }
 
 
@@ -517,7 +517,7 @@ body {
 .mega-menu__link--parent,
 .mega-menu__link--parent span,
 .mega-menu__link--parent * {
-  font-family: 'ldc-font' !important;
+  font-family: 'Canela' !important;
   font-style: normal !important;
   text-transform: none !important;
   font-size: 22px !important;
@@ -605,7 +605,7 @@ body {
 
 .mega-menu__feature-title {
   margin: 0 0 8px;
-  font-family: 'ldc-font' !important;
+  font-family: 'Canela' !important;
   font-size: clamp(28px, 2vw, 36px);
   font-weight: normal !important;
   line-height: 1.05 !important;
@@ -706,7 +706,7 @@ body {
 }
 
 .cart-drawer__heading {
-  font-family: 'ldc-font' !important;
+  font-family: 'Canela' !important;
   font-weight: normal !important;
   text-transform: lowercase !important;
   letter-spacing: normal !important;
@@ -833,7 +833,7 @@ body {
 }
 
 .cart__total-value {
-  font-family: 'ldc-font' !important;
+  font-family: 'Canela' !important;
   font-weight: normal !important;
   color: var(--ldc-burgundy) !important;
 }

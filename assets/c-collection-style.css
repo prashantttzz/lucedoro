@@ -3,7 +3,7 @@
     --ldc-collection-text: #000;
     --ldc-collection-gray: #f2eee6;
     --ldc-collection-border: #e6e6e6;
-    --ldc-collection-font-primary: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --ldc-collection-font-primary: "Canela", serif;
     --ldc-collection-transition: all .3s ease
 }
 
@@ -51,6 +51,17 @@ html, body {
     background: rgba(0, 0, 0, 0.55);
     position: absolute;
     inset: 0
+}
+
+.c-collection-banner__overlay-top {
+    z-index: 1;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.35) 40%, rgba(0, 0, 0, 0) 100%);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 220px;
+    pointer-events: none
 }
 
 .c-collection-banner__content {

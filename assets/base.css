@@ -1,17 +1,5 @@
-@font-face {
-  font-family: 'LDC';
-  src: url('{{ "ldc-font.woff2" | asset_url }}') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 .hero__heading {
-  font-family: 'LDC', serif;
-}
-
-.hero__heading {
-  font-family: 'LDC', serif;
+  font-family: 'Canela', serif;
   letter-spacing: 0.02em;
   line-height: 1.1;
 }
@@ -27,7 +15,7 @@ body {
 
 
 body {
-  font-family: 'LDC', serif;
+  font-family: 'Canela', serif;
   color: var(--color-foreground);
   background: var(--color-background);
   display: flex;

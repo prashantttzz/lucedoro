@@ -354,36 +354,90 @@
     </div>
   {% endif %}
 
-  {% unless template.name == 'index' or template.name == 'collection' %}
-    <style>
-      .header-section,
-      header-component,
-      .header,
-      .header__row {
-        background-color: rgba(0, 0, 0, 0.65) !important;
-        background: rgba(0, 0, 0, 0.65) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-      }
-      
-      .header__row {
-        border-bottom: none !important;
-      }
-      
-      header-component .menu-list__link,
-      header-component .header-actions__action,
-      header-component .header-logo,
-      header-component .currency-code,
-      header-component .icon-caret {
-        color: #fafaf7 !important;
-      }
+  <style>
+    /* Single continuous backdrop spanning the header row and the open mega menu, so
+       the two read as one surface rather than a bar plus a detached drawer. It grows
+       with --submenu-height (set on #header-component by header-menu.js).
+       Hidden until a nav link with a submenu is hovered — the bare header stays
+       transparent over the hero. */
+    #header-component .header__row--top::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto;
+      height: calc(100% + var(--submenu-height, 0px));
+      background-image: url('https://cdn.shopify.com/s/files/1/0665/5036/6274/files/ChatGPT_Image_Jul_18_2026_02_48_48_PM.png?v=1784366339');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: height var(--submenu-animation-speed) var(--ease-out-cubic),
+        opacity calc(var(--submenu-animation-speed) * 0.7) var(--ease-out-cubic);
+      will-change: height, opacity;
+    }
 
-      header-component .menu-list__link:hover,
-      header-component .header-actions__action:hover {
-        color: #C6A15B !important;
-      }
-    </style>
-  {% endunless %}
+    #header-component:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'])) .header__row--top::before,
+    #header-component:has(.menu-list__submenu:hover) .header__row--top::before,
+    #header-component:has(.mega-menu__list:hover) .header__row--top::before {
+      opacity: 1;
+    }
+
+    #header-component .header__row--top > .header__columns {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* The row's colour scheme paints an opaque bar over the shared backdrop.
+       Suppress it so the header strip and the panel below are one image. */
+    .header-section:has(#header-component),
+    #header-component,
+    #header-component .header__row--top {
+      background-color: transparent;
+    }
+
+    /* Let the shared backdrop show through: no panel background, no seam. */
+    #header-component .menu-list__submenu,
+    #header-component .overflow-menu::part(overflow) {
+      background-color: transparent;
+    }
+
+    #header-component .overflow-menu::after {
+      display: none;
+    }
+
+    #header-component .header__row--top {
+      border-bottom: none;
+    }
+
+    #header-component .menu-list__submenu-inner,
+    #header-component .overflow-menu::part(overflow-list) {
+      transition: opacity calc(var(--submenu-animation-speed) * 0.6) var(--ease-out-cubic)
+        calc(var(--submenu-animation-speed) * 0.25);
+    }
+
+    /* Light in both states: over the hero while transparent, and over the dark
+       image backdrop once the extended header opens. */
+    #header-component .menu-list__link,
+    #header-component .header-actions__action,
+    #header-component .header-logo,
+    #header-component .currency-code,
+    #header-component .icon-caret {
+      color: #fafaf7;
+    }
+
+    /* Mega-menu contents sit on the dark image, so keep them light in every state. */
+    #header-component .mega-menu__link,
+    #header-component .mega-menu__link--parent,
+    #header-component .menu-list__submenu .wrap-text {
+      color: #fafaf7;
+    }
+
+    #header-component .mega-menu__link:hover {
+      color: #ffffff;
+      opacity: 0.75;
+    }
+  </style>
 </header-component>
 
 <script
