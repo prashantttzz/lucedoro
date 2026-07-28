@@ -110,11 +110,11 @@
                 style="display: flex; justify-content: space-between;"
               >
                 {%- comment -%}
-                  Anchors use Shopify's auto-generated #shopify-section-{id}
-                  wrapper ids, keyed to the section ids in templates/index.json.
-                  The sections themselves carry no hand-written ids, so the
-                  previous /#our-story and /#join-the-club targets matched
-                  nothing and simply landed at the top of the page.
+                  Targets are explicit ids declared on each home section's root
+                  element (sections/hero.liquid and friends), not Shopify's
+                  generated #shopify-section-{id} wrappers — those are keyed to
+                  the section ids in templates/index.json and break silently if
+                  a section is renamed or re-added in the theme editor.
                 {%- endcomment -%}
                 <ul class="mega-menu__list list-unstyled" style="display: flex; gap: 80px; padding: 20px 0;">
                   <li class="mega-menu__column">
@@ -122,16 +122,16 @@
                       <span class="wrap-text">Explore</span>
                     </a>
                     <ul class="list-unstyled">
-                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-hero" class="mega-menu__link"><span class="wrap-text">Customize Your Frame</span></a></li>
-                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-custom_featured_collection" class="mega-menu__link"><span class="wrap-text">Signature Eyewear</span></a></li>
-                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-custom_parallax_image" class="mega-menu__link"><span class="wrap-text">The Look</span></a></li>
-                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-custom_our_story" class="mega-menu__link"><span class="wrap-text">Our Story</span></a></li>
-                      <li style="margin-bottom: 12px;"><a href="/#shopify-section-custom_bento_grid" class="mega-menu__link"><span class="wrap-text">Everyday Icons</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="{{ routes.root_url }}#ldc-hero" class="mega-menu__link"><span class="wrap-text">Customize Your Frame</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="{{ routes.root_url }}#ldc-featured" class="mega-menu__link"><span class="wrap-text">Signature Eyewear</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="{{ routes.root_url }}#ldc-the-look" class="mega-menu__link"><span class="wrap-text">The Look</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="{{ routes.root_url }}#ldc-our-story" class="mega-menu__link"><span class="wrap-text">Our Story</span></a></li>
+                      <li style="margin-bottom: 12px;"><a href="{{ routes.root_url }}#custom-bento-grid" class="mega-menu__link"><span class="wrap-text">Everyday Icons</span></a></li>
                     </ul>
                   </li>
 
                   <li class="mega-menu__column">
-                    <a href="/#shopify-section-custom_our_story" class="mega-menu__link mega-menu__link--parent">
+                    <a href="{{ routes.root_url }}#ldc-our-story" class="mega-menu__link mega-menu__link--parent">
                       <span class="wrap-text">Join the Club</span>
                     </a>
                     <ul class="list-unstyled">
@@ -244,7 +244,7 @@
         class="menu-list__list-item"
       >
         <a
-          href="mailto:support@lucedoro.com"
+          href="{{ routes.root_url }}pages/contact-us"
           data-skip-node-update="true"
           class="menu-list__link"
           ref="menuitem"

@@ -279,6 +279,18 @@
                 <span class="menu-drawer__menu-item-text wrap-text">Collection</span>
               </a>
             </li>
+            <li
+              style="--menu-drawer-animation-index: {{ animation_index | plus: 3 }};"
+              class="{%- if block_settings.drawer_accordion -%}menu-drawer__list-item--deep{%- else -%}menu-drawer__list-item--flat{%- endif -%}{% if block_settings.drawer_dividers %} menu-drawer__list-item--divider{% endif %}"
+            >
+              <a
+                id="HeaderDrawer-contact"
+                href="{{ routes.root_url }}pages/contact-us"
+                class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset"
+              >
+                <span class="menu-drawer__menu-item-text wrap-text">Contact Us</span>
+              </a>
+            </li>
           {% else %}
             {%- comment -%}
               Handle menus with 3 levels of links

@@ -15,6 +15,28 @@
   font-display: swap;
 }
 
+/* In-page anchor targets (the HOME mega-menu links at blocks/_header-menu.liquid).
+   The header is fixed and overlays the page, so an untreated anchor lands with
+   the section's top edge underneath it. scroll-margin-top reserves that height
+   at the jump point. */
+html {
+  scroll-behavior: smooth;
+}
+
+#ldc-hero,
+#ldc-featured,
+#ldc-the-look,
+#ldc-our-story,
+#custom-bento-grid {
+  scroll-margin-top: var(--header-height, 60px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 :root {
   --font-body-family: 'Canela' !important;
   --font-body--family: 'Canela' !important;
@@ -930,10 +952,23 @@ body {
   border-radius: 0 !important;
 }
 
-/* --- Header ------------------------------------------------------------- */
+/* --- Header -------------------------------------------------------------
+   A gold hairline under the greeting gives the panel a masthead rather than
+   the theme's undifferentiated stack of rows. */
 .account-actions__header {
   border-bottom: 1px solid rgba(90, 31, 38, 0.1);
   padding-bottom: 18px !important;
+  position: relative;
+}
+
+.account-actions__header::after {
+  content: '';
+  position: absolute;
+  left: var(--padding-xl, 20px);
+  bottom: -1px;
+  width: 42px;
+  height: 1px;
+  background-color: var(--ldc-gold);
 }
 
 .account-actions__title {
@@ -950,6 +985,45 @@ body {
   font-size: 12px !important;
   letter-spacing: 0.02em;
   color: rgba(90, 31, 38, 0.6) !important;
+}
+
+/* --- Icons ---------------------------------------------------------------
+   The theme ships these as outline SVGs that inherit currentColor; force the
+   stroke too, since some of the icon assets set it explicitly. */
+.account-actions__icon svg,
+.account-actions__icon svg path {
+  color: currentColor !important;
+  stroke: currentColor !important;
+  fill: none !important;
+}
+
+.account-actions__link.button .account-actions__icon {
+  color: var(--ldc-white) !important;
+}
+
+.account-actions__link.button-secondary .account-actions__icon {
+  color: var(--ldc-burgundy) !important;
+}
+
+/* --- Drawer (mobile) -----------------------------------------------------
+   The drawer is the same component presented full-width on small screens, so
+   it needs the panel treatment plus a little more breathing room. */
+.account-drawer__dialog .account-actions__header {
+  padding-top: 26px !important;
+}
+
+.account-drawer__dialog .account-actions__title {
+  font-size: 26px !important;
+}
+
+@media screen and (max-width: 479px) {
+  .account-actions__list {
+    grid-template-columns: 1fr !important;
+  }
+
+  .account-actions__title {
+    font-size: 22px !important;
+  }
 }
 
 /* --- Buttons ------------------------------------------------------------
@@ -1025,4 +1099,16 @@ body {
 
 .account-drawer__close-button:hover {
   opacity: 0.6;
+}
+
+/* --- Header account icon -------------------------------------------------
+   The trigger itself, so the entry point reads as part of the same set as the
+   cart and search icons rather than a default theme control. */
+.header-actions__action--account .header__icon,
+.header-actions__action--account .header__icon svg {
+  transition: opacity 0.25s ease;
+}
+
+.header-actions__action--account:hover .header__icon {
+  opacity: 0.7;
 }

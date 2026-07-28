@@ -1,0 +1,354 @@
+{% comment %}
+  Contact page for Luce D'Oro Club.
+
+  Desktop mirrors the reference layout: an editorial heading column on the left
+  with the socials anchored to its foot, and a 2x2 block of labelled contact
+  details on the right with the feature image beneath them. On mobile the two
+  columns collapse into a single reading order — heading, intro, details,
+  image, socials.
+{% endcomment %}
+
+{%- liquid
+  assign img = section.settings.feature_image
+  if img == blank
+    assign img_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/c4c274d0d2c12adfdb9370087bcefc91.jpg?v=1785251229'
+  else
+    assign img_url = img | image_url: width: 2000
+  endif
+-%}
+
+<div class="ldc-contact" id="ldc-contact">
+  <div class="ldc-contact__inner">
+    <div class="ldc-contact__intro">
+      <h1 class="ldc-contact__title">{{ section.settings.heading | escape }}</h1>
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="ldc-contact__subtitle">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+
+      <ul class="ldc-contact__socials list-unstyled">
+        {%- if section.settings.social_1_label != blank -%}
+          <li>
+            <a href="{{ section.settings.social_1_link | default: '#' }}" target="_blank" rel="noopener">
+              {{- section.settings.social_1_label | escape -}}
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if section.settings.social_2_label != blank -%}
+          <li>
+            <a href="{{ section.settings.social_2_link | default: '#' }}" target="_blank" rel="noopener">
+              {{- section.settings.social_2_label | escape -}}
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if section.settings.social_3_label != blank -%}
+          <li>
+            <a href="{{ section.settings.social_3_link | default: '#' }}" target="_blank" rel="noopener">
+              {{- section.settings.social_3_label | escape -}}
+            </a>
+          </li>
+        {%- endif -%}
+      </ul>
+    </div>
+
+    <div class="ldc-contact__body">
+      <dl class="ldc-contact__details">
+        {%- for i in (1..4) -%}
+          {%- liquid
+            case i
+              when 1
+                assign label = section.settings.block_1_label
+                assign line_a = section.settings.block_1_line_1
+                assign line_b = section.settings.block_1_line_2
+              when 2
+                assign label = section.settings.block_2_label
+                assign line_a = section.settings.block_2_line_1
+                assign line_b = section.settings.block_2_line_2
+              when 3
+                assign label = section.settings.block_3_label
+                assign line_a = section.settings.block_3_line_1
+                assign line_b = section.settings.block_3_line_2
+              when 4
+                assign label = section.settings.block_4_label
+                assign line_a = section.settings.block_4_line_1
+                assign line_b = section.settings.block_4_line_2
+            endcase
+          -%}
+
+          {%- if label != blank or line_a != blank -%}
+            <div class="ldc-contact__detail">
+              {%- if label != blank -%}
+                <dt class="ldc-contact__label">{{ label | escape }}</dt>
+              {%- endif -%}
+              <dd class="ldc-contact__value">
+                {%- if line_a != blank -%}
+                  <span class="ldc-contact__line">{% render 'ldc-contact-line', value: line_a %}</span>
+                {%- endif -%}
+                {%- if line_b != blank -%}
+                  <span class="ldc-contact__line">{% render 'ldc-contact-line', value: line_b %}</span>
+                {%- endif -%}
+              </dd>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </dl>
+
+      <div class="ldc-contact__media">
+        <img
+          src="{{ img_url }}"
+          alt="{{ section.settings.heading | escape }}"
+          class="ldc-contact__image"
+          width="2000"
+          height="1250"
+          loading="lazy"
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ldc-contact {
+    background-color: var(--ldc-white, #FAFAF7);
+    color: var(--ldc-burgundy, #5A1F26);
+    font-family: 'Canela', serif;
+    padding: calc(var(--header-height, 60px) + 56px) 5vw 80px;
+    box-sizing: border-box;
+  }
+
+  .ldc-contact * {
+    box-sizing: border-box;
+  }
+
+  .ldc-contact .list-unstyled {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Single column by default — the mobile layout is the base case, and the
+     two-column arrangement is layered on at the desktop breakpoint. */
+  .ldc-contact__inner {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+
+  .ldc-contact__title {
+    font-family: 'Canela', serif;
+    font-size: clamp(38px, 11vw, 64px);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+  }
+
+  .ldc-contact__subtitle {
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 30ch;
+    margin: 0;
+    color: rgba(90, 31, 38, 0.7);
+  }
+
+  .ldc-contact__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 36px;
+  }
+
+  .ldc-contact__socials a {
+    color: var(--ldc-burgundy, #5A1F26);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s ease, color 0.25s ease;
+  }
+
+  .ldc-contact__socials a:hover {
+    color: var(--ldc-gold, #C6A15B);
+    border-bottom-color: var(--ldc-gold, #C6A15B);
+  }
+
+  .ldc-contact__details {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px 40px;
+    margin: 0 0 44px;
+  }
+
+  .ldc-contact__label {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: rgba(90, 31, 38, 0.45);
+    margin: 0 0 10px;
+  }
+
+  .ldc-contact__value {
+    margin: 0;
+  }
+
+  .ldc-contact__line {
+    display: block;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .ldc-contact__line a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s ease;
+  }
+
+  .ldc-contact__line a:hover {
+    border-bottom-color: currentColor;
+  }
+
+  .ldc-contact__media {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ldc-contact__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  /* --- Small phones ----------------------------------------------------- */
+  @media (max-width: 479px) {
+    .ldc-contact {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .ldc-contact__socials {
+      gap: 20px;
+    }
+  }
+
+  /* --- Tablet: details pair up before the columns split ----------------- */
+  @media (min-width: 600px) {
+    .ldc-contact__details {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* --- Desktop: the reference two-column layout ------------------------- */
+  @media (min-width: 990px) {
+    .ldc-contact {
+      padding-bottom: 100px;
+    }
+
+    .ldc-contact__inner {
+      grid-template-columns: minmax(280px, 1fr) 1.75fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    /* Sticks the socials to the foot of the left column, matching the
+       reference, without needing a fixed height on the column itself. */
+    .ldc-contact__intro {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      position: sticky;
+      top: calc(var(--header-height, 60px) + 40px);
+    }
+
+    .ldc-contact__socials {
+      margin-top: auto;
+      padding-top: 80px;
+    }
+
+    .ldc-contact__details {
+      gap: 40px 48px;
+      margin-bottom: 56px;
+    }
+
+    .ldc-contact__image {
+      aspect-ratio: 16 / 9;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Contact us"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Intro text",
+      "default": "Get in touch with us for any enquiries and questions"
+    },
+    {
+      "type": "header",
+      "content": "Detail block 1"
+    },
+    { "type": "text", "id": "block_1_label", "label": "Label", "default": "general inquiries" },
+    { "type": "text", "id": "block_1_line_1", "label": "Line 1", "default": "hello@lucedoro.club" },
+    { "type": "text", "id": "block_1_line_2", "label": "Line 2", "default": "+91 98765 43210" },
+    {
+      "type": "header",
+      "content": "Detail block 2"
+    },
+    { "type": "text", "id": "block_2_label", "label": "Label", "default": "careers" },
+    { "type": "text", "id": "block_2_line_1", "label": "Line 1", "default": "careers@lucedoro.club" },
+    { "type": "text", "id": "block_2_line_2", "label": "Line 2" },
+    {
+      "type": "header",
+      "content": "Detail block 3"
+    },
+    { "type": "text", "id": "block_3_label", "label": "Label", "default": "collaborations" },
+    { "type": "text", "id": "block_3_line_1", "label": "Line 1", "default": "partners@lucedoro.club" },
+    { "type": "text", "id": "block_3_line_2", "label": "Line 2" },
+    {
+      "type": "header",
+      "content": "Detail block 4"
+    },
+    { "type": "text", "id": "block_4_label", "label": "Label", "default": "address" },
+    { "type": "text", "id": "block_4_line_1", "label": "Line 1", "default": "Luce D'Oro Club" },
+    { "type": "text", "id": "block_4_line_2", "label": "Line 2" },
+    {
+      "type": "header",
+      "content": "Socials"
+    },
+    { "type": "text", "id": "social_1_label", "label": "Link 1 label", "default": "Instagram" },
+    { "type": "url", "id": "social_1_link", "label": "Link 1 URL" },
+    { "type": "text", "id": "social_2_label", "label": "Link 2 label", "default": "TikTok" },
+    { "type": "url", "id": "social_2_link", "label": "Link 2 URL" },
+    { "type": "text", "id": "social_3_label", "label": "Link 3 label" },
+    { "type": "url", "id": "social_3_link", "label": "Link 3 URL" },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "feature_image",
+      "label": "Feature image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Page"
+    }
+  ]
+}
+{% endschema %}

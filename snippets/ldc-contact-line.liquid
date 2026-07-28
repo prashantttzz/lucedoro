@@ -1,0 +1,37 @@
+{% comment %}
+  Renders one line of a contact detail block, wrapping it in the right link
+  type so emails and phone numbers are tappable on mobile. Anything else
+  (an address, a name) renders as plain text.
+
+  Accepts:
+  - value: {String} the raw line of text
+{% endcomment %}
+
+{%- liquid
+  assign line = value | strip
+
+  assign is_email = false
+  if line contains '@'
+    assign is_email = true
+  endif
+
+  # Liquid has no regex, so classify by subtraction: strip every digit and
+  # separator, and treat the line as a phone number only if nothing is left.
+  assign residue = line | remove: '+' | remove: '-' | remove: ' ' | remove: '(' | remove: ')'
+  assign tel_href = residue
+  assign residue = residue | remove: '0' | remove: '1' | remove: '2' | remove: '3' | remove: '4'
+  assign residue = residue | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9'
+
+  assign is_phone = false
+  if is_email == false and residue == blank and tel_href.size > 6
+    assign is_phone = true
+  endif
+-%}
+
+{%- if is_email -%}
+  <a href="mailto:{{ line }}">{{ line | escape }}</a>
+{%- elsif is_phone -%}
+  <a href="tel:{{ tel_href }}">{{ line | escape }}</a>
+{%- else -%}
+  {{ line | escape }}
+{%- endif -%}

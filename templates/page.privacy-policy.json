@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "custom-legal-page",
+      "settings": {
+        "eyebrow": "Legal",
+        "heading": "Privacy policy",
+        "updated_at": "February 9, 2026"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
