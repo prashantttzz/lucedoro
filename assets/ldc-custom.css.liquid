@@ -171,9 +171,9 @@ option,
 .cart-item__name,
 .cart-item__details,
 .cart-item__details * {
-  font-family: 'Canela', serif !important;
-  font-style: normal !important;
-  line-height: 1.15 !important;
+  font-family: var(--ldc-font-script) !important;
+  font-style: italic !important;
+  line-height: 1.6 !important;
 }
 
 body,
@@ -239,7 +239,29 @@ h6 *,
 .header__heading a,
 .header__heading span,
 .header__heading-logo,
-.header__heading-logo-wrapper {
+.header__heading-logo-wrapper,
+.c-product-card__title,
+.c-product-card__title *,
+.c-product-card__price,
+.c-product-card__price *,
+.c-pdp-product-name,
+.c-pdp-product-name *,
+.c-pdp-product-price,
+.c-pdp-product-price *,
+.c-product-info__title,
+.c-product-info__title *,
+.c-product-info__price,
+.c-product-info__price *,
+[class*="price"],
+[class*="price"] *,
+[class*="badge"],
+[class*="badge"] *,
+.c-pdp-type-title,
+.c-pdp-type-title *,
+.c-pdp-type-price,
+.c-pdp-type-price *,
+.c-drawer-lens-type-title,
+.c-drawer-lens-type-title * {
   font-family: 'Canela' !important;
   font-style: normal !important;
   font-weight: normal !important;
@@ -1165,4 +1187,19 @@ body {
 
 .header-actions__action--account:hover .header__icon {
   opacity: 0.7;
+}
+
+/* --- Force Canela font for product descriptions ------------------------ */
+.c-pdp-open-desc,
+.c-pdp-open-desc *,
+.product__description,
+.product__description *,
+.product-description,
+.product-description *,
+.c-accordion__content,
+.c-accordion__content * {
+  font-family: 'Canela' !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  line-height: 1.6 !important;
 }

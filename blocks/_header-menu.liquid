@@ -34,6 +34,10 @@
             role="list"
           >
             {% for link in block_settings.menu.links %}
+              {% assign link_title = link.title %}
+              {% if link_title == 'Shop' or link_title == 'SHOP' or link_title == 'shop' %}
+                {% assign link_title = 'Collection' %}
+              {% endif %}
               <li>
                 <a
                   href="{{ link.url }}"
@@ -43,7 +47,7 @@
                     aria-current="page"
                   {% endif %}
                 >
-                  {{- link.title -}}
+                  {{- link_title -}}
                 </a>
               </li>
             {% endfor %}
@@ -156,7 +160,7 @@
         </div>
       </li>
 
-      <!-- Link 2: Shop -->
+      <!-- Link 2: Collection -->
       <li
         role="presentation"
         class="menu-list__list-item"
@@ -174,7 +178,7 @@
           aria-expanded="false"
           ref="menuitem"
         >
-          <span class="menu-list__link-title">SHOP</span>
+          <span class="menu-list__link-title">COLLECTION</span>
         </a>
         <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
           <div
@@ -253,20 +257,6 @@
         </a>
       </li>
 
-      <!-- Link 4: Customization -->
-      <li
-        role="presentation"
-        class="menu-list__list-item"
-      >
-        <a
-          href="/collections/all"
-          data-skip-node-update="true"
-          class="menu-list__link"
-          ref="menuitem"
-        >
-          <span class="menu-list__link-title" style="color: #e5c158; font-weight: bold; letter-spacing: 0.1em;">CUSTOMIZATION</span>
-        </a>
-      </li>
       <li
         class="menu-list__list-item"
         role="presentation"
