@@ -21,7 +21,7 @@
     {%- liquid
       assign hero_img = section.settings.hero_image
       if hero_img == blank
-        assign hero_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/c4c274d0d2c12adfdb9370087bcefc91.jpg?v=1785251229'
+        assign hero_url = 'https://cdn.shopify.com/s/files/1/0665/5036/6274/files/WhatsApp_Image_2026-07-21_at_4.18.49_PM.jpg?v=1784632674'
       else
         assign hero_url = hero_img | image_url: width: 2400
       endif
@@ -85,12 +85,6 @@
 
       <!-- Price & Sort Filters -->
       <div class="ldc-filter-bar">
-        <div class="ldc-price-chips" id="ldc-price-tabs">
-          <button type="button" class="ldc-chip active" onclick="ldcFilterPrice('all')">All Prices</button>
-          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('under-700')">Under AED 700</button>
-          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('700-800')">AED 700&ndash;800</button>
-          <button type="button" class="ldc-chip" onclick="ldcFilterPrice('over-800')">Over AED 800</button>
-        </div>
 
         <div class="ldc-sort-wrap">
           <label for="ldc-sort-select" class="ldc-sort-label">Sort by</label>
@@ -371,7 +365,7 @@
     width: 100%;
     height: 170%;
     background-size: cover;
-    background-position: center top;
+    background-position: center;
     background-repeat: no-repeat;
     z-index: 0;
     will-change: transform;
@@ -626,7 +620,7 @@
     .ldc-filter-bar {
       flex-direction: row;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       flex-wrap: wrap;
       text-align: left;
     }
