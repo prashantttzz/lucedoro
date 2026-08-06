@@ -1115,12 +1115,17 @@
   }
 
   .c-pdp-color-dot {
-    width: 22px;
-    height: 22px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     border: 1px solid rgba(0, 0, 0, 0.12);
     box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  
+  .c-pdp-color-item:hover .c-pdp-color-dot {
+    transform: scale(1.08);
   }
 
   .c-pdp-color-info {
@@ -1410,34 +1415,31 @@
 
     // Dynamic lens color catalogue — edit here to add/remove/rename colors
     const solidColors = [
-      { name: 'Azure Blue', color: '#1e88e5' },
-      { name: 'Champagne', color: '#f7e7ce' },
-      { name: 'Emerald', color: '#2e7d32' },
-      { name: 'Honey Gold', color: '#fbc02d' },
-      { name: 'Lavender Mist', color: '#b39ddb' },
-      { name: 'Amber', color: '#ffb300' },
-      { name: 'Rose Blush', color: '#f48fb1' },
-      { name: 'Riviera Blue', color: '#00acc1' },
-      { name: 'Turquoise', color: '#00838f' },
-      { name: 'Burnt Amber', color: '#d84315' },
-      { name: 'Olive', color: '#558b2f' },
-      { name: 'Royal Violet', color: '#6a1b9a' }
+      { name: 'Burnt Citrus', value: 'burnt-citrus.png', image: "{{ 'burnt-citrus.png' | asset_url }}" },
+      { name: 'Buttercup', value: 'buttercup.png', image: "{{ 'buttercup.png' | asset_url }}" },
+      { name: 'Evergreen', value: 'evergreen.png', image: "{{ 'evergreen.png' | asset_url }}" },
+      { name: 'Golden Hour', value: 'golder-hour.png', image: "{{ 'golder-hour.png' | asset_url }}" },
+      { name: 'Lagoon', value: 'lagoon.png', image: "{{ 'lagoon.png' | asset_url }}" },
+      { name: 'Lilac Haze', value: 'lilac-haze.png', image: "{{ 'lilac-haze.png' | asset_url }}" },
+      { name: 'Moviestar Blue', value: 'moviestar-blue.png', image: "{{ 'moviestar-blue.png' | asset_url }}" },
+      { name: 'Pink Velvet', value: 'pink-velvet.png', image: "{{ 'pink-velvet.png' | asset_url }}" },
+      { name: 'Poolside Blue', value: 'poolside-blue.png', image: "{{ 'poolside-blue.png' | asset_url }}" },
+      { name: 'Purple Haze', value: 'purple-haze.png', image: "{{ 'purple-haze.png' | asset_url }}" },
+      { name: 'Sunnyside', value: 'sunnnyside.png', image: "{{ 'sunnnyside.png' | asset_url }}" }
     ];
 
     const gradientColors = [
-      { name: 'Golden Dusk Fade', color: 'linear-gradient(180deg, #fbc02d 0%, #d84315 100%)' },
-      { name: 'Coastal Fade', color: 'linear-gradient(180deg, #1e88e5 0%, #f7e7ce 100%)' },
-      { name: 'Chestnut Fade', color: 'linear-gradient(180deg, #8b5a2b 0%, #e9e2d6 100%)' },
-      { name: 'Ocean Fade', color: 'linear-gradient(180deg, #00838f 0%, #b39ddb 100%)' },
-      { name: 'Smoke Fade', color: 'linear-gradient(180deg, #37474f 0%, #cfd8dc 100%)' },
-      { name: 'Forest Fade', color: 'linear-gradient(180deg, #2e7d32 0%, #fbc02d 100%)' },
-      { name: 'Classic Green Fade', color: 'linear-gradient(180deg, #1b5e20 0%, #dcedc8 100%)' },
-      { name: 'Lagoon Fade', color: 'linear-gradient(180deg, #00acc1 0%, #558b2f 100%)' },
-      { name: 'Bordeaux Fade', color: 'linear-gradient(180deg, #5a1f26 0%, #f48fb1 100%)' },
-      { name: 'Ruby Fade', color: 'linear-gradient(180deg, #c62828 0%, #ffcdd2 100%)' },
-      { name: 'Espresso Fade', color: 'linear-gradient(180deg, #4e342e 0%, #d7ccc8 100%)' },
-      { name: 'Silver Fade', color: 'linear-gradient(180deg, #b0bec5 0%, #eceff1 100%)' },
-      { name: 'Sunset Fade', color: 'linear-gradient(180deg, #ff7043 0%, #ffca28 100%)' }
+      { name: 'Afterglow Fade', value: 'afterglow-fade.png', image: "{{ 'afterglow-fade.png' | asset_url }}" },
+      { name: 'Blue Monday', value: 'blue-monday.png', image: "{{ 'blue-monday.png' | asset_url }}" },
+      { name: 'Blue Velvet Fade', value: 'bluevelvet-fade.png', image: "{{ 'bluevelvet-fade.png' | asset_url }}" },
+      { name: 'Cherry Fade', value: 'cherry-fade.png', image: "{{ 'cherry-fade.png' | asset_url }}" },
+      { name: 'Cola Fade', value: 'cola-fade.png', image: "{{ 'cola-fade.png' | asset_url }}" },
+      { name: 'Honey Drip', value: 'honey-drip.png', image: "{{ 'honey-drip.png' | asset_url }}" },
+      { name: 'Military Fade', value: 'military-fade.png', image: "{{ 'military-fade.png' | asset_url }}" },
+      { name: 'Morning Tide', value: 'morning-tide.png', image: "{{ 'morning-tide.png' | asset_url }}" },
+      { name: 'Moss Fade', value: 'moss-fade.png', image: "{{ 'moss-fade.png' | asset_url }}" },
+      { name: 'Red Velvet Fade', value: 'redvelvet-fade.png', image: "{{ 'redvelvet-fade.png' | asset_url }}" },
+      { name: 'Steel Fade', value: 'steel-fade.png', image: "{{ 'steel-fade.png' | asset_url }}" }
     ];
 
     let selectedType = null;
@@ -1610,7 +1612,7 @@
         item.className = 'c-pdp-color-item' + (selectedColor && selectedColor.name === c.name ? ' is-selected' : '');
         item.innerHTML = `
           <div class="c-pdp-color-left">
-            <span class="c-pdp-color-dot" style="background: ${c.color}"></span>
+            <span class="c-pdp-color-dot" style="background: url('${c.image}') center/cover no-repeat;"></span>
             <div class="c-pdp-color-info">
               <span class="c-pdp-color-title">${c.name}</span>
             </div>
@@ -1754,7 +1756,7 @@
         'Frame Color': selectedFrameColorName,
         'Lens Type': selectedType ? selectedType.title : 'N/A',
         'Lens Finish': selectedColorType ? (selectedColorType === 'solid' ? 'Solid Tint' : 'Gradient Tint') : 'N/A',
-        'Lens Color': selectedColor ? selectedColor.name : 'N/A'
+        'Lens Color': selectedColor ? selectedColor.value : 'N/A'
       };
 
       if (rxFile) {

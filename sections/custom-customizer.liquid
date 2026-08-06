@@ -1488,34 +1488,31 @@
     ];
 
     const solidColors = [
-      { name: 'Azure Blue', color: '#1e88e5', opacity: 0.5 },
-      { name: 'Champagne', color: '#f7e7ce', opacity: 0.3 },
-      { name: 'Emerald', color: '#2e7d32', opacity: 0.4 },
-      { name: 'Honey Gold', color: '#fbc02d', opacity: 0.45 },
-      { name: 'Lavender Mist', color: '#b39ddb', opacity: 0.4 },
-      { name: 'Amber', color: '#ffb300', opacity: 0.45 },
-      { name: 'Rose Blush', color: '#f48fb1', opacity: 0.4 },
-      { name: 'Riviera Blue', color: '#00acc1', opacity: 0.4 },
-      { name: 'Turquoise', color: '#00838f', opacity: 0.45 },
-      { name: 'Burnt Amber', color: '#d84315', opacity: 0.5 },
-      { name: 'Olive', color: '#558b2f', opacity: 0.45 },
-      { name: 'Royal Violet', color: '#6a1b9a', opacity: 0.5 }
+      { name: 'Burnt Citrus', value: 'burnt-citrus.png', image: "{{ 'burnt-citrus.png' | asset_url }}", opacity: 0.5 },
+      { name: 'Buttercup', value: 'buttercup.png', image: "{{ 'buttercup.png' | asset_url }}", opacity: 0.3 },
+      { name: 'Evergreen', value: 'evergreen.png', image: "{{ 'evergreen.png' | asset_url }}", opacity: 0.4 },
+      { name: 'Golden Hour', value: 'golder-hour.png', image: "{{ 'golder-hour.png' | asset_url }}", opacity: 0.45 },
+      { name: 'Lagoon', value: 'lagoon.png', image: "{{ 'lagoon.png' | asset_url }}", opacity: 0.4 },
+      { name: 'Lilac Haze', value: 'lilac-haze.png', image: "{{ 'lilac-haze.png' | asset_url }}", opacity: 0.45 },
+      { name: 'Moviestar Blue', value: 'moviestar-blue.png', image: "{{ 'moviestar-blue.png' | asset_url }}", opacity: 0.4 },
+      { name: 'Pink Velvet', value: 'pink-velvet.png', image: "{{ 'pink-velvet.png' | asset_url }}", opacity: 0.4 },
+      { name: 'Poolside Blue', value: 'poolside-blue.png', image: "{{ 'poolside-blue.png' | asset_url }}", opacity: 0.45 },
+      { name: 'Purple Haze', value: 'purple-haze.png', image: "{{ 'purple-haze.png' | asset_url }}", opacity: 0.5 },
+      { name: 'Sunnyside', value: 'sunnnyside.png', image: "{{ 'sunnnyside.png' | asset_url }}", opacity: 0.45 }
     ];
 
     const gradientColors = [
-      { name: 'Golden Dusk Fade', color: 'linear-gradient(to bottom, #fbc02d 0%, #d84315 100%)', opacity: 0.55 },
-      { name: 'Coastal Fade', color: 'linear-gradient(to bottom, #1e88e5 0%, #f7e7ce 100%)', opacity: 0.5 },
-      { name: 'Chestnut Fade', color: 'linear-gradient(to bottom, #8b5a2b 0%, #e9e2d6 100%)', opacity: 0.5 },
-      { name: 'Ocean Fade', color: 'linear-gradient(to bottom, #00838f 0%, #b39ddb 100%)', opacity: 0.55 },
-      { name: 'Smoke Fade', color: 'linear-gradient(to bottom, #37474f 0%, rgba(255,255,255,0) 100%)', opacity: 0.6 },
-      { name: 'Forest Fade', color: 'linear-gradient(to bottom, #2e7d32 0%, #fbc02d 100%)', opacity: 0.5 },
-      { name: 'Classic Green Fade', color: 'linear-gradient(to bottom, #1b5e20 0%, rgba(255,255,255,0) 100%)', opacity: 0.55 },
-      { name: 'Lagoon Fade', color: 'linear-gradient(to bottom, #00acc1 0%, #558b2f 100%)', opacity: 0.5 },
-      { name: 'Bordeaux Fade', color: 'linear-gradient(to bottom, #5a1f26 0%, #f48fb1 100%)', opacity: 0.55 },
-      { name: 'Ruby Fade', color: 'linear-gradient(to bottom, #c62828 0%, rgba(255,255,255,0) 100%)', opacity: 0.5 },
-      { name: 'Espresso Fade', color: 'linear-gradient(to bottom, #4e342e 0%, rgba(255,255,255,0) 100%)', opacity: 0.6 },
-      { name: 'Silver Fade', color: 'linear-gradient(to bottom, #b0bec5 0%, rgba(255,255,255,0) 100%)', opacity: 0.4 },
-      { name: 'Sunset Fade', color: 'linear-gradient(to bottom, #ff7043 0%, #ffca28 100%)', opacity: 0.5 }
+      { name: 'Afterglow Fade', value: 'afterglow-fade.png', image: "{{ 'afterglow-fade.png' | asset_url }}", opacity: 0.55 },
+      { name: 'Blue Monday', value: 'blue-monday.png', image: "{{ 'blue-monday.png' | asset_url }}", opacity: 0.5 },
+      { name: 'Blue Velvet Fade', value: 'bluevelvet-fade.png', image: "{{ 'bluevelvet-fade.png' | asset_url }}", opacity: 0.5 },
+      { name: 'Cherry Fade', value: 'cherry-fade.png', image: "{{ 'cherry-fade.png' | asset_url }}", opacity: 0.55 },
+      { name: 'Cola Fade', value: 'cola-fade.png', image: "{{ 'cola-fade.png' | asset_url }}", opacity: 0.6 },
+      { name: 'Honey Drip', value: 'honey-drip.png', image: "{{ 'honey-drip.png' | asset_url }}", opacity: 0.5 },
+      { name: 'Military Fade', value: 'military-fade.png', image: "{{ 'military-fade.png' | asset_url }}", opacity: 0.55 },
+      { name: 'Morning Tide', value: 'morning-tide.png', image: "{{ 'morning-tide.png' | asset_url }}", opacity: 0.5 },
+      { name: 'Moss Fade', value: 'moss-fade.png', image: "{{ 'moss-fade.png' | asset_url }}", opacity: 0.55 },
+      { name: 'Red Velvet Fade', value: 'redvelvet-fade.png', image: "{{ 'redvelvet-fade.png' | asset_url }}", opacity: 0.5 },
+      { name: 'Steel Fade', value: 'steel-fade.png', image: "{{ 'steel-fade.png' | asset_url }}", opacity: 0.6 }
     ];
 
     // ------------------- APPLICATION STATE -------------------
@@ -1525,6 +1522,7 @@
       lensTypeId: 'sig-tints',
       rxFile: null,
       lensColorName: null,
+      lensColorValue: null,
       lensColorHex: null,
       lensColorType: null, // 'solid' or 'gradient'
       currentStep: 1,
@@ -1785,7 +1783,8 @@
           } else if (!state.lensColorName) {
             // Default to first solid color
             state.lensColorName = solidColors[0].name;
-            state.lensColorHex = solidColors[0].color;
+            state.lensColorValue = solidColors[0].value;
+            state.lensColorHex = `url('${solidColors[0].image}') center/cover no-repeat`;
             state.lensColorOpacity = solidColors[0].opacity;
             state.lensColorType = 'solid';
           }
@@ -1807,11 +1806,11 @@
           const card = document.createElement('div');
           card.className = `ldc-lens-swatch-card ${state.lensColorName === c.name ? 'active' : ''}`;
           card.innerHTML = `
-            <div class="ldc-lens-swatch-circle" style="background-color: ${c.color};"></div>
+            <div class="ldc-lens-swatch-circle" style="background: url('${c.image}') center/cover no-repeat;"></div>
             <div class="ldc-lens-swatch-name">${c.name}</div>
           `;
           card.onclick = () => {
-            selectLensColor(c.name, c.color, c.opacity, 'solid');
+            selectLensColor(c.name, c.value, `url('${c.image}') center/cover no-repeat`, c.opacity, 'solid');
             solidContainer.querySelectorAll('.ldc-lens-swatch-card').forEach(el => el.classList.remove('active'));
             document.getElementById('ldc-gradient-swatches').querySelectorAll('.ldc-lens-swatch-card').forEach(el => el.classList.remove('active'));
             card.classList.add('active');
@@ -1828,11 +1827,11 @@
           const card = document.createElement('div');
           card.className = `ldc-lens-swatch-card ${state.lensColorName === c.name ? 'active' : ''}`;
           card.innerHTML = `
-            <div class="ldc-lens-swatch-circle" style="background: ${c.color};"></div>
+            <div class="ldc-lens-swatch-circle" style="background: url('${c.image}') center/cover no-repeat;"></div>
             <div class="ldc-lens-swatch-name">${c.name}</div>
           `;
           card.onclick = () => {
-            selectLensColor(c.name, c.color, c.opacity, 'gradient');
+            selectLensColor(c.name, c.value, `url('${c.image}') center/cover no-repeat`, c.opacity, 'gradient');
             gradContainer.querySelectorAll('.ldc-lens-swatch-card').forEach(el => el.classList.remove('active'));
             document.getElementById('ldc-solid-swatches').querySelectorAll('.ldc-lens-swatch-card').forEach(el => el.classList.remove('active'));
             card.classList.add('active');
@@ -1842,8 +1841,9 @@
       }
     }
 
-    function selectLensColor(name, color, opacity, type) {
+    function selectLensColor(name, value, color, opacity, type) {
       state.lensColorName = name;
+      state.lensColorValue = value;
       state.lensColorHex = color;
       state.lensColorOpacity = opacity;
       state.lensColorType = type;
@@ -2019,7 +2019,7 @@
         'Frame Color': color.name,
         'Lens Type': type.name,
         'Lens Finish': state.lensColorType ? (state.lensColorType === 'solid' ? 'Solid Tint' : 'Gradient Tint') : 'N/A',
-        'Lens Color': state.lensColorName || 'Clear / Default',
+        'Lens Color': state.lensColorValue || 'Clear / Default',
       };
 
       if (state.rxFile) {
